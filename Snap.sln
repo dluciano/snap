@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.Console", "Clients\Sna
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A6CF54F0-B610-4091-A4FE-F0763EEAA55E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.UnitTests", "Tests\Snap.UnitTests\Snap.UnitTests.csproj", "{E7A9D567-EADE-420E-8A14-A2CCA938C854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.Tests", "Tests\Snap.UnitTests\Snap.Tests.csproj", "{E7A9D567-EADE-420E-8A14-A2CCA938C854}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.Services", "Core\Snap.Services\Snap.Services.csproj", "{8371C388-3959-4FBE-9DB5-2E428A086D4C}"
 EndProject
@@ -23,17 +23,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.DataAccess", "Snap.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawlin.Abstract.Entities", "Dawlin.Abstract.Entities\Dawlin.Abstract.Entities.csproj", "{6F80F4A6-C684-4F85-9EAD-19E5645E51FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawlin.Util", "Dawlin.Util\Dawlin.Util.csproj", "{03D00CBE-C904-4E44-8490-DFC0E4BBD939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawlin.Util", "Dawlin.Util\Dawlin.Util.csproj", "{03D00CBE-C904-4E44-8490-DFC0E4BBD939}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSharp.Entities", "GameSharp.Entities\GameSharp.Entities.csproj", "{F1263637-BD1D-4C42-A417-5A9598DCDBC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSharp.Entities", "GameSharp.Entities\GameSharp.Entities.csproj", "{F1263637-BD1D-4C42-A417-5A9598DCDBC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSharp.DataAccess", "GameSharp.DataAccess\GameSharp.DataAccess.csproj", "{BE72C527-4582-4F84-B656-D7FC0AEE69F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSharp.DataAccess", "GameSharp.DataAccess\GameSharp.DataAccess.csproj", "{BE72C527-4582-4F84-B656-D7FC0AEE69F1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dawlin", "Dawlin", "{7E3CE218-A3B9-4159-B70D-CF75F5241D79}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameSharp", "GameSharp", "{C3807A0F-67BB-4708-B24A-0A0180CC44CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameSharp.Services", "GameSharp.Services\GameSharp.Services.csproj", "{9A2BAE24-5D25-4F0B-8E05-1BA215F36D71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSharp.Services", "GameSharp.Services\GameSharp.Services.csproj", "{9A2BAE24-5D25-4F0B-8E05-1BA215F36D71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,7 +7,7 @@ using Shouldly;
 using Snap.Services.Abstract;
 using Xunit;
 
-namespace Snap.UnitTests
+namespace Snap.Tests
 {
     public class GameCreationTest
     {

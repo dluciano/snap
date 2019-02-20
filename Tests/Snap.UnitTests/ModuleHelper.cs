@@ -8,7 +8,7 @@ using Snap.DataAccess;
 using Snap.Services;
 using Snap.Services.Abstract;
 
-namespace Snap.UnitTests
+namespace Snap.Tests
 {
     public static class ModuleHelper
     {

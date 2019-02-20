@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Snap.DataAccess;
 
-namespace Snap.UnitTests
+namespace Snap.Tests
 {
     public class ModuleManager :
         ServiceCollection,
         IServiceProvider,
         IDisposable
     {
-        private ServiceProvider _provider = null;
+        private ServiceProvider _provider;
         private readonly SqliteConnection _connection = new SqliteConnection("DataSource=:memory:");
 
         public IServiceProvider Configure(Func<IServiceCollection, IServiceCollection> configure) =>

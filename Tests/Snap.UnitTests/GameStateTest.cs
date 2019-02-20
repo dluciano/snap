@@ -1,13 +1,13 @@
 using System.Threading;
-using Shouldly;
-using Xunit;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using Microsoft.Extensions.DependencyInjection;
+using Shouldly;
 using Snap.Services.Abstract;
+using Xunit;
 
-namespace Snap.UnitTests
+namespace Snap.Tests
 {
     public class GameStateTest
     {
