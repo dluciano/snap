@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Dawlin.Util;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
+using GameSharp.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;

@@ -1,17 +1,16 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GameSharp.DataAccess;
 using GameSharp.Entities;
-using Snap.DataAccess;
-using Snap.Services.Abstract;
 
-namespace Snap.Services
+namespace GameSharp.Services
 {
     public class PlayerTurnsService : IPlayerTurnsService
     {
-        private readonly SnapDbContext _db;
+        private readonly GameSharpContext _db;
 
-        public PlayerTurnsService(SnapDbContext db)
+        public PlayerTurnsService(GameSharpContext db)
         {
             _db = db;
         }

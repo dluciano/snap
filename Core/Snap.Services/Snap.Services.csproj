@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\GameSharp.Services\GameSharp.Services.csproj" />
     <ProjectReference Include="..\..\Snap.DataAccess\Snap.DataAccess.csproj" />
     <ProjectReference Include="..\Snap.Entities\Snap.Entities.csproj" />
   </ItemGroup>

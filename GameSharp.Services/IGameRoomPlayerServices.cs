@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 
-namespace Snap.Services.Abstract
+namespace GameSharp.Services
 {
     public interface IGameRoomPlayerServices
     {

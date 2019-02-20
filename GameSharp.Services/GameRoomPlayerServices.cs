@@ -1,23 +1,20 @@
-﻿using Snap.DataAccess;
-using Snap.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GameSharp.DataAccess;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
-using Snap.Entities.Enums;
-using Snap.Services.Abstract;
-using Snap.Services.Exceptions;
+using GameSharp.Services.Exceptions;
 
-namespace Snap.Services
+namespace GameSharp.Services
 {
     public class GameRoomPlayerServices : IGameRoomPlayerServices
     {
-        private readonly SnapDbContext _db;
+        private readonly GameSharpContext _db;
 
-        public GameRoomPlayerServices(SnapDbContext db)
+        public GameRoomPlayerServices(GameSharpContext db)
         {
             _db = db;
         }

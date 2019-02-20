@@ -8,6 +8,8 @@ using Snap.Services.Abstract;
 using Dawlin.Util;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
+using GameSharp.Services;
+using GameSharp.Services.Exceptions;
 using Snap.Services.Exceptions;
 
 namespace Snap.Services
