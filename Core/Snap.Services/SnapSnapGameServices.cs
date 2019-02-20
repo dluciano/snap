@@ -14,7 +14,7 @@ using Snap.Services.Exceptions;
 
 namespace Snap.Services
 {
-    public class SnapGameServices : IGameSessionServices
+    public class SnapSnapGameServices : ISnapGameServices
     {
         private readonly IGameRoomPlayerServices _gameRoomService;
         private readonly SnapDbContext _db;
@@ -24,7 +24,7 @@ namespace Snap.Services
         private readonly ICardPilesService _cardPilesServices;
         private readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachineProvider;
 
-        public SnapGameServices(IGameRoomPlayerServices gameRoomService,
+        public SnapSnapGameServices(IGameRoomPlayerServices gameRoomService,
             ISnapGameConfigurationProvider configuration,
             IDealer dealer,
             IPlayerTurnsService playerTurnsService,

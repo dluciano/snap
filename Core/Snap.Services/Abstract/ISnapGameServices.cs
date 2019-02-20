@@ -5,7 +5,7 @@ using Snap.Entities;
 
 namespace Snap.Services.Abstract
 {
-    public interface IGameSessionServices
+    public interface ISnapGameServices
     {
         Task<SnapGame> CreateAsync(CancellationToken token, params Player[] players);
         Task<SnapGame> StarGame(SnapGame game, CancellationToken token);
