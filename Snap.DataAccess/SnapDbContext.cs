@@ -7,7 +7,7 @@ namespace Snap.DataAccess
     public class SnapDbContext : GameSharpContext
     {
         public DbSet<PlayerGameplay> PlayerGamePlays { get; set; }
-        public DbSet<PlayersData> PlayerDatas { get; set; }
+        public DbSet<PlayersData> PlayersData { get; set; }
         public DbSet<SnapGame> SnapGames { get; set; }
         public DbSet<StackNode> StackNodes { get; set; }
 
@@ -35,6 +35,9 @@ namespace Snap.DataAccess
             modelBuilder
                 .Entity<SnapGame>()
                 .OwnsOne(p => p.CentralPile);
+            modelBuilder
+                .Entity<SnapGame>()
+                .Ignore(p => p.CurrentTurn);
             modelBuilder
                 .Entity<PlayersData>()
                 .OwnsOne(p => p.StackEntity);

@@ -39,6 +39,7 @@ namespace Snap.Services
             _playerTurnsService = playerTurnsService;
             _cardPilesServices = cardPilesServices;
         }
+
         public async Task<SnapGame> CreateAsync(CancellationToken token, params Player[] players)
         {
             using (var trans = await _db.Database.BeginTransactionAsync(token))
@@ -75,15 +76,14 @@ namespace Snap.Services
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
                 var turns = await _playerTurnsService.AddRangeAsync(token, _dealer.ChooseTurns(game.GameData).ToArray());
-                await _db.PlayerDatas.AddRangeAsync(turns.Select(pt => new PlayersData()
+                await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayersData()
                 {
                     SnapGame = game,
                     PlayerTurn = pt,
                 }), CancellationToken.None);
-
-                await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game, _dealer.ShuffleCards()), token);
+                var shuffledCards = _dealer.ShuffleCards();
+                await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game, shuffledCards), token);
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
-
 
                 if (game.GameData.From != GameState.PLAYING)
                 {
