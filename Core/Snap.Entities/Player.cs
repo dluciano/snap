@@ -1,7 +1,11 @@
-﻿namespace Snap.Entities
+﻿using Dawlin.Abstract.Entities;
+
+namespace Snap.Entities
 {
-    public class Player
+    public class Player : IEntity
     {
-        public string Usename { get; set; }
+        public int Id { get; set; }
+
+        public string Username { get; set; }
     }
 }

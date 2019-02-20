@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Dawlin.Abstract.Entities\Dawlin.Abstract.Entities.csproj" />
+    <ProjectReference Include="..\..\Snap.DataAccess\Snap.DataAccess.csproj" />
+    <ProjectReference Include="..\Snap.Entities\Snap.Entities.csproj" />
   </ItemGroup>
 
 </Project>

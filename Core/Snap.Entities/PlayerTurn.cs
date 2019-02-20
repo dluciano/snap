@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Dawlin.Abstract.Entities;
+using Snap.Entities.Enums;
 
 namespace Snap.Entities
 {
-    public class PlayerTurn
+    public class PlayerTurn : IEntity
     {
+        public int Id { get; set; }
+
         public Player Player { get; set; }
         public PlayerTurn Next { get; set; }
-        public GameSession GameSession { get; set; }
+        public GameRoom GameRoom { get; set; }
         public CardPileNode Last { get; set; }
         public ICollection<PlayerGameplay> PlayerGameplay { get; } = new HashSet<PlayerGameplay>();
+        public ICollection<GameRoom> FirstPlayers { get; } = new HashSet<GameRoom>();
+        public ICollection<GameRoom> CurrentTurns { get; } = new HashSet<GameRoom>();
 
         public Card? PopCard()
         {
@@ -32,7 +38,7 @@ namespace Snap.Entities
 
         public override string ToString()
         {
-            return $"{Player.Usename} {CardString()}";
+            return $"{Player.Username} {CardString()}";
         }
 
         private string CardString()
@@ -48,5 +54,6 @@ namespace Snap.Entities
 
             return s.ToString();
         }
+
     }
 }

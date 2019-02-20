@@ -1,4 +1,4 @@
-﻿namespace Snap.Entities
+﻿namespace Snap.Entities.Enums
 {
     public enum Card : byte
     {

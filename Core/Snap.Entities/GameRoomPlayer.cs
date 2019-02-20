@@ -1,9 +1,12 @@
-﻿namespace Snap.Entities
+﻿using Dawlin.Abstract.Entities;
+
+namespace Snap.Entities
 {
-    public class GameRoomPlayer
+    public class GameRoomPlayer : IEntity
     {
-        public Player Player { get; internal set; }
-        public bool IsViewer { get; internal set; }
-        public GameSession GameSession { get; internal set; }
+        public int Id { get; set; }
+        public Player Player { get; set; }
+        public bool IsViewer { get; set; }
+        public GameRoom GameRoom { get; set; }
     }
 }
