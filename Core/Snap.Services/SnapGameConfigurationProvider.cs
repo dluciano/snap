@@ -6,8 +6,7 @@ namespace Snap.Services
     {
         public int MinRoomPlayers()
         {
-            //TODO: This can come from a db or from a the config file
-            throw new System.NotImplementedException();
+            return 1;
         }
     }
 }

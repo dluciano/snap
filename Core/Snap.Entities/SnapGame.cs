@@ -9,6 +9,6 @@ namespace Snap.Entities
         public int Id { get; set; }
         public GameData GameData { get; set; }
         public StackEntity CentralPile { get; set; }
-        public ICollection<PlayersData> PlayersData { get; set; }
+        public ICollection<PlayersData> PlayersData { get; } = new HashSet<PlayersData>();
     }
 }

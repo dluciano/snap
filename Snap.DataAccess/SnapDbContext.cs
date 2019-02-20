@@ -7,7 +7,7 @@ namespace Snap.DataAccess
     public class SnapDbContext : GameSharpContext
     {
         public DbSet<PlayerGameplay> PlayerGamePlays { get; set; }
-        public DbSet<PlayersData> PlayerPiles { get; set; }
+        public DbSet<PlayersData> PlayerDatas { get; set; }
         public DbSet<SnapGame> SnapGames { get; set; }
         public DbSet<StackNode> StackNodes { get; set; }
 

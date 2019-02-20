@@ -86,7 +86,7 @@ namespace Snap.Services
         public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
         {
             PlayerTurn lastPlayerTurn = null;
-            return RandomArray(game.PlayerTurns.Select(r => r.Player).ToArray())
+            return RandomArray(game.GameRoom.RoomPlayers.Where(p=>!p.IsViewer).Select(r => r.Player).ToArray())
                 .ToList()
                 .Select(p =>
             {

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using Snap.DataAccess;
 using System.Threading.Tasks;
-using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 using Dawlin.Util;
 using GameSharp.Entities;
@@ -75,9 +74,17 @@ namespace Snap.Services
             }
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
-                await _playerTurnsService.AddRangeAsync(token, _dealer.ChooseTurns(game.GameData).ToArray());
+                var turns = await _playerTurnsService.AddRangeAsync(token, _dealer.ChooseTurns(game.GameData).ToArray());
+                await _db.PlayerDatas.AddRangeAsync(turns.Select(pt => new PlayersData()
+                {
+                    SnapGame = game,
+                    PlayerTurn = pt,
+                }), CancellationToken.None);
+
                 await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game, _dealer.ShuffleCards()), token);
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
+
+
                 if (game.GameData.From != GameState.PLAYING)
                 {
                     throw new InvalidGameStateException();
