@@ -24,7 +24,7 @@ namespace Snap.Services
             params Player[] players)
         {
             var entities = new List<GameRoomPlayer>();
-            if (game.State != GameState.AWAITING_PLAYERS)
+            if (game.From != GameState.AWAITING_PLAYERS)
             {
                 //TODO: Make exception handling i18n
                 throw new InvalidGameStateException("The game is not in the state where players can join");

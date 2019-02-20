@@ -5,6 +5,7 @@ using Snap.DataAccess;
 using System.Threading.Tasks;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
+using Dawlin.Util;
 
 namespace Snap.Services
 {
@@ -16,16 +17,19 @@ namespace Snap.Services
         private readonly IDealer _dealer;
         private readonly IPlayerTurnsService _playerTurnsService;
         private readonly ICardPilesService _cardPilesServices;
+        private readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachineProvider;
 
         public GameSessionServices(IGameRoomPlayerServices gameRoomService,
             ISnapGameConfigurationProvider configuration,
             IDealer dealer,
             IPlayerTurnsService playerTurnsService,
             ICardPilesService cardPilesServices,
+            IStateMachineProvider<GameState, GameSessionTransitions> stateMachineProvider,
             SnapDbContext db)
         {
             _gameRoomService = gameRoomService;
             _db = db;
+            _stateMachineProvider = stateMachineProvider;
             _configuration = configuration;
             _dealer = dealer;
             _playerTurnsService = playerTurnsService;
@@ -35,8 +39,8 @@ namespace Snap.Services
         {
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
-                var game = new GameRoom()
-                    .ChangeState(GameSessionTransitions.CREATE_GAME);
+                var game = new GameRoom();
+                _stateMachineProvider.ChangeState(game, GameSessionTransitions.CREATE_GAME);
 
                 await _db.GameRooms.AddAsync(game, token);
                 await _gameRoomService.AddPlayersAsync(game, token, players);
@@ -57,8 +61,8 @@ namespace Snap.Services
             {
                 await _playerTurnsService.AddRangeAsync(token, _dealer.ChooseTurns(game).ToArray());
                 await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game, _dealer.ShuffleCards()), token);
-                game.ChangeState(GameSessionTransitions.START_GAME);
-                if (game.State != GameState.PLAYING)
+                _stateMachineProvider.ChangeState(game, GameSessionTransitions.START_GAME);
+                if (game.From != GameState.PLAYING)
                 {
                     throw new InvalidGameStateException();
                 }

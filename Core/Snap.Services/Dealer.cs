@@ -23,9 +23,9 @@ namespace Snap.Services
         //Game loop
         public void NextMove(GameRoom game)
         {
-            if (game.State != GameState.PLAYING)
+            if (game.From != GameState.PLAYING)
                 throw new Exception(
-                    $"The game was supposed to be in state: ${nameof(GameState.PLAYING)} but was changed to: {Enum.GetName(typeof(GameState), game.State)}");
+                    $"The game was supposed to be in state: ${nameof(GameState.PLAYING)} but was changed to: {Enum.GetName(typeof(GameState), game.From)}");
             Console.WriteLine($"{game.CurrentTurn.Player.Username} will pop a card");
             var playerCard = game.CurrentTurn.PopCard();
             Console.WriteLine($"Poped card: {playerCard}");

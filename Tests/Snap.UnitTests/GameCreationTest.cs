@@ -1,11 +1,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Util;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Snap.DataAccess;
 using Snap.Entities;
+using Snap.Entities.Enums;
 using Snap.Services;
 using Xunit;
 
@@ -13,6 +15,11 @@ namespace Snap.UnitTests
 {
     public class GameCreationTest
     {
+        private readonly static IStateMachineProvider<GameState, GameSessionTransitions> _stateMachine = new StateMachine<GameState, GameSessionTransitions>()
+            .AddTransition(GameState.NONE, GameState.AWAITING_PLAYERS, GameSessionTransitions.CREATE_GAME)
+            .AddTransition(GameState.AWAITING_PLAYERS, GameState.PLAYING, GameSessionTransitions.START_GAME)
+            .AddTransition(GameState.PLAYING, GameState.FINISHED, GameSessionTransitions.FINISH_GAME)
+            .AddTransition(GameState.PLAYING, GameState.ABORTED, GameSessionTransitions.ABORT_GAME);
         [Fact]
         public async Task When_create_game_it_should_only_have_player_test()
         {
@@ -32,6 +39,7 @@ namespace Snap.UnitTests
                             new Dealer(),
                             new PlayerTurnsService(db),
                             new CardPilesService(db),
+                            _stateMachine,
                             db);
                         var testPlayer = new Player { Username = "test" };
                         var player = (await service.CreateAsync(CancellationToken.None, testPlayer))
@@ -66,6 +74,7 @@ namespace Snap.UnitTests
                             new Dealer(),
                             new PlayerTurnsService(db),
                             new CardPilesService(db),
+                            _stateMachine,
                             db);
                         var testPlayer = new Player { Username = "test" };
                         var player = (await service.CreateAsync(CancellationToken.None, testPlayer))

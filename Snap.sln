@@ -15,13 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.Console", "Clients\Sna
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A6CF54F0-B610-4091-A4FE-F0763EEAA55E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.UnitTests", "Tests\Snap.UnitTests\Snap.UnitTests.csproj", "{E7A9D567-EADE-420E-8A14-A2CCA938C854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.UnitTests", "Tests\Snap.UnitTests\Snap.UnitTests.csproj", "{E7A9D567-EADE-420E-8A14-A2CCA938C854}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.Services", "Core\Snap.Services\Snap.Services.csproj", "{8371C388-3959-4FBE-9DB5-2E428A086D4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.Services", "Core\Snap.Services\Snap.Services.csproj", "{8371C388-3959-4FBE-9DB5-2E428A086D4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.DataAccess", "Snap.DataAccess\Snap.DataAccess.csproj", "{24117769-55CF-4CE6-AA4F-653BB3F35E5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.DataAccess", "Snap.DataAccess\Snap.DataAccess.csproj", "{24117769-55CF-4CE6-AA4F-653BB3F35E5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawlin.Abstract.Entities", "Dawlin.Abstract.Entities\Dawlin.Abstract.Entities.csproj", "{6F80F4A6-C684-4F85-9EAD-19E5645E51FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dawlin.Abstract.Entities", "Dawlin.Abstract.Entities\Dawlin.Abstract.Entities.csproj", "{6F80F4A6-C684-4F85-9EAD-19E5645E51FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dawlin.Util", "Dawlin.Util\Dawlin.Util.csproj", "{03D00CBE-C904-4E44-8490-DFC0E4BBD939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{6F80F4A6-C684-4F85-9EAD-19E5645E51FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F80F4A6-C684-4F85-9EAD-19E5645E51FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F80F4A6-C684-4F85-9EAD-19E5645E51FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03D00CBE-C904-4E44-8490-DFC0E4BBD939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03D00CBE-C904-4E44-8490-DFC0E4BBD939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03D00CBE-C904-4E44-8490-DFC0E4BBD939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03D00CBE-C904-4E44-8490-DFC0E4BBD939}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{8371C388-3959-4FBE-9DB5-2E428A086D4C} = {E5635B02-BB68-44D3-9AAE-A576072BF7BD}
 		{24117769-55CF-4CE6-AA4F-653BB3F35E5B} = {E5635B02-BB68-44D3-9AAE-A576072BF7BD}
 		{6F80F4A6-C684-4F85-9EAD-19E5645E51FB} = {E5635B02-BB68-44D3-9AAE-A576072BF7BD}
+		{03D00CBE-C904-4E44-8490-DFC0E4BBD939} = {E5635B02-BB68-44D3-9AAE-A576072BF7BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09F34F17-F3DE-4160-A09B-083B9AE6A512}

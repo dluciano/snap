@@ -54,6 +54,5 @@ namespace Snap.Entities
 
             return s.ToString();
         }
-
     }
 }

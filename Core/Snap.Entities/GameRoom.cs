@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Dawlin.Abstract.Entities;
+using Dawlin.Util;
 using Snap.Entities.Enums;
 
 namespace Snap.Entities
 {
-    public partial class GameRoom : IEntity
+    public partial class GameRoom :
+        IEntity,
+        ITransitable<GameState>
     {
         public int Id { get; set; }
 
-        public GameState State { get; private set; } = GameState.NONE;
+        public GameState From { get; set; } = GameState.NONE;
         public ICollection<GameRoomPlayer> RoomPlayers { get; } = new HashSet<GameRoomPlayer>();
         public PlayerTurn FirstPlayer { get; set; }
         public PlayerTurn CurrentTurn { get; private set; }
         public CardPileNode CentralPileLast { get; set; }
-
+        
         public IEnumerable<PlayerTurn> Turns
         {
             get
@@ -52,8 +56,5 @@ namespace Snap.Entities
 
             return s.ToString();
         }
-
-        public GameRoom ChangeState(GameSessionTransitions transition) =>
-             StaticStateMachine.ChangeState(this, transition);
     }
 }

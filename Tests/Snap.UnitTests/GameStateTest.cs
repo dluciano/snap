@@ -3,6 +3,7 @@ using Snap.Entities;
 using Shouldly;
 using Xunit;
 using System.Threading.Tasks;
+using Dawlin.Util;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;
@@ -13,6 +14,11 @@ namespace Snap.UnitTests
 {
     public class GameStateTest
     {
+        private static readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachine = new StateMachine<GameState, GameSessionTransitions>()
+            .AddTransition(GameState.NONE, GameState.AWAITING_PLAYERS, GameSessionTransitions.CREATE_GAME)
+            .AddTransition(GameState.AWAITING_PLAYERS, GameState.PLAYING, GameSessionTransitions.START_GAME)
+            .AddTransition(GameState.PLAYING, GameState.FINISHED, GameSessionTransitions.FINISH_GAME)
+            .AddTransition(GameState.PLAYING, GameState.ABORTED, GameSessionTransitions.ABORT_GAME);
         [Fact]
         public async Task When_create_game_state_should_be_awaiting_player()
         {
@@ -32,9 +38,10 @@ namespace Snap.UnitTests
                             new Dealer(),
                             new PlayerTurnsService(db),
                             new CardPilesService(db),
+                            _stateMachine,
                             db);
                         (await service.CreateAsync(CancellationToken.None, new Player { Username = "test" }))
-                            .State
+                            .From
                             .ShouldBe(GameState.AWAITING_PLAYERS);
                     }
                 }
