@@ -1,4 +1,5 @@
 ﻿using Dawlin.Abstract.Entities;
+using GameSharp.Entities;
 using Snap.Entities.Enums;
 
 namespace Snap.Entities

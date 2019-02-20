@@ -1,8 +1,8 @@
 ﻿using Dawlin.Abstract.Entities;
 
-namespace Snap.Entities
+namespace GameSharp.Entities
 {
-    public class GameRoomPlayer : IEntity
+    public sealed class GameRoomPlayer : IEntity
     {
         public int Id { get; set; }
         public Player Player { get; set; }

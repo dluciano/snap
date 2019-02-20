@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GameSharp.Entities;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;

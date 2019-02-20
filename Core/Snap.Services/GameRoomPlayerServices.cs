@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GameSharp.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 

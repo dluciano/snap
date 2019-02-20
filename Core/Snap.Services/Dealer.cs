@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameSharp.Entities;
 using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;

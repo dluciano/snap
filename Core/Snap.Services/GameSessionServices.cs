@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 using Dawlin.Util;
+using GameSharp.Entities;
 
 namespace Snap.Services
 {

@@ -4,6 +4,7 @@ using Shouldly;
 using Xunit;
 using System.Threading.Tasks;
 using Dawlin.Util;
+using GameSharp.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;

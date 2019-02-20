@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GameSharp.Entities;
 using Snap.Entities;
 using Snap.Entities.Enums;
 
