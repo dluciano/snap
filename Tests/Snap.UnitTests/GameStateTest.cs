@@ -5,6 +5,7 @@ using Xunit;
 using System.Threading.Tasks;
 using Dawlin.Util;
 using GameSharp.Entities;
+using GameSharp.Entities.Enums;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;
@@ -34,7 +35,7 @@ namespace Snap.UnitTests
                     {
                         await db.Database.EnsureCreatedAsync(CancellationToken.None);
 
-                        var service = new GameSessionServices(new GameRoomPlayerServices(db),
+                        var service = new SnapGameServices(new GameRoomPlayerServices(db),
                             new SnapGameConfigurationProvider(),
                             new Dealer(),
                             new PlayerTurnsService(db),
@@ -42,7 +43,7 @@ namespace Snap.UnitTests
                             _stateMachine,
                             db);
                         (await service.CreateAsync(CancellationToken.None, new Player { Username = "test" }))
-                            .From
+                            .GameData.From
                             .ShouldBe(GameState.AWAITING_PLAYERS);
                     }
                 }

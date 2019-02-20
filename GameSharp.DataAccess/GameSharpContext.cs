@@ -11,10 +11,11 @@ namespace GameSharp.DataAccess
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerTurn> PlayerTurns { get; set; }
 
-        public GameSharpContext()
+        protected GameSharpContext()
         {
         }
-        public GameSharpContext(DbContextOptions options) :
+
+        protected GameSharpContext(DbContextOptions options) :
             base(options)
         {
         }
@@ -45,6 +46,10 @@ namespace GameSharp.DataAccess
             modelBuilder
                 .Entity<PlayerTurn>()
                 .HasOne(p => p.Player)
+                .WithMany(r => r.PlayerTurns);
+            modelBuilder
+                .Entity<PlayerTurn>()
+                .HasOne(p => p.GameData)
                 .WithMany(r => r.PlayerTurns);
         }
     }

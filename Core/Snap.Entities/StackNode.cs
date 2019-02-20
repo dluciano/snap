@@ -8,8 +8,9 @@ namespace Snap.Entities
     {
         public int Id { get; set; }
 
-        public Card Value { get; set; }
+        public Card Card { get; set; }
         public StackNode Previous { get; set; }
         public ICollection<SnapGame> SnapGames { get; } = new HashSet<SnapGame>();
+        public ICollection<PlayersData> PlayersData { get; } = new HashSet<PlayersData>();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Snap.Entities.Enums
+﻿namespace GameSharp.Entities.Enums
 {
     public enum GameSessionTransitions : byte
     {

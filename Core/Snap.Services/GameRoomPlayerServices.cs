@@ -6,8 +6,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
+using GameSharp.Entities.Enums;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
+using Snap.Services.Exceptions;
 
 namespace Snap.Services
 {
@@ -20,7 +22,7 @@ namespace Snap.Services
             _db = db;
         }
 
-        public async Task<IAsyncEnumerable<GameRoomPlayer>> AddPlayersAsync(GameRoom game,
+        public async Task<IAsyncEnumerable<GameRoomPlayer>> AddPlayersAsync(GameData game,
             CancellationToken token,
             params Player[] players)
         {
@@ -34,7 +36,7 @@ namespace Snap.Services
             {
                 entities.Add(new GameRoomPlayer
                 {
-                    GameRoom = game,
+                    GameRoom = game.GameRoom,
                     Player = player,
                     IsViewer = false,
                 });

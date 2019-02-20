@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Snap.Services
+namespace Snap.Services.Exceptions
 {
     [Serializable]
     internal class InvalidGameStateException : Exception

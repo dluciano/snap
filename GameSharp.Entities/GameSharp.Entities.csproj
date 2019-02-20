@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dawlin.Abstract.Entities\Dawlin.Abstract.Entities.csproj" />
+    <ProjectReference Include="..\Dawlin.Util\Dawlin.Util.csproj" />
   </ItemGroup>
 
 </Project>

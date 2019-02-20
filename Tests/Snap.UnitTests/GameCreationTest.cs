@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dawlin.Util;
 using GameSharp.Entities;
+using GameSharp.Entities.Enums;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -35,7 +36,7 @@ namespace Snap.UnitTests
                     {
                         await db.Database.EnsureCreatedAsync(CancellationToken.None);
 
-                        var service = new GameSessionServices(new GameRoomPlayerServices(db),
+                        var service = new SnapGameServices(new GameRoomPlayerServices(db),
                             new SnapGameConfigurationProvider(),
                             new Dealer(),
                             new PlayerTurnsService(db),
@@ -44,7 +45,7 @@ namespace Snap.UnitTests
                             db);
                         var testPlayer = new Player { Username = "test" };
                         var player = (await service.CreateAsync(CancellationToken.None, testPlayer))
-                            .RoomPlayers.Select(r => r.Player).SingleOrDefault();
+                            .GameData.GameRoom.RoomPlayers.Select(r => r.Player).SingleOrDefault();
                         player.ShouldNotBeNull();
                         player.ShouldBe(testPlayer);
                     }
@@ -70,7 +71,7 @@ namespace Snap.UnitTests
                     {
                         await db.Database.EnsureCreatedAsync(CancellationToken.None);
 
-                        var service = new GameSessionServices(new GameRoomPlayerServices(db),
+                        var service = new SnapGameServices(new GameRoomPlayerServices(db),
                             new SnapGameConfigurationProvider(),
                             new Dealer(),
                             new PlayerTurnsService(db),
@@ -79,7 +80,7 @@ namespace Snap.UnitTests
                             db);
                         var testPlayer = new Player { Username = "test" };
                         var player = (await service.CreateAsync(CancellationToken.None, testPlayer))
-                            .RoomPlayers.SingleOrDefault();
+                            .GameData.GameRoom.RoomPlayers.SingleOrDefault();
                         player.ShouldNotBeNull();
                         player.IsViewer.ShouldBeFalse();
                     }

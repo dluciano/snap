@@ -5,22 +5,22 @@ namespace Snap.Entities
 {
     public sealed class StackEntity
     {
-        public StackNode LastNode { get; set; }
-        public ICollection<SnapGame> SnapGames { get; } = new HashSet<SnapGame>();
+        public StackNode Last { get; set; }
+
         public void Push(Card value) =>
-            LastNode = new StackNode
+            Last = new StackNode
             {
-                Previous = LastNode,
-                Value = value
+                Previous = Last,
+                Card = value
             };
 
         public Card? PopCard()
         {
-            if (LastNode == null)
+            if (Last == null)
                 return null;
-            var aux = LastNode;
-            LastNode = LastNode.Previous;
-            return aux.Value;
+            var aux = Last;
+            Last = Last.Previous;
+            return aux.Card;
         }
     }
 }

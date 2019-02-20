@@ -1,6 +1,6 @@
-﻿namespace Snap.Entities.Enums
+﻿namespace GameSharp.Entities.Enums
 {
-    public enum GameState
+    public enum GameState : byte
     {
         NONE,
         AWAITING_PLAYERS,

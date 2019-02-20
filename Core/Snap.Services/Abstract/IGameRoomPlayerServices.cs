@@ -2,13 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
-using Snap.Entities;
 
 namespace Snap.Services.Abstract
 {
     public interface IGameRoomPlayerServices
     {
-        Task<IAsyncEnumerable<GameRoomPlayer>> AddPlayersAsync(GameRoom game,
+        Task<IAsyncEnumerable<GameRoomPlayer>> AddPlayersAsync(GameData game,
             CancellationToken token,
             params Player[] players);
     }

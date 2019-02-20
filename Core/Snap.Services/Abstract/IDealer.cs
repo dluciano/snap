@@ -8,7 +8,7 @@ namespace Snap.Services.Abstract
     public interface IDealer
     {
         IEnumerable<Card> ShuffleCards();
-        IEnumerable<PlayerTurn> ChooseTurns(GameRoom game);
-        IEnumerable<CardPileNode> DealtCards(GameRoom gameRoom, IEnumerable<Card> cards);
+        IEnumerable<PlayerTurn> ChooseTurns(GameData game);
+        IEnumerable<StackNode> DealtCards(SnapGame game, IEnumerable<Card> cards);
     }
 }
