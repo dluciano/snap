@@ -28,7 +28,7 @@ namespace GameSharp.Entities
             }
         }
 
-        public void NextTurn() =>
-            CurrentTurn = CurrentTurn == null || CurrentTurn.Next == null ? FirstPlayer : CurrentTurn.Next;
+        public PlayerTurn NextTurn() =>
+             CurrentTurn = CurrentTurn == null || CurrentTurn.Next == null ? FirstPlayer : CurrentTurn.Next;
     }
 }

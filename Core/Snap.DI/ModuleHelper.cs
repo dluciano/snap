@@ -10,6 +10,7 @@ using Snap.DataAccess;
 using Snap.Entities.Enums;
 using Snap.Services;
 using Snap.Services.Abstract;
+using Snap.Services.Notifications;
 
 namespace Snap.DI
 {
@@ -36,6 +37,7 @@ namespace Snap.DI
                 .AddTransient<ICardRandomizer, DefaultRandomizer>()
                 .AddTransient<ICardDealter, DefaultCardDealter>()
                 .AddTransient<IDealer, Dealer>()
+                .AddTransient<INotificationService, DefaultNotificationService>()
                 .AddTransient(provider => GameStateMachine());
             return module;
         }

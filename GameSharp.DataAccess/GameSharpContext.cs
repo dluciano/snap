@@ -33,7 +33,7 @@ namespace GameSharp.DataAccess
                 .WithMany(r => r.CurrentTurns);
             modelBuilder
                 .Entity<GameData>()
-                .Ignore(p=>p.Turns);
+                .Ignore(p => p.Turns);
             modelBuilder
                 .Entity<GameData>()
                 .HasOne(p => p.GameRoom)

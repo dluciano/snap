@@ -13,6 +13,7 @@ using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 using Snap.Services.Exceptions;
+using Snap.Services.Notifications;
 
 namespace Snap.Services
 {
@@ -22,19 +23,22 @@ namespace Snap.Services
         private readonly ICardRandomizer _carRandomizer;
         private readonly IPlayerService _playerService;
         private readonly ICardDealter _cardDealter;
+        private readonly INotificationService _notificationService;
         private readonly SnapDbContext _db;
 
         public Dealer(IPlayerRandomizer playerRandomizer,
             ICardRandomizer carRandomizer,
             IPlayerService playerService,
             SnapDbContext db,
-            ICardDealter cardDealter)
+            ICardDealter cardDealter,
+            INotificationService notificationService)
         {
             _playerRandomizer = playerRandomizer;
             _carRandomizer = carRandomizer;
             _playerService = playerService;
             _db = db;
             _cardDealter = cardDealter;
+            _notificationService = notificationService;
         }
 
         //Game loop
@@ -61,8 +65,9 @@ namespace Snap.Services
                 if ((!CanSnap(game) && game.CurrentTurn.StackEntity.Last == null))
                     PlayerGameOver(game.CurrentTurn.PlayerTurn);
 
-                game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
+                var nextTurn = game.GameData.NextTurn();
+                _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, nextTurn));
                 trans.Commit();
                 return gamePlay;
             }
