@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using GameSharp.Entities.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using Snap.DI;
 using Snap.Services.Abstract;
 using Snap.Tests.Module;
 using Xunit;
@@ -53,6 +52,7 @@ namespace Snap.Tests.Tests
                 var service = module.GetService<ISnapGameServices>();
                 var joinService = module.GetService<ISnapGameServices>();
                 var game = await service.CreateAsync(CancellationToken.None);
+
                 game = await service.StarGameAsync(game, CancellationToken.None);
                 throw new NotImplementedException();
                 game = await service.StarGameAsync(game, CancellationToken.None);

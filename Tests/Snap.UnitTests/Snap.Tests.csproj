@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
 
     <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,12 @@
     <ProjectReference Include="..\..\Core\Snap.Entities\Snap.Entities.csproj" />
     <ProjectReference Include="..\..\Core\Snap.Services\Snap.Services.csproj" />
     <ProjectReference Include="..\..\Snap.Fakes\Snap.Fakes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Security.Permissions">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\system.security.permissions\4.5.0\ref\netstandard2.0\System.Security.Permissions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

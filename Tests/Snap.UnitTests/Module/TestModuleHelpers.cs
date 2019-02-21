@@ -11,11 +11,14 @@ namespace Snap.Tests.Module
 {
     internal static class TestModuleHelpers
     {
-        internal static async Task<SnapModuleManager> CreateAndBuildWithDefaultsAsync() =>
-            await new SnapModuleManager()
+        internal static async Task<SnapModuleManager> BuildWithDefaults(this SnapModuleManager snapModule) =>
+            await snapModule
                 .WithDefaults()
                 .WithFakes()
                 .BuildAndCreateDatabaseAsync();
+
+        internal static async Task<SnapModuleManager> CreateAndBuildWithDefaultsAsync() =>
+            await new SnapModuleManager().BuildWithDefaults();
 
         internal static SnapModuleManager WithFakePlayerRandomizer(this SnapModuleManager snapModule, IEnumerable<Player> players) =>
                snapModule.Configure(services =>

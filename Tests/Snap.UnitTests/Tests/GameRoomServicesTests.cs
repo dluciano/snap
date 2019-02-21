@@ -17,19 +17,17 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_player_2_join_then_two_player_should_exists()
         {
-            using (var module = await (await TestModuleHelpers
-                .CreateAndBuildWithDefaultsAsync())
-                .SeedAndLoginFirstAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var service = module.GetService<ISnapGameServices>();
-                var roomService = module.GetService<IGameRoomPlayerServices>();
+                //Background
+                var game = await module.CreateGameAsync();
 
-                var game = await service.CreateAsync(CancellationToken.None);
-                await module.SeedAndLoginSecondPlayer();
+                //When
+                var roomPlayer = await module.SecondPlayerJoin(game);
 
-                var gameRoomPlayer = await roomService.AddPlayersAsync(game.GameData.GameRoom, false, CancellationToken.None);
-                gameRoomPlayer.GameRoom.RoomPlayers.Count.ShouldBe(2);
-                gameRoomPlayer.GameRoom
+                //Then
+                roomPlayer.GameRoom.RoomPlayers.Count.ShouldBe(2);
+                roomPlayer.GameRoom
                     .RoomPlayers.Select(p => p.IsViewer)
                     .ShouldAllBe(p => p == false);
             }
@@ -38,17 +36,17 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_player_2_join_as_viewer_then_two_player_should_exists_and_player_2_should_be_viewer()
         {
-            using (var module = await (await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
-                .SeedAndLoginFirstAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var service = module.GetService<ISnapGameServices>();
-                var roomService = module.GetService<IGameRoomPlayerServices>();
-
-                var game = await service.CreateAsync(CancellationToken.None);
+                //Background
+                var game = await module.CreateGameAsync();
                 await module.SeedAndLoginSecondPlayer();
 
-                var gameRoomPlayer = await roomService.AddPlayersAsync(game.GameData.GameRoom, true, CancellationToken.None);
+                //When
+                var gameRoomPlayer = await module.GetService<IGameRoomPlayerServices>()
+                    .AddPlayersAsync(game.GameData.GameRoom, true, CancellationToken.None);
+
+                //Then
                 gameRoomPlayer.GameRoom.RoomPlayers.Single(p =>
                     p.Player.Username == PlayerServiceSeedHelper.FirstPlayerUsername).IsViewer.ShouldBeFalse();
                 gameRoomPlayer.GameRoom.RoomPlayers.Single(p =>
