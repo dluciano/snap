@@ -20,10 +20,10 @@ namespace Snap.Tests.Module
         internal static async Task<SnapModuleManager> CreateAndBuildWithDefaultsAsync() =>
             await new SnapModuleManager().BuildWithDefaults();
 
-        internal static SnapModuleManager WithFakePlayerRandomizer(this SnapModuleManager snapModule, IEnumerable<Player> players) =>
+        internal static SnapModuleManager WithSecondPlayerFirstRandomizer(this SnapModuleManager snapModule) =>
                snapModule.Configure(services =>
                {
-                   services.AddTransient<IPlayerRandomizer>(p => new FakeRandomizer<Player>(players));
+                   services.AddTransient<IPlayerRandomizer, SecondPlayerFirst>();
                });
 
         internal static SnapModuleManager WithFakeCardRandomizer(this SnapModuleManager snapModule, IEnumerable<Card> cards) =>
