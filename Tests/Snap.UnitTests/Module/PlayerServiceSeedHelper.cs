@@ -35,6 +35,12 @@ namespace Snap.Tests.Module
         public static async Task<SnapModuleManager> SeedAndLoginFirstAsync(this SnapModuleManager module)
         {
             await module.SeedWithFirstPlayerAsync();
+            await LoginFirstPlayer(module);
+            return module;
+        }
+
+        public static async Task<SnapModuleManager> LoginFirstPlayer(this SnapModuleManager module)
+        {
             await module.GetService<IFakePlayerService>()
                 .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == FirstPlayerUsername));
             return module;

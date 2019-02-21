@@ -1,10 +1,6 @@
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using Snap.DI;
-using Snap.Services.Abstract;
 using Snap.Tests.Module;
 using Xunit;
 
@@ -15,12 +11,16 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_create_game_it_should_only_have_player_test()
         {
-            using (var module = await (await TestModuleHelpers
-                .CreateAndBuildWithDefaultsAsync())
-                .SeedAndLoginFirstAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var player = (await module.GetService<ISnapGameServices>().CreateAsync(CancellationToken.None))
-                    .GameData.GameRoom.RoomPlayers.Select(r => r.Player).SingleOrDefault();
+                //When
+                var player = (await module.CreateGameAsync())
+                    .GameData
+                    .GameRoom
+                    .RoomPlayers
+                    .Select(r => r.Player)
+                    .SingleOrDefault();
+                //Then
                 player.ShouldNotBeNull();
                 player.Username.ShouldBe(PlayerServiceSeedHelper.FirstPlayerUsername);
             }
@@ -29,12 +29,16 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_create_game_its_first_player_should_not_be_a_viewer()
         {
-            using (var module = await (await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
-                .SeedAndLoginFirstAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var player = (await module.GetService<ISnapGameServices>().CreateAsync(CancellationToken.None))
-                    .GameData.GameRoom.RoomPlayers.SingleOrDefault();
+                //When
+                var player = (await module.CreateGameAsync())
+                    .GameData
+                    .GameRoom
+                    .RoomPlayers
+                    .SingleOrDefault();
+
+                //Then
                 player.ShouldNotBeNull();
                 player.IsViewer.ShouldBeFalse();
             }

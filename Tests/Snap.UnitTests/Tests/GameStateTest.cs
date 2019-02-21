@@ -1,9 +1,13 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Util;
 using GameSharp.Entities.Enums;
+using GameSharp.Services.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Snap.Entities;
 using Snap.Services.Abstract;
 using Snap.Tests.Module;
 using Xunit;
@@ -15,47 +19,55 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_create_game_state_should_be_awaiting_player()
         {
-            using (var module = await (await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
-                .SeedAndLoginFirstAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var service = module.GetService<ISnapGameServices>();
-                (await service.CreateAsync(CancellationToken.None))
-                    .GameData
-                    .CurrentState
-                    .ShouldBe(GameState.AWAITING_PLAYERS);
+                //When
+                var game = (await module.CreateGameAsync()).GameData;
+
+                //Then
+                game.CurrentState.ShouldBe(GameState.AWAITING_PLAYERS);
             }
         }
 
         [Fact]
-        public async Task When_game_started_then_game_should_be_in_state_playing()
+        public async Task When_game_start_then_game_should_be_in_state_playing()
         {
-            using (var module = await (await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
-                .SeedAndLoginFirstAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var service = module.GetService<ISnapGameServices>();
-                var game = (await service.CreateAsync(CancellationToken.None));
-                (await service.StarGameAsync(game, CancellationToken.None))
-                    .GameData
+                //Background
+                var game = await module.CreateGameAsync();
+                await module.SecondPlayerJoin(game);
+
+                //When
+                game = await module.GameStart(game);
+
+                //Then
+                game.GameData
                     .CurrentState
                     .ShouldBe(GameState.PLAYING);
+
             }
         }
 
         [Fact]
         public async Task When_restarting_the_game_then_it_should_throw_an_error()
         {
-            using (var module = await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var service = module.GetService<ISnapGameServices>();
-                var joinService = module.GetService<ISnapGameServices>();
-                var game = await service.CreateAsync(CancellationToken.None);
+                //Background
+                var game = await module.CreateGameAsync();
+                await module.SecondPlayerJoin(game);
 
-                game = await service.StarGameAsync(game, CancellationToken.None);
-                throw new NotImplementedException();
-                game = await service.StarGameAsync(game, CancellationToken.None);
+                //When
+                await StartGameAsync();
+
+                //Then
+                await StartGameAsync().ShouldThrowAsync<InvalidChangeTransition>();
+
+                async Task<SnapGame> StartGameAsync()
+                {
+                    return await module.GameStart(game);
+                }
             }
         }
     }

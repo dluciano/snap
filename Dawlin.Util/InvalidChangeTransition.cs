@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Dawlin.Util
 {
     [Serializable]
-    internal class InvalidChangeTransition : Exception
+    public class InvalidChangeTransition : Exception
     {
         public InvalidChangeTransition()
         {

@@ -27,5 +27,14 @@ namespace Snap.Tests
             var roomService = module.GetService<IGameRoomPlayerServices>();
             return await roomService.AddPlayersAsync(game.GameData.GameRoom, false, CancellationToken.None);
         }
+
+        public static async Task<SnapGame> GameStart(
+            this SnapModuleManager module, SnapGame game)
+        {
+            var service = module.GetService<ISnapGameServices>();
+            await module.LoginFirstPlayer();
+
+            return await service.StarGameAsync(game, CancellationToken.None);
+        }
     }
 }
