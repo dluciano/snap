@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
@@ -50,7 +49,7 @@ namespace Snap.ConsoleApplication
                     Console.WriteLine($"Player cards: {e.GamePlay.PlayerTurn.StackEntity}");
                     Console.WriteLine($"Central Pile: {e.GamePlay.PlayerTurn.SnapGame.CentralPile}");
                     Division();
-                    Console.WriteLine($"Current Player is: {e.NextPlayer.Player.Username}");
+                    Console.WriteLine($"Current Player is: {e.NextPlayer.PlayerTurn.Player.Username}");
                     Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
 
                     ((FakePlayerService)module.GetService<IPlayerService>()).Player = game.CurrentTurn.PlayerTurn.Player;

@@ -65,8 +65,8 @@ namespace Snap.Services
                     PlayerGameOver(game.CurrentTurn.PlayerTurn);
 
                 await _db.SaveChangesAsync(token);
-                var nextTurn = game.GameData.NextTurn();
-                _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, nextTurn));
+                game.GameData.NextTurn();
+                _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, game.CurrentTurn));
                 trans.Commit();
                 return gamePlay;
             }

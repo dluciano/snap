@@ -10,6 +10,7 @@ using GameSharp.Entities.Enums;
 using GameSharp.Services;
 using GameSharp.Services.Exceptions;
 using Snap.Services.Exceptions;
+using Snap.Services.Notifications;
 
 namespace Snap.Services
 {
@@ -17,6 +18,7 @@ namespace Snap.Services
     {
         private readonly IGameRoomPlayerServices _gameRoomService;
         private readonly SnapDbContext _db;
+        private readonly INotificationService _notificationService;
         private readonly ISnapGameConfigurationProvider _configuration;
         private readonly IDealer _dealer;
         private readonly IPlayerTurnsService _playerTurnsService;
@@ -29,10 +31,12 @@ namespace Snap.Services
             IPlayerTurnsService playerTurnsService,
             ICardPilesService cardPilesServices,
             IStateMachineProvider<GameState, GameSessionTransitions> stateMachineProvider,
-            SnapDbContext db)
+            SnapDbContext db,
+            INotificationService notificationService)
         {
             _gameRoomService = gameRoomService;
             _db = db;
+            _notificationService = notificationService;
             _stateMachineProvider = stateMachineProvider;
             _configuration = configuration;
             _dealer = dealer;
@@ -92,6 +96,7 @@ namespace Snap.Services
                 }
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
+                _notificationService?.OnGameStarted(this, new GameStartedEvent(game));
                 trans.Commit();
                 return game;
             }
