@@ -82,7 +82,8 @@ namespace Snap.Services
                     PlayerTurn = pt,
                 }), CancellationToken.None);
                 var shuffledCards = _dealer.ShuffleCards();
-                await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game, shuffledCards), token);
+                await _cardPilesServices.AddRangeAsync(
+                    _dealer.DealtCards(game.PlayersData.Select(p => p.StackEntity).ToList(), shuffledCards), token);
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
 
                 if (game.GameData.From != GameState.PLAYING)

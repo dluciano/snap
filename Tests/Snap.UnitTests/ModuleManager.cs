@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +15,23 @@ namespace Snap.Tests
         private ServiceProvider _provider;
         private readonly SqliteConnection _connection = new SqliteConnection("DataSource=:memory:");
 
-        public IServiceProvider Configure(Func<IServiceCollection, IServiceCollection> configure) =>
-            _provider = configure(this).BuildServiceProvider();
+        public ModuleManager Configure(Func<IServiceCollection, IServiceCollection> configure)
+        {
+            configure(this);
+            return this;
+        }
+
+        public ModuleManager Configure(Action<IServiceCollection> config)
+        {
+            config?.Invoke(this);
+            return this;
+        }
+
+        public ModuleManager Build()
+        {
+            _provider = this.BuildServiceProvider();
+            return this;
+        }
 
         public ModuleManager ConfigureInMemorySql()
         {

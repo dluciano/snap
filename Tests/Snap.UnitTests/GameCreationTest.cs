@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Dawlin.Util;
 using GameSharp.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -11,12 +9,12 @@ using Xunit;
 
 namespace Snap.Tests
 {
-    public class GameCreationTest
+    public partial class GameCreationTest
     {
         [Fact]
         public async Task When_create_game_it_should_only_have_player_test()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults())
+            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var testPlayer = new Player { Username = "test" };
@@ -30,7 +28,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_create_game_it_players_should_be_player_not_viewers()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults())
+            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var testPlayer = new Player { Username = "test" };
@@ -41,22 +39,19 @@ namespace Snap.Tests
             }
         }
 
-        private sealed class FirstPlayerIsLastInTheRoomRandomizer : IListRandomizer
-        {
-            public IEnumerable<T> Generate<T>(IEnumerable<T> list) =>
-                list.Reverse();
-        }
-
         [Fact]
         public async Task When_game_started_player_2_should_be_the_current_player()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults(new FirstPlayerIsLastInTheRoomRandomizer()))
+            var expected = new Player() { Username = "Player 2" };
+            var other = new Player { Username = "Player 1" };
+            var players = new[] { expected, other };
+            using (var module = await new ModuleManager()
+                .ConfigureDefault()
+                .WithFakePlayerRandomizer(players)
+                .BuildAndCreateDatabase())
             {
                 var service = module.GetService<ISnapGameServices>();
-                var expected = new Player() { Username = "Player 2" };
-                var game = (await service.CreateAsync(CancellationToken.None,
-                    new Player { Username = "Player 1" },
-                    expected));
+                var game = (await service.CreateAsync(CancellationToken.None, players));
                 (await service.StarGame(game, CancellationToken.None)).CurrentTurn
                     .PlayerTurn.Player.Username.ShouldBe(expected.Username);
             }
@@ -65,7 +60,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_game_started_with_2_player_each_player_should_be_have_26_cards()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults())
+            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var expected = new Player() { Username = "Player 2" };
@@ -83,7 +78,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_game_started_with_2_player_not_cards_should_be_repeated()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults())
+            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var game = (await service.CreateAsync(CancellationToken.None,

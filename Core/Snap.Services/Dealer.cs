@@ -1,58 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dawlin.Util;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
+using GameSharp.Services;
 using GameSharp.Services.Exceptions;
+using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
+using Snap.Services.Exceptions;
 
 namespace Snap.Services
 {
     public class Dealer : IDealer
     {
-        private readonly IListRandomizer _playerRandomizer;
-        private readonly IListRandomizer _carRandomizer;
+        private readonly IPlayerRandomizer _playerRandomizer;
+        private readonly ICardRandomizer _carRandomizer;
+        private readonly IPlayerService _playerService;
+        private readonly ICardDealter _cardDealter;
+        private readonly SnapDbContext _db;
 
-        public Dealer(IListRandomizer playerRandomizer,
-            IListRandomizer carRandomizer)
+        public Dealer(IPlayerRandomizer playerRandomizer,
+            ICardRandomizer carRandomizer,
+            IPlayerService playerService,
+            SnapDbContext db,
+            ICardDealter cardDealter)
         {
             _playerRandomizer = playerRandomizer;
             _carRandomizer = carRandomizer;
+            _playerService = playerService;
+            _db = db;
+            _cardDealter = cardDealter;
         }
 
         //Game loop
-        public async Task PopCurrentPlayerCard(SnapGame game)
+        public async Task<PlayerGameplay> PopCurrentPlayerCardAsync(SnapGame game, CancellationToken token)
         {
             if (game.GameData.From != GameState.PLAYING)
                 throw new InvalidGameStateException();
-
-            var playerCard = game.CurrentTurn.StackEntity.PopCard();
-
-            if (playerCard == null)
+            if (game.CurrentTurn.PlayerTurn.Player.Username != _playerService.CurrentPlayer.Username)
+                throw new NotCurrentPlayerTryToPlayException();
+            using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
-                PlayerGameOver(game.CurrentTurn.PlayerTurn);
-            }
-            else
-            {
-                game.CurrentTurn.PlayerGameplay.Add(new PlayerGameplay
+                var playerCard = game.CurrentTurn.StackEntity.PopCard();
+                if (playerCard == null)
+                    throw new PlayerHasNotMoreCardToPlayException();
+
+                var gamePlay = new PlayerGameplay
                 {
                     Card = playerCard.Value,
                     PlayerTurn = game.CurrentTurn.PlayerTurn
-                });
+                };
+                game.CurrentTurn.PlayerGameplay.Add(gamePlay);
                 game.CentralPile.Push(playerCard.Value);
-                if (!CanSnap(game) && game.CurrentTurn.StackEntity.Last == null)
-                    PlayerGameOver(game.CurrentTurn.PlayerTurn);
-            }
 
-            game.GameData.NextTurn();
+                if ((!CanSnap(game) && game.CurrentTurn.StackEntity.Last == null))
+                    PlayerGameOver(game.CurrentTurn.PlayerTurn);
+
+                game.GameData.NextTurn();
+                await _db.SaveChangesAsync(token);
+                trans.Commit();
+                return gamePlay;
+            }
         }
 
         private void PlayerGameOver(PlayerTurn currentTurn)
         {
+            //When a gamer lost then delete them from the turns
             throw new NotImplementedException();
         }
 
@@ -84,13 +102,11 @@ namespace Snap.Services
         public IEnumerable<Card> ShuffleCards() =>
             _carRandomizer.Generate(Enum.GetValues(typeof(Card)).Cast<Card>().ToArray());
 
-        public virtual IEnumerable<PlayerTurn> ChooseTurns(GameData game)
+        public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
         {
             PlayerTurn lastPlayerTurn = null;
             return _playerRandomizer
-                .Generate(game.GameRoom.RoomPlayers)
-                    .Where(p => !p.IsViewer).Select(r => r.Player).ToArray()
-                .ToList()
+                .Generate(game.GameRoom.RoomPlayers.Where(p => !p.IsViewer).Select(p => p.Player))
                 .Select(p =>
                 {
                     var newTurn = new PlayerTurn
@@ -104,47 +120,7 @@ namespace Snap.Services
                 });
         }
 
-        public IEnumerable<StackNode> DealtCards(SnapGame game, IEnumerable<Card> cards)
-        {
-            var lastIdx = 0;
-            var playersData = game.PlayersData.ToList();
-            var r = cards.Select(c =>
-            {
-                var playerD = playersData[lastIdx];
-                var newCardNode = new StackNode()
-                {
-                    Card = c,
-                    Previous = playerD.StackEntity.Last
-                };
-                playerD.StackEntity.Last = newCardNode;
-                lastIdx++;
-                lastIdx = lastIdx >= playersData.Count ? 0 : lastIdx;
-
-                return newCardNode;
-            });
-            return r;
-            //var turns = game.PlayersData.ToList();
-
-            //var cardsPerPlayer = cards.Count() / turns.Count;
-            //var groups = cards
-            //        .Select((card, index) => new { card, index })
-            //        .GroupBy(g => g.index % turns.Count, c => c.card);
-
-            //return groups.SelectMany(g =>
-            //    {
-            //        var aux = 0;
-            //        return g.ToList().Select(card =>
-            //        {
-            //            var newCardNode = new StackNode()
-            //            {
-            //                Card = card,
-            //                Previous = turns[aux].StackEntity.Last ?? null
-            //            };
-            //            turns[aux].StackEntity.Last = newCardNode;
-            //            aux++;
-            //            return newCardNode;
-            //        });
-            //    });
-        }
+        public virtual IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
+            this._cardDealter.DealtCards(playersStacks, cards);
     }
 }

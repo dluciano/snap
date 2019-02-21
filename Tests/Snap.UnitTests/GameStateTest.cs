@@ -14,7 +14,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_create_game_state_should_be_awaiting_player()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults())
+            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 (await service.CreateAsync(CancellationToken.None, new Player { Username = "test" }))
@@ -26,7 +26,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_game_started_player_2_should_be_the_current_player()
         {
-            using (var module = await ModuleHelper.CreateModuleWithDefaults())
+            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var game = (await service.CreateAsync(CancellationToken.None,
