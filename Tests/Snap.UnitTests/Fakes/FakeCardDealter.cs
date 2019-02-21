@@ -4,7 +4,7 @@ using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 
-namespace Snap.Tests
+namespace Snap.Tests.Fakes
 {
     internal class FakeCardDealter : ICardDealter
     {

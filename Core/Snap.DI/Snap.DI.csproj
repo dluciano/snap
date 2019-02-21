@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Snap.DataAccess\Snap.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Snap.Fakes\Snap.Fakes.csproj" />
     <ProjectReference Include="..\Snap.Services\Snap.Services.csproj" />
   </ItemGroup>
 

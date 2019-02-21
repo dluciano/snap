@@ -2,7 +2,7 @@
 
 namespace GameSharp.Entities
 {
-    public sealed class GameRoomPlayer : IEntity
+    public sealed class GameRoomPlayer : IEntity    
     {
         public int Id { get; set; }
         public Player Player { get; set; }

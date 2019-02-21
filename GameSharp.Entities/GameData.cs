@@ -5,7 +5,7 @@ using GameSharp.Entities.Enums;
 
 namespace GameSharp.Entities
 {
-    public sealed class GameData : IEntity, ITransitable<GameState>
+    public abstract class GameData : IEntity, ITransitable<GameState>
     {
         public int Id { get; set; }
 
@@ -13,7 +13,7 @@ namespace GameSharp.Entities
         public PlayerTurn CurrentTurn { get; private set; }
         public GameRoom GameRoom { get; set; }
         public ICollection<PlayerTurn> PlayerTurns { get; } = new HashSet<PlayerTurn>();
-        public GameState From { get; set; }
+        public GameState CurrentState { get; set; }
 
         public IEnumerable<PlayerTurn> Turns
         {

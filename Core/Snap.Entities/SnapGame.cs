@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dawlin.Abstract.Entities;
-using GameSharp.Entities;
 
 namespace Snap.Entities
 {
-    public class SnapGame : IEntity
+    public sealed class SnapGame : IEntity
     {
         public int Id { get; set; }
-        public GameData GameData { get; set; }
+        public SnapGameData GameData { get; set; }
         public StackEntity CentralPile { get; set; }
         public ICollection<PlayerData> PlayersData { get; } = new HashSet<PlayerData>();
 

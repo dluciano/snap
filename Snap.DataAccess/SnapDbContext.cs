@@ -39,6 +39,10 @@ namespace Snap.DataAccess
                 .Entity<SnapGame>()
                 .Ignore(p => p.CurrentTurn);
             modelBuilder
+                .Entity<SnapGame>()
+                .HasOne(p => p.GameData)
+                .WithMany(p=>p.SnapGames);
+            modelBuilder
                 .Entity<PlayerData>()
                 .OwnsOne(p => p.StackEntity);
             modelBuilder

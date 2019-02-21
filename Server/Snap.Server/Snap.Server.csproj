@@ -8,6 +8,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="NSwag.AspNetCore" Version="12.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Snap.DI\Snap.DI.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.Services\Snap.Services.csproj" />
   </ItemGroup>
 
 </Project>

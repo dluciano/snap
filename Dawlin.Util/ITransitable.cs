@@ -4,6 +4,6 @@ namespace Dawlin.Util
 {
     public interface ITransitable<TState>
     {
-        TState From { get; set; }
+        TState CurrentState { get; set; }
     }
 }

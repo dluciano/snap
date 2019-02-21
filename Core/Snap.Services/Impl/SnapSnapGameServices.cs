@@ -1,18 +1,18 @@
-﻿using Snap.Entities;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
-using Snap.DataAccess;
 using System.Threading.Tasks;
-using Snap.Services.Abstract;
 using Dawlin.Util;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services;
 using GameSharp.Services.Exceptions;
+using Snap.DataAccess;
+using Snap.Entities;
+using Snap.Services.Abstract;
 using Snap.Services.Exceptions;
 using Snap.Services.Notifications;
 
-namespace Snap.Services
+namespace Snap.Services.Impl
 {
     public class SnapSnapGameServices : ISnapGameServices
     {
@@ -24,6 +24,7 @@ namespace Snap.Services
         private readonly IPlayerTurnsService _playerTurnsService;
         private readonly ICardPilesService _cardPilesServices;
         private readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachineProvider;
+        private IPlayerService _playerService;
 
         public SnapSnapGameServices(IGameRoomPlayerServices gameRoomService,
             ISnapGameConfigurationProvider configuration,
@@ -32,11 +33,13 @@ namespace Snap.Services
             ICardPilesService cardPilesServices,
             IStateMachineProvider<GameState, GameSessionTransitions> stateMachineProvider,
             SnapDbContext db,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IPlayerService playerService)
         {
             _gameRoomService = gameRoomService;
             _db = db;
             _notificationService = notificationService;
+            _playerService = playerService;
             _stateMachineProvider = stateMachineProvider;
             _configuration = configuration;
             _dealer = dealer;
@@ -44,13 +47,16 @@ namespace Snap.Services
             _cardPilesServices = cardPilesServices;
         }
 
-        public async Task<SnapGame> CreateAsync(CancellationToken token, params Player[] players)
+        public async Task<SnapGame> CreateAsync(CancellationToken token)
         {
+            var creator = await _playerService.GetCurrentPlayer();
+            if (creator == null)
+                throw new UnauthorizedCreateException();
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
                 var game = new SnapGame
                 {
-                    GameData = new GameData
+                    GameData = new SnapGameData
                     {
                         GameRoom = new GameRoom()
                     },
@@ -58,17 +64,16 @@ namespace Snap.Services
                 };
 
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.CREATE_GAME);
-
                 await _db.SnapGames.AddAsync(game, token);
-                await _gameRoomService.AddPlayersAsync(game.GameData, token, players);
                 await _db.SaveChangesAsync(token);
-                trans.Commit();
 
+                await _gameRoomService.AddPlayersAsync(game.GameData.GameRoom, false, token);
+                trans.Commit();
                 return game;
             }
         }
 
-        public async Task<SnapGame> StarGame(SnapGame game, CancellationToken token)
+        public async Task<SnapGame> StarGameAsync(SnapGame game, CancellationToken token)
         {
             if (game.GameData
                     .GameRoom
@@ -90,7 +95,7 @@ namespace Snap.Services
                     _dealer.DealtCards(game.PlayersData.Select(p => p.StackEntity).ToList(), shuffledCards), token);
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
 
-                if (game.GameData.From != GameState.PLAYING)
+                if (game.GameData.CurrentState != GameState.PLAYING)
                 {
                     throw new InvalidGameStateException();
                 }

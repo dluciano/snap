@@ -21,9 +21,9 @@ namespace Dawlin.Util
         public ITransitable<TState> ChangeState(ITransitable<TState> transitable,
             TTransitions transition)
         {
-            if (!_transitions[transition].From.Equals(transitable.From))
+            if (!_transitions[transition].From.Equals(transitable.CurrentState))
                 throw new InvalidChangeTransition();
-            transitable.From = _transitions[transition].To;
+            transitable.CurrentState = _transitions[transition].To;
             return transitable;
         }
 

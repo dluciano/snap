@@ -6,7 +6,7 @@ using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;
 
-namespace Snap.Services
+namespace Snap.Services.Impl
 {
     public class CardPilesService : ICardPilesService
     {

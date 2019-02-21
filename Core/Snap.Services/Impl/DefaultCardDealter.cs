@@ -4,7 +4,7 @@ using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 
-namespace Snap.Services
+namespace Snap.Services.Impl
 {
     public class DefaultCardDealter : ICardDealter
     {

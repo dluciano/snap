@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\Core\Snap.DI\Snap.DI.csproj" />
     <ProjectReference Include="..\..\Core\Snap.Entities\Snap.Entities.csproj" />
     <ProjectReference Include="..\..\Core\Snap.Services\Snap.Services.csproj" />
+    <ProjectReference Include="..\..\Snap.Fakes\Snap.Fakes.csproj" />
   </ItemGroup>
 
 </Project>

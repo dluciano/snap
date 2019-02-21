@@ -14,7 +14,7 @@ using Snap.Services.Abstract;
 using Snap.Services.Exceptions;
 using Snap.Services.Notifications;
 
-namespace Snap.Services
+namespace Snap.Services.Impl
 {
     public class Dealer : IDealer
     {
@@ -43,9 +43,9 @@ namespace Snap.Services
         //Game loop
         public async Task<PlayerGameplay> PopCurrentPlayerCardAsync(SnapGame game, CancellationToken token)
         {
-            if (game.GameData.From != GameState.PLAYING)
+            if (game.GameData.CurrentState != GameState.PLAYING)
                 throw new InvalidGameStateException();
-            if (game.CurrentTurn.PlayerTurn.Player.Username != _playerService.CurrentPlayer.Username)
+            if (game.CurrentTurn.PlayerTurn.Player.Username != (await _playerService.GetCurrentPlayer()).Username)
                 throw new NotCurrentPlayerTryToPlayException();
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {

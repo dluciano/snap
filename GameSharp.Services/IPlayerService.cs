@@ -1,9 +1,10 @@
-﻿using GameSharp.Entities;
+﻿using System.Threading.Tasks;
+using GameSharp.Entities;
 
 namespace GameSharp.Services
 {
     public interface IPlayerService
     {
-        Player CurrentPlayer { get; }
+        Task<Player> GetCurrentPlayer();
     }
 }

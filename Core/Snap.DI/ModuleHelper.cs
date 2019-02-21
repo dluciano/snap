@@ -1,30 +1,29 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dawlin.Util;
 using GameSharp.DataAccess;
-using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Snap.DataAccess;
-using Snap.Entities.Enums;
+using Snap.Fakes;
 using Snap.Services;
 using Snap.Services.Abstract;
+using Snap.Services.Impl;
 using Snap.Services.Notifications;
 
 namespace Snap.DI
 {
     public static class ModuleHelper
     {
-        public static async Task<ModuleManager> BuildAndCreateDatabase(this ModuleManager module)
+        public static async Task<SnapModuleManager> BuildAndCreateDatabaseAsync(this SnapModuleManager snapModule)
         {
-            await module.Build().GetService<SnapDbContext>().Database.EnsureCreatedAsync();
-            return module;
+            await snapModule.Build().GetService<SnapDbContext>().Database.EnsureCreatedAsync();
+            return snapModule;
         }
 
-        public static ModuleManager WithDefaults(this ModuleManager module)
+        public static SnapModuleManager WithDefaults(this SnapModuleManager snapModule)
         {
-            module
+            snapModule
                 .ConfigureInMemorySql()
                 .AddTransient<IListRandomizer, ListRandomizer>()
                 .AddScoped<GameSharpContext>(provider => provider.GetService<SnapDbContext>())
@@ -39,8 +38,13 @@ namespace Snap.DI
                 .AddTransient<IDealer, Dealer>()
                 .AddScoped<INotificationService, DefaultNotificationService>()
                 .AddTransient(provider => GameStateMachine());
-            return module;
+            return snapModule;
         }
+
+        public static SnapModuleManager WithFakes(this SnapModuleManager snapModule) => snapModule
+                .Configure(service => service
+                    .AddScoped<IPlayerService, FakePlayerService>()
+                    .AddScoped<IFakePlayerService>(s => (FakePlayerService)s.GetService<IPlayerService>()));
 
         private static IStateMachineProvider<GameState, GameSessionTransitions> GameStateMachine() =>
             new StateMachine<GameState, GameSessionTransitions>()

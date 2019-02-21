@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
@@ -13,34 +10,40 @@ namespace GameSharp.Services
     public class GameRoomPlayerServices : IGameRoomPlayerServices
     {
         private readonly GameSharpContext _db;
+        private readonly IPlayerService _playerService;
 
-        public GameRoomPlayerServices(GameSharpContext db)
+        public GameRoomPlayerServices(GameSharpContext db,
+            IPlayerService playerService)
         {
             _db = db;
+            _playerService = playerService;
         }
 
-        public async Task<IAsyncEnumerable<GameRoomPlayer>> AddPlayersAsync(GameData game,
-            CancellationToken token,
-            params Player[] players)
+        public async Task<GameRoomPlayer> AddPlayersAsync(GameRoom room,
+            bool isViewer,
+            CancellationToken token)
         {
-            var entities = new List<GameRoomPlayer>();
-            if (game.From != GameState.AWAITING_PLAYERS)
+            //TODO: Implement this correctly
+            //if (!isViewer && room.GameData.CurrentState != GameState.AWAITING_PLAYERS)
+            //{
+            //    //TODO: Make exception handling i18n
+            //    throw new InvalidGameStateException("The game is not in the state where players can join");
+            //}
+            var creator = await _playerService.GetCurrentPlayer();
+            if (creator == null)
             {
-                //TODO: Make exception handling i18n
-                throw new InvalidGameStateException("The game is not in the state where players can join");
+                throw new UnauthorizedCreateException();
             }
-            foreach (var player in (players ?? Array.Empty<Player>()))
+            var entity = new GameRoomPlayer
             {
-                entities.Add(new GameRoomPlayer
-                {
-                    GameRoom = game.GameRoom,
-                    Player = player,
-                    IsViewer = false,
-                });
-            }
-            await _db.GameRoomPlayers.AddRangeAsync(entities, token);
+                GameRoom = room,
+                Player = creator,
+                IsViewer = isViewer,
+            };
+
+            await _db.GameRoomPlayers.AddAsync(entity, token);
             await _db.SaveChangesAsync(token);
-            return entities.ToAsyncEnumerable();
+            return entity;
         }
     }
 }

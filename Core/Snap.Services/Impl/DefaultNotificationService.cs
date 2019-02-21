@@ -1,7 +1,7 @@
 ﻿using System;
 using Snap.Services.Notifications;
 
-namespace Snap.Services
+namespace Snap.Services.Impl
 {
     public class DefaultNotificationService : INotificationService
     {

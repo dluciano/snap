@@ -2,7 +2,7 @@
 using System.Linq;
 using Snap.Services.Abstract;
 
-namespace Snap.Tests
+namespace Snap.Tests.Fakes
 {
     internal sealed class FakeRandomizer<TObject> :
         IPlayerRandomizer,

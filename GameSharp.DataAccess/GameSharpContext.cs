@@ -38,6 +38,7 @@ namespace GameSharp.DataAccess
                 .Entity<GameData>()
                 .HasOne(p => p.GameRoom)
                 .WithMany(r => r.GameDatas);
+
             modelBuilder
                 .Entity<GameRoomPlayer>()
                 .HasOne(p => p.GameRoom)
@@ -46,6 +47,7 @@ namespace GameSharp.DataAccess
                 .Entity<GameRoomPlayer>()
                 .HasOne(p => p.Player)
                 .WithMany(r => r.GameRoomPlayers);
+
             modelBuilder
                 .Entity<PlayerTurn>()
                 .HasOne(p => p.Player)
