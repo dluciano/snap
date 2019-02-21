@@ -38,18 +38,18 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_shuffle_with_two_player_then_only_two_players_should_exists()
         {
-            using (var module = await TestModuleHelpers
-                .CreateAndBuildWithDefaultsAsync())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaultsAsync())
             {
-                var service = module.GetService<ISnapGameServices>();
-                var joinService = module.GetService<ISnapGameServices>();
-                var game = await service.CreateAsync(CancellationToken.None);
-                game = await service.StarGameAsync(game, CancellationToken.None);
+                //Background or When
+                var game = await module.CreateGameAsync();
+                await module.SecondPlayerJoin(game);
+                game = await module.GameStart(game);
+
+                //Then
                 game.PlayersData.Count.ShouldBe(2);
                 game.ShouldSatisfyAllConditions(
-                   () => game.PlayersData.Select(pd => pd.PlayerTurn.Player.Username).ShouldContain(PlayerServiceSeedHelper.FirstPlayerUsername),
-                   () => game.PlayersData.Select(pd => pd.PlayerTurn.Player.Username).ShouldContain(PlayerServiceSeedHelper.SecondPlayerUsername));
-
+                    () => game.PlayersData.Select(pd => pd.PlayerTurn.Player.Username).ShouldContain(PlayerServiceSeedHelper.FirstPlayerUsername),
+                    () => game.PlayersData.Select(pd => pd.PlayerTurn.Player.Username).ShouldContain(PlayerServiceSeedHelper.SecondPlayerUsername));
             }
         }
     }
