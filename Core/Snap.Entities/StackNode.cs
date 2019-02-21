@@ -11,7 +11,7 @@ namespace Snap.Entities
         public Card Card { get; set; }
         public StackNode Previous { get; set; }
         public ICollection<SnapGame> SnapGames { get; } = new HashSet<SnapGame>();
-        public ICollection<PlayersData> PlayersData { get; } = new HashSet<PlayersData>();
+        public ICollection<PlayerData> PlayersData { get; } = new HashSet<PlayerData>();
 
         public static StackNode Create(Card card, StackEntity stack) =>
             stack.Last = new StackNode

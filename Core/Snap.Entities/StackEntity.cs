@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Snap.Entities.Enums;
 
 namespace Snap.Entities
@@ -36,5 +38,8 @@ namespace Snap.Entities
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public override string ToString() =>
+            string.Join(", ", this.Select(s => Enum.GetName(typeof(Card), s.Card)));
     }
 }

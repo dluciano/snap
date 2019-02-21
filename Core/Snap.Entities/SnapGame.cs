@@ -11,9 +11,9 @@ namespace Snap.Entities
         public int Id { get; set; }
         public GameData GameData { get; set; }
         public StackEntity CentralPile { get; set; }
-        public ICollection<PlayersData> PlayersData { get; } = new HashSet<PlayersData>();
+        public ICollection<PlayerData> PlayersData { get; } = new HashSet<PlayerData>();
 
-        public PlayersData CurrentTurn =>
+        public PlayerData CurrentTurn =>
             PlayersData.Single(p => p.PlayerTurn.Id == GameData.CurrentTurn.Id);
     }
 }

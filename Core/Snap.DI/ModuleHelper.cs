@@ -37,7 +37,7 @@ namespace Snap.DI
                 .AddTransient<ICardRandomizer, DefaultRandomizer>()
                 .AddTransient<ICardDealter, DefaultCardDealter>()
                 .AddTransient<IDealer, Dealer>()
-                .AddTransient<INotificationService, DefaultNotificationService>()
+                .AddScoped<INotificationService, DefaultNotificationService>()
                 .AddTransient(provider => GameStateMachine());
             return module;
         }

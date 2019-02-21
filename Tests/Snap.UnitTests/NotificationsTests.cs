@@ -75,10 +75,9 @@ namespace Snap.Tests
                 var game = await service.CreateAsync(CancellationToken.None, players);
                 game = await service.StarGame(game, CancellationToken.None);
                 var gameplay = await dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
-                notifier.CardPopEvent += (e, sender) =>
+                notifier.CardPopEvent += (sender, e) =>
                 {
-                    var ev = e as CardPopEvent;
-                    ev?.GamePlay.PlayerTurn.Player.Username.Equals(other);
+                    e.GamePlay.PlayerTurn.PlayerTurn.Player.Username.ShouldBe(other.Username);
                 };
             }
         }

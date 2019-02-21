@@ -8,6 +8,7 @@ namespace Snap.Services.Notifications
     {
         public PlayerGameplay GamePlay { get; }
         public PlayerTurn NextPlayer { get; }
+
         public CardPopEvent(PlayerGameplay gamePlay,
             PlayerTurn nextPlayer)
         {

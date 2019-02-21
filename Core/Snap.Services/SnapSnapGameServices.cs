@@ -76,7 +76,7 @@ namespace Snap.Services
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
                 var turns = await _playerTurnsService.AddRangeAsync(token, _dealer.ChooseTurns(game.GameData).ToArray());
-                await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayersData()
+                await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayerData()
                 {
                     SnapGame = game,
                     PlayerTurn = pt,

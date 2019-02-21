@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Dawlin.Util;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services;
@@ -57,7 +56,7 @@ namespace Snap.Services
                 var gamePlay = new PlayerGameplay
                 {
                     Card = playerCard.Value,
-                    PlayerTurn = game.CurrentTurn.PlayerTurn
+                    PlayerTurn = game.CurrentTurn
                 };
                 game.CurrentTurn.PlayerGameplay.Add(gamePlay);
                 game.CentralPile.Push(playerCard.Value);
