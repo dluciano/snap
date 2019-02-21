@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GameSharp.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Snap.DI;
 using Snap.Services.Abstract;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_create_game_it_should_only_have_player_test()
         {
-            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var testPlayer = new Player { Username = "test" };
@@ -28,7 +29,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_create_game_it_players_should_be_player_not_viewers()
         {
-            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var testPlayer = new Player { Username = "test" };
@@ -46,7 +47,7 @@ namespace Snap.Tests
             var other = new Player { Username = "Player 1" };
             var players = new[] { expected, other };
             using (var module = await new ModuleManager()
-                .ConfigureDefault()
+                .UseDefaults()
                 .WithFakePlayerRandomizer(players)
                 .BuildAndCreateDatabase())
             {
@@ -60,7 +61,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_game_started_with_2_player_each_player_should_be_have_26_cards()
         {
-            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var expected = new Player() { Username = "Player 2" };
@@ -78,7 +79,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_game_started_with_2_player_not_cards_should_be_repeated()
         {
-            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var game = (await service.CreateAsync(CancellationToken.None,

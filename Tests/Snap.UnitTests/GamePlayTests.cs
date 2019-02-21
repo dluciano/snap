@@ -8,6 +8,7 @@ using Snap.Services.Abstract;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Snap.DI;
 using Snap.Entities.Enums;
 
 namespace Snap.Tests
@@ -26,7 +27,7 @@ namespace Snap.Tests
                 .ToList();
 
             using (var module = await new ModuleManager()
-                .ConfigureDefault()
+                .UseDefaults()
                 .WithFakePlayerRandomizer(players)
                 .WithFakeCardRandomizer(fakedRandomCards)
                 .WithFakePlayerService(firstPlayer)
@@ -55,7 +56,7 @@ namespace Snap.Tests
                 .ToList();
 
             using (var module = await new ModuleManager()
-                .ConfigureDefault()
+                .UseDefaults()
                 .WithFakePlayerRandomizer(players)
                 .WithFakeCardRandomizer(fakedRandomCards)
                 .WithFakePlayerService(firstPlayer)

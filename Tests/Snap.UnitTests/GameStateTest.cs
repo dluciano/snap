@@ -4,6 +4,7 @@ using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Snap.DI;
 using Snap.Services.Abstract;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_create_game_state_should_be_awaiting_player()
         {
-            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 (await service.CreateAsync(CancellationToken.None, new Player { Username = "test" }))
@@ -26,7 +27,7 @@ namespace Snap.Tests
         [Fact]
         public async Task When_game_started_player_2_should_be_the_current_player()
         {
-            using (var module = await ModuleHelper.CreateAndBuildWithDefaults())
+            using (var module = await TestModuleHelpers.CreateAndBuildWithDefaults())
             {
                 var service = module.GetService<ISnapGameServices>();
                 var game = (await service.CreateAsync(CancellationToken.None,

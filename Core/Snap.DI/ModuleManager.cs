@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Reflection;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Snap.DataAccess;
 
-namespace Snap.Tests
+namespace Snap.DI
 {
     public class ModuleManager :
         ServiceCollection,
