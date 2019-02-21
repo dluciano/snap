@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSharp.Services", "GameS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.DI", "Core\Snap.DI\Snap.DI.csproj", "{5B2632DA-A2FF-4C90-BB3E-101CE07D93A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.Server", "Server\Snap.Server\Snap.Server.csproj", "{F857D5BB-1EE9-4730-B1AA-BA20B973155A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{5B2632DA-A2FF-4C90-BB3E-101CE07D93A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B2632DA-A2FF-4C90-BB3E-101CE07D93A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B2632DA-A2FF-4C90-BB3E-101CE07D93A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F857D5BB-1EE9-4730-B1AA-BA20B973155A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F857D5BB-1EE9-4730-B1AA-BA20B973155A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F857D5BB-1EE9-4730-B1AA-BA20B973155A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F857D5BB-1EE9-4730-B1AA-BA20B973155A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{BE72C527-4582-4F84-B656-D7FC0AEE69F1} = {C3807A0F-67BB-4708-B24A-0A0180CC44CD}
 		{9A2BAE24-5D25-4F0B-8E05-1BA215F36D71} = {C3807A0F-67BB-4708-B24A-0A0180CC44CD}
 		{5B2632DA-A2FF-4C90-BB3E-101CE07D93A1} = {E5635B02-BB68-44D3-9AAE-A576072BF7BD}
+		{F857D5BB-1EE9-4730-B1AA-BA20B973155A} = {7FB3FD17-5A4E-4D85-ADCC-473C7DA46857}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09F34F17-F3DE-4160-A09B-083B9AE6A512}
