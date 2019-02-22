@@ -46,6 +46,7 @@ namespace Snap.Tests.Module
                 .AsSelf()
                 .As<GameSharpContext>()
                 .AsImplementedInterfaces()
+                .InstancePerLifetimeScope()
                 .OnActivated(async args =>
                 {
                     var db = args.Instance;

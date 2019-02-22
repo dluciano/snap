@@ -20,7 +20,7 @@ namespace Snap.Tests.Module
         public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername)
         {
             return (await _playerService
-                    .AddRangeAsync(FirstPlayerUsername))
+                    .AddRangeAsync(username))
                 .Single();
         }
 
