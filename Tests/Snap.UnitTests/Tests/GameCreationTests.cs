@@ -8,13 +8,13 @@ using Xunit.Ioc.Autofac;
 namespace Snap.Tests.Tests
 {
     [UseAutofacTestFramework]
-    public class GameCreationTest
+    public class GameCreationTests
     {
-        public GameCreationTest()
+        public GameCreationTests()
         {
         }
 
-        public GameCreationTest(BackgroundHelper backgroundHelper)
+        public GameCreationTests(BackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }

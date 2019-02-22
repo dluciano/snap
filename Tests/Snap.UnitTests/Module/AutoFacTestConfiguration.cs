@@ -55,7 +55,8 @@ namespace Snap.Tests.Module
 
             builder.RegisterType<FakePlayerService>()
                 .As<IPlayerService>()
-                .As<IFakePlayerService>();
+                .As<IFakePlayerService>()
+                .InstancePerLifetimeScope();
 
             builder.RegisterModule<DawlinUtilModule>();
             builder.RegisterModule<GameSharpModule>();

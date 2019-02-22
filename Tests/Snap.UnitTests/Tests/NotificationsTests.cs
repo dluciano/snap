@@ -17,6 +17,11 @@ namespace Snap.Tests.Tests
     [UseAutofacTestFramework]
     public class NotificationsTests
     {
+        public NotificationsTests()
+        {
+
+        }
+
         public NotificationsTests(BackgroundHelper backgroundHelper,
             IDealer dealer,
             INotificationService notifier)

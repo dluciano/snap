@@ -9,13 +9,13 @@ using Xunit.Ioc.Autofac;
 namespace Snap.Tests.Tests
 {
     [UseAutofacTestFramework]
-    public class GameStateTest
+    public class GameStateTests
     {
-        public GameStateTest()
+        public GameStateTests()
         {
         }
 
-        public GameStateTest(BackgroundHelper backgroundHelper)
+        public GameStateTests(BackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }
