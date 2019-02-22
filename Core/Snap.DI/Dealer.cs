@@ -12,8 +12,8 @@ using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
-using Snap.Services.Exceptions;
-using Snap.Services.Notifications;
+using Snap.Services.Impl.Exceptions;
+using Snap.Services.Impl.Notifications;
 
 namespace Snap.Services.Impl
 {

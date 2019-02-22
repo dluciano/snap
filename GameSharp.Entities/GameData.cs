@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Dawlin.Abstract.Entities;
 using Dawlin.Util;
+using Dawlin.Util.Abstract;
 using GameSharp.Entities.Enums;
 
 namespace GameSharp.Entities

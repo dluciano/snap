@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dawlin.Util
+﻿namespace Dawlin.Util.Abstract
 {
     public interface ITransitable<TState>
     {

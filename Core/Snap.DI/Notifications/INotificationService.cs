@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snap.Services.Notifications
+namespace Snap.Services.Impl.Notifications
 {
     public interface INotificationService
     {

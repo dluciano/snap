@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Dawlin.Util
+namespace Dawlin.Util.Abstract
 {
     public interface IListRandomizer
     {

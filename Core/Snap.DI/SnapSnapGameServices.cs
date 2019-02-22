@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Dawlin.Util;
+using Dawlin.Util.Abstract;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services.Abstract;
@@ -9,8 +10,8 @@ using GameSharp.Services.Impl.Exceptions;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;
-using Snap.Services.Exceptions;
-using Snap.Services.Notifications;
+using Snap.Services.Impl.Exceptions;
+using Snap.Services.Impl.Notifications;
 
 namespace Snap.Services.Impl
 {

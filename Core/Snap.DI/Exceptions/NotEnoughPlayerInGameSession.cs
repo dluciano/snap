@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Snap.Services.Exceptions
+namespace Snap.Services.Impl.Exceptions
 {
     [Serializable]
     internal class NotEnoughPlayerInGameSession : Exception

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Dawlin.Util.Abstract;
 using Dawlin.Util.Impl.Exceptions;
 
 namespace Dawlin.Util.Impl

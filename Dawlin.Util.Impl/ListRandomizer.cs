@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dawlin.Util.Abstract;
 
 namespace Dawlin.Util.Impl
 {

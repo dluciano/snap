@@ -1,12 +1,12 @@
 using Autofac;
 using Dawlin.Util;
+using Dawlin.Util.Abstract;
 using Dawlin.Util.Impl;
 using GameSharp.Entities.Enums;
 using Snap.Services.Abstract;
-using Snap.Services.Impl;
-using Snap.Services.Notifications;
+using Snap.Services.Impl.Notifications;
 
-namespace Snap.DI
+namespace Snap.Services.Impl
 {
     public sealed class SnapGameModule : Module
     {

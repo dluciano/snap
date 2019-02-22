@@ -5,7 +5,6 @@ using GameSharp.Entities;
 using GameSharp.Services;
 using GameSharp.Services.Abstract;
 using Microsoft.Extensions.DependencyInjection;
-using Snap.DI;
 using Snap.Entities;
 using Snap.Services.Abstract;
 using Snap.Tests.Module;

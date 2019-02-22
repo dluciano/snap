@@ -1,4 +1,4 @@
-﻿namespace Dawlin.Util
+﻿namespace Dawlin.Util.Abstract
 {
     public interface IStateMachineProvider<TState, in TTransitions>
     {

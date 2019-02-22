@@ -1,7 +1,7 @@
 ﻿using System;
 using Snap.Entities;
 
-namespace Snap.Services.Notifications
+namespace Snap.Services.Impl.Notifications
 {
     public class GameStartedEvent : EventArgs
     {

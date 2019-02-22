@@ -1,5 +1,5 @@
 ﻿using System;
-using Snap.Services.Notifications;
+using Snap.Services.Impl.Notifications;
 
 namespace Snap.Services.Impl
 {

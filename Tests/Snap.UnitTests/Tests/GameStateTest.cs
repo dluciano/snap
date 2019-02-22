@@ -16,27 +16,15 @@ namespace Snap.Tests.Tests
     public class GameStateTest
     {
         private readonly BackgroundHelper _backgroundHelper;
-        private readonly IFakePlayerService _playerService;
-        private readonly PlayerServiceSeedHelper _playerHelperService;
-        private readonly IDealer _dealer;
-        private readonly IGameRoomPlayerServices _gameRoomPlayerServices;
 
         public GameStateTest()
         {
 
         }
 
-        public GameStateTest(BackgroundHelper backgroundHelper,
-            IFakePlayerService playerService,
-            PlayerServiceSeedHelper playerHelperService,
-            IDealer dealer,
-            IGameRoomPlayerServices gameRoomPlayerServices)
+        public GameStateTest(BackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
-            _playerService = playerService;
-            _playerHelperService = playerHelperService;
-            _dealer = dealer;
-            _gameRoomPlayerServices = gameRoomPlayerServices;
         }
 
         [Fact]

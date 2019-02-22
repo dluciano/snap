@@ -4,7 +4,7 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Snap.Fakes;
 
-namespace Snap.Tests.Module
+namespace Snap.Tests.Fakes
 {
     internal sealed class FakeSecondPlayerFirst : IPlayerChooser
     {

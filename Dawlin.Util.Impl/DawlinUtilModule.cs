@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Dawlin.Util.Abstract;
 
 namespace Dawlin.Util.Impl
 {

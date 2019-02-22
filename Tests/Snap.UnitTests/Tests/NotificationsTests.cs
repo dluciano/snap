@@ -9,7 +9,7 @@ using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Fakes;
 using Snap.Services.Abstract;
-using Snap.Services.Notifications;
+using Snap.Services.Impl.Notifications;
 using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;

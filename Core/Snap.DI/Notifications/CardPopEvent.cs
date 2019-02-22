@@ -1,8 +1,7 @@
 ﻿using System;
-using GameSharp.Entities;
 using Snap.Entities;
 
-namespace Snap.Services.Notifications
+namespace Snap.Services.Impl.Notifications
 {
     public class CardPopEvent : EventArgs
     {

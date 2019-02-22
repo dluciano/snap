@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dawlin.Util;
+using Dawlin.Util.Abstract;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 
-namespace Snap.DI
+namespace Snap.Services.Impl
 {
     internal class CardRandomizer : ICardRandomizer
     {
