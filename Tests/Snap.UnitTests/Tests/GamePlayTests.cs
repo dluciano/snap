@@ -35,8 +35,9 @@ namespace Snap.Tests.Tests
             var game = await _backgroundHelper.CreateGameAsync();
             await _backgroundHelper.PlayerJoinAsync(game);
             game = await _backgroundHelper.StartGameAsync(game);
-            (await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None))
-                .PlayerTurn
+            await _playerHelperService.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
+            var r = (await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None));
+                r.PlayerTurn
                 .SnapGame
                 .CentralPile
                 .Last

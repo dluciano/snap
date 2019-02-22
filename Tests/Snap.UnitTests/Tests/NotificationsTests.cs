@@ -23,20 +23,23 @@ namespace Snap.Tests.Tests
         }
 
         public NotificationsTests(BackgroundHelper backgroundHelper,
+            PlayerServiceSeedHelper playerServiceSeedHelper,
             IDealer dealer,
             INotificationService notifier)
         {
             _backgroundHelper = backgroundHelper;
+            _playerServiceSeedHelper = playerServiceSeedHelper;
             _dealer = dealer;
             _notifier = notifier;
         }
 
         private readonly BackgroundHelper _backgroundHelper;
+        private readonly PlayerServiceSeedHelper _playerServiceSeedHelper;
         private readonly IDealer _dealer;
         private readonly INotificationService _notifier;
 
         [Fact]
-        private async Task When_a_game_is_started_players_should_be_notified()
+        private async Task When_a_game_is_started_players_should_be_notified_with_the_game_stared_state()
         {
             var fakedRandomCards = Enum
                 .GetValues(typeof(Card))
@@ -48,14 +51,15 @@ namespace Snap.Tests.Tests
                 notified = true;
                 e.Game.GameData.CurrentState.ShouldBe(GameState.PLAYING);
             };
+
             var game = await _backgroundHelper.CreateGameAsync();
+            await _backgroundHelper.PlayerJoinAsync(game, PlayerServiceSeedHelper.SecondPlayerUsername);
             game = await _backgroundHelper.StartGameAsync(game);
-            await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
             notified.ShouldBeTrue();
         }
 
         [Fact]
-        private async Task When_first_playe_pop_the_KING_TILE_then_all_players_should_be_notified()
+        private async Task When_first_player_pop_the_KING_TILE_then_all_players_should_be_notified()
         {
             var fakedRandomCards = Enum
                 .GetValues(typeof(Card))
@@ -70,14 +74,17 @@ namespace Snap.Tests.Tests
                 gameplay.Card.ShouldBe(Card.KING_TILE);
             };
             var game = await _backgroundHelper.CreateGameAsync();
+            await _backgroundHelper.PlayerJoinAsync(game, PlayerServiceSeedHelper.SecondPlayerUsername);
             game = await _backgroundHelper.StartGameAsync(game);
+            await _playerServiceSeedHelper.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
             await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
-            gameplay.ShouldNotBeNull();
             notified.ShouldBeTrue();
+
+            gameplay.ShouldNotBeNull();
         }
 
         [Fact]
-        private async Task When_player_1_pop_the_KING_TILE_then_player_1_should_be_notified_as_the_current_player()
+        private async Task When_player_2_pop_then_player_1_should_be_notified_as_the_current_player()
         {
             var fakedRandomCards = Enum
                 .GetValues(typeof(Card))
@@ -92,8 +99,12 @@ namespace Snap.Tests.Tests
                 e.NextPlayer.PlayerTurn.Player.Username.ShouldBe(PlayerServiceSeedHelper.FirstPlayerUsername);
             };
             var game = await _backgroundHelper.CreateGameAsync();
+            await _backgroundHelper.PlayerJoinAsync(game, PlayerServiceSeedHelper.SecondPlayerUsername);
             game = await _backgroundHelper.StartGameAsync(game);
+            await _playerServiceSeedHelper.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
             await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
+
+            notified.ShouldBeTrue();
             gameplay.ShouldNotBeNull();
             notified.ShouldBeTrue();
         }

@@ -20,7 +20,9 @@ namespace Snap.Services.Impl
             builder.RegisterType<SnapSnapGameServices>().As<ISnapGameServices>();
             builder.RegisterType<SnapGameConfigurationProvider>().As<ISnapGameConfigurationProvider>();
             builder.RegisterType<CardPilesService>().As<ICardPilesService>();
-            builder.RegisterType<DefaultNotificationService>().As<INotificationService>();
+            builder.RegisterType<DefaultNotificationService>()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
             builder.Register(context => new StateMachine<GameState, GameSessionTransitions>()
                     .AddTransition(GameState.NONE, GameState.AWAITING_PLAYERS,
                         GameSessionTransitions.CREATE_GAME)
