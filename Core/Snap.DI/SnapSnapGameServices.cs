@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Dawlin.Util;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
-using GameSharp.Services;
-using GameSharp.Services.Exceptions;
+using GameSharp.Services.Abstract;
+using GameSharp.Services.Impl.Exceptions;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;
@@ -49,7 +49,7 @@ namespace Snap.Services.Impl
 
         public async Task<SnapGame> CreateAsync(CancellationToken token)
         {
-            var creator = await _playerService.GetCurrentPlayer();
+            var creator = await _playerService.GetCurrentPlayerAsync();
             if (creator == null)
                 throw new UnauthorizedCreateException();
             using (var trans = await _db.Database.BeginTransactionAsync(token))

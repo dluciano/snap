@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using GameSharp.Services;
+using GameSharp.Services.Abstract;
 
 namespace Snap.Fakes
 {
@@ -11,6 +12,6 @@ namespace Snap.Fakes
     {
         Task<Player> SetCurrentPlayer(Func<IQueryable<Player>, Task<Player>> action);
         Task<IEnumerable<Player>> AddRangeAsync(params string[] usernames);
-        Task<IQueryable<Player>> GetPlayers();
+        IQueryable<Player> GetPlayers();
     }
 }

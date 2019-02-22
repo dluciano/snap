@@ -4,7 +4,7 @@ using Snap.Entities.Enums;
 
 namespace Snap.Entities
 {
-    public sealed class StackNode : IEntity
+    public class StackNode : IEntity
     {
         public int Id { get; set; }
 

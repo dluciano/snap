@@ -6,7 +6,7 @@ using Snap.Entities.Enums;
 
 namespace Snap.Entities
 {
-    public sealed class StackEntity
+    public class StackEntity
         : IEnumerable<StackNode>
     {
         public StackNode Last { get; set; }

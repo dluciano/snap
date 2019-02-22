@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
-using GameSharp.Entities.Enums;
-using GameSharp.Services.Exceptions;
+using GameSharp.Services.Abstract;
+using GameSharp.Services.Impl.Exceptions;
 
-namespace GameSharp.Services
+namespace GameSharp.Services.Impl
 {
-    public class GameRoomPlayerServices : IGameRoomPlayerServices
+    internal sealed class GameRoomPlayerServices : IGameRoomPlayerServices
     {
         private readonly GameSharpContext _db;
         private readonly IPlayerService _playerService;
@@ -29,7 +29,7 @@ namespace GameSharp.Services
             //    //TODO: Make exception handling i18n
             //    throw new InvalidGameStateException("The game is not in the state where players can join");
             //}
-            var creator = await _playerService.GetCurrentPlayer();
+            var creator = await _playerService.GetCurrentPlayerAsync();
             if (creator == null)
             {
                 throw new UnauthorizedCreateException();

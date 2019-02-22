@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Snap.DI\Snap.DI.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.DI\Snap.Services.Impl.csproj" />
     <ProjectReference Include="..\..\Core\Snap.Entities\Snap.Entities.csproj" />
   </ItemGroup>
 

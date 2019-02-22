@@ -8,7 +8,7 @@ namespace Snap.Tests.Fakes
 {
     internal class FakeCardDealter : ICardDealter
     {
-        IEnumerable<StackNode> ICardDealter.DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
+        public IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
             playersStacks.SelectMany((stack, i) =>
             {
                 var take = (cards.Count() / playersStacks.Count);

@@ -5,9 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GameSharp.Entities\GameSharp.Entities.csproj" />
+    <PackageReference Include="Autofac" Version="4.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GameSharp.Services\GameSharp.Services.Abstract.csproj" />
-    <ProjectReference Include="..\Snap.DataAccess\Snap.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,56 +2,31 @@
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Snap.DataAccess;
-using Snap.DI;
 using Snap.Fakes;
 
 namespace Snap.Tests.Module
 {
-    internal static class PlayerServiceSeedHelper
+    public sealed class PlayerServiceSeedHelper
     {
+        private readonly IFakePlayerService _playerService;
         public const string FirstPlayerUsername = "First Player";
         public const string SecondPlayerUsername = "Second Player";
 
-        private static async Task<Player> SeedWithFirstPlayerAsync(this SnapModuleManager module)
+        public PlayerServiceSeedHelper(IFakePlayerService playerService)
         {
-            var player = (await module.GetService<IFakePlayerService>()
-                    .AddRangeAsync(FirstPlayerUsername))
-                .Single();
-            await module.GetService<SnapDbContext>().SaveChangesAsync();
-            return player;
+            _playerService = playerService;
         }
 
-        private static async Task<Player> SeedSecondPlayer(this SnapModuleManager module)
-        {
-            var player = (await module.GetService<IFakePlayerService>()
-                    .AddRangeAsync(SecondPlayerUsername))
-                .Single();
-            await module.GetService<SnapDbContext>().SaveChangesAsync();
-            return player;
-        }
+        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername) =>
+            (await _playerService
+                .AddRangeAsync(FirstPlayerUsername))
+            .Single();
 
-        public static async Task<SnapModuleManager> SeedAndLoginFirstAsync(this SnapModuleManager module)
-        {
-            await module.SeedWithFirstPlayerAsync();
-            await LoginFirstPlayer(module);
-            return module;
-        }
+        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername) =>
+            await LoginPlayerAsync((await SeedPlayerAsync(username)).Username);
 
-        public static async Task<SnapModuleManager> LoginFirstPlayer(this SnapModuleManager module)
-        {
-            await module.GetService<IFakePlayerService>()
-                .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == FirstPlayerUsername));
-            return module;
-        }
-
-        public static async Task<SnapModuleManager> SeedAndLoginSecondPlayer(this SnapModuleManager module)
-        {
-            await (module.SeedSecondPlayer());
-            await module.GetService<IFakePlayerService>()
-                .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == SecondPlayerUsername));
-            return module;
-        }
+        public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername) =>
+            await _playerService
+                .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == username));
     }
 }

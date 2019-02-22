@@ -18,12 +18,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="xunit2.ioc.autofac" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Snap.DI\Snap.DI.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.DI\Snap.Services.Impl.csproj" />
     <ProjectReference Include="..\..\Core\Snap.Entities\Snap.Entities.csproj" />
-    <ProjectReference Include="..\..\Core\Snap.Services\Snap.Services.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.Services\Snap.Services.Abstract.csproj" />
+    <ProjectReference Include="..\..\GameSharp.Module\GameSharp.Services.Impl.csproj" />
     <ProjectReference Include="..\..\Snap.Fakes\Snap.Fakes.csproj" />
   </ItemGroup>
 

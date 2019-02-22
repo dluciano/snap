@@ -5,13 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Dawlin.Util.Impl\Dawlin.Util.Impl.csproj" />
+    <ProjectReference Include="..\..\GameSharp.Module\GameSharp.Services.Impl.csproj" />
     <ProjectReference Include="..\..\Snap.DataAccess\Snap.DataAccess.csproj" />
     <ProjectReference Include="..\..\Snap.Fakes\Snap.Fakes.csproj" />
-    <ProjectReference Include="..\Snap.Services\Snap.Services.csproj" />
+    <ProjectReference Include="..\Snap.Services\Snap.Services.Abstract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

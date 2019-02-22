@@ -3,7 +3,7 @@ using Dawlin.Abstract.Entities;
 
 namespace GameSharp.Entities
 {
-    public sealed class PlayerTurn : IEntity
+    public class PlayerTurn : IEntity
     {
         public int Id { get; set; }
 

@@ -20,9 +20,7 @@ namespace Snap.Fakes
 
         public async Task<Player> SetCurrentPlayer(Func<IQueryable<Player>, Task<Player>> action)
         {
-            var playerId = (await action?.Invoke(_db.Players))?.Id;
-            if (playerId == null)
-                return null;
+            var playerId = (await action?.Invoke(_db.Players)).Id;
             return _currentPlayer = await _db.Players.SingleAsync(p => p.Id == playerId);
         }
 
@@ -36,9 +34,9 @@ namespace Snap.Fakes
             return players;
         }
 
-        public async Task<IQueryable<Player>> GetPlayers() =>
-            _db.Players;
+        public IQueryable<Player> GetPlayers() =>
+           _db.Players;
 
-        public async Task<Player> GetCurrentPlayer() => await Task.FromResult(_currentPlayer);
+        public async Task<Player> GetCurrentPlayerAsync() => await Task.FromResult(_currentPlayer);
     }
 }

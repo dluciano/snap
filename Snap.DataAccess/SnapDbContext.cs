@@ -4,7 +4,7 @@ using Snap.Entities;
 
 namespace Snap.DataAccess
 {
-    public class SnapDbContext : GameSharpContext
+    public sealed class SnapDbContext : GameSharpContext
     {
         public DbSet<PlayerGameplay> PlayerGamePlays { get; set; }
         public DbSet<PlayerData> PlayersData { get; set; }
@@ -22,11 +22,10 @@ namespace Snap.DataAccess
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(
-                    @"Server=(localdb)\mssqllocaldb;Database=Snap.InMemory;Trusted_Connection=True;ConnectRetryCount=0");
-            }
+            if (optionsBuilder.IsConfigured)
+                return;
+            optionsBuilder.UseSqlServer(
+                @"Server=(localdb)\mssqllocaldb;Database=Snap.InMemory;Trusted_Connection=True;ConnectRetryCount=0");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,7 +40,7 @@ namespace Snap.DataAccess
             modelBuilder
                 .Entity<SnapGame>()
                 .HasOne(p => p.GameData)
-                .WithMany(p=>p.SnapGames);
+                .WithMany(p => p.SnapGames);
             modelBuilder
                 .Entity<PlayerData>()
                 .OwnsOne(p => p.StackEntity);

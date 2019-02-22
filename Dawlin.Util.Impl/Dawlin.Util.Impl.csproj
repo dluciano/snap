@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dawlin.Abstract.Entities\Dawlin.Abstract.Entities.csproj" />
+    <PackageReference Include="Autofac" Version="4.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dawlin.Util\Dawlin.Util.Abstract.csproj" />
   </ItemGroup>
 

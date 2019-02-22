@@ -5,7 +5,7 @@ using Dawlin.Abstract.Entities;
 
 namespace Snap.Entities
 {
-    public sealed class SnapGame : IEntity
+    public class SnapGame : IEntity
     {
         public int Id { get; set; }
         public SnapGameData GameData { get; set; }

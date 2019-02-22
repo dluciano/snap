@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services;
-using GameSharp.Services.Exceptions;
+using GameSharp.Services.Abstract;
+using GameSharp.Services.Impl.Exceptions;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Entities.Enums;
@@ -16,23 +17,24 @@ using Snap.Services.Notifications;
 
 namespace Snap.Services.Impl
 {
-    public class Dealer : IDealer
+    internal sealed class Dealer : IDealer
     {
-        private readonly IPlayerRandomizer _playerRandomizer;
+        private readonly IPlayerChooser _playerChooser;
         private readonly ICardRandomizer _carRandomizer;
-        private readonly IPlayerService _playerService;
         private readonly ICardDealter _cardDealter;
+
+        private readonly IPlayerService _playerService;
         private readonly INotificationService _notificationService;
         private readonly SnapDbContext _db;
 
-        public Dealer(IPlayerRandomizer playerRandomizer,
+        public Dealer(IPlayerChooser playerChooser,
             ICardRandomizer carRandomizer,
             IPlayerService playerService,
             SnapDbContext db,
             ICardDealter cardDealter,
             INotificationService notificationService)
         {
-            _playerRandomizer = playerRandomizer;
+            _playerChooser = playerChooser;
             _carRandomizer = carRandomizer;
             _playerService = playerService;
             _db = db;
@@ -45,7 +47,7 @@ namespace Snap.Services.Impl
         {
             if (game.GameData.CurrentState != GameState.PLAYING)
                 throw new InvalidGameStateException();
-            if (game.CurrentTurn.PlayerTurn.Player.Username != (await _playerService.GetCurrentPlayer()).Username)
+            if (game.CurrentTurn.PlayerTurn.Player.Username != (await _playerService.GetCurrentPlayerAsync()).Username)
                 throw new NotCurrentPlayerTryToPlayException();
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
@@ -104,27 +106,12 @@ namespace Snap.Services.Impl
         }
 
         public IEnumerable<Card> ShuffleCards() =>
-            _carRandomizer.Generate(Enum.GetValues(typeof(Card)).Cast<Card>().ToArray());
+            _carRandomizer.ShuffleCards();
 
-        public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
-        {
-            PlayerTurn lastPlayerTurn = null;
-            return _playerRandomizer
-                .Generate(game.GameRoom.RoomPlayers.Where(p => !p.IsViewer).Select(p => p.Player))
-                .Select(p =>
-                {
-                    var newTurn = new PlayerTurn
-                    {
-                        GameData = game,
-                        Player = p
-                    };
-                    if (game.FirstPlayer == null) game.FirstPlayer = newTurn;
-                    if (lastPlayerTurn != null) lastPlayerTurn.Next = newTurn;
-                    return lastPlayerTurn = newTurn;
-                });
-        }
+        public IEnumerable<PlayerTurn> ChooseTurns(GameData game) =>
+            _playerChooser.ChooseTurns(game);
 
-        public virtual IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
-            this._cardDealter.DealtCards(playersStacks, cards);
+        public IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
+            _cardDealter.DealtCards(playersStacks, cards);
     }
 }

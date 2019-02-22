@@ -2,63 +2,81 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using Snap.DI;
 using Snap.Entities.Enums;
+using Snap.Fakes;
 using Snap.Services.Abstract;
 using Snap.Tests.Module;
 using Xunit;
+using Xunit.Ioc.Autofac;
 
 namespace Snap.Tests.Tests
 {
-    public class GamePlayTests
+    [UseAutofacTestFramework]
+    public sealed class GamePlayTests
     {
+        private readonly BackgroundHelper _backgroundHelper;
+        private readonly IFakePlayerService _playerService;
+        private readonly PlayerServiceSeedHelper _playerHelperService;
+        private readonly IDealer _dealer;
+
+        public GamePlayTests()
+        {
+
+        }
+        public GamePlayTests(BackgroundHelper backgroundHelper,
+            IFakePlayerService playerService,
+            PlayerServiceSeedHelper playerHelperService,
+            IDealer dealer)
+        {
+            _backgroundHelper = backgroundHelper;
+            _playerService = playerService;
+            _playerHelperService = playerHelperService;
+            _dealer = dealer;
+        }
+
         [Fact]
         public async Task When_first_player_play_then_the_pop_card_should_be_KING_TILE()
         {
-            throw new NotImplementedException();
             var fakedRandomCards = Enum
                 .GetValues(typeof(Card))
                 .Cast<Card>()
                 .ToList();
+            //using (var module = await new SnapModuleManager()
+            //    .WithFakeCardRandomizer(fakedRandomCards)
+            //    .WithFakeDealter()
+            //    .WithFakeSecondPlayerFirstRandomizer()
+            //    .BuildWithDefaultsAsync())
+            //Background or When
+            var game = await _backgroundHelper.CreateGameAsync();
+            await _backgroundHelper.PlayerJoinAsync(game);
+            game = await _backgroundHelper.StartGameAsync(game);
+            await _playerHelperService.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
 
-            using (var module = await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
-            {
-                var service = module.GetService<ISnapGameServices>();
-                var dealer = module.GetService<IDealer>();
-                var game = await service.CreateAsync(CancellationToken.None);
-                game = await service.StarGameAsync(game, CancellationToken.None);
-                var gameplay = await dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
-                gameplay.Card.ShouldBe(Card.KING_TILE);
-            }
+            //When
+            var gameplay = await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
+
+            //Then
+            gameplay.Card.ShouldBe(Card.KING_TILE);
         }
 
         [Fact]
         public async Task When_first_player_play_then_central_pile_should_have_KING_TILE()
         {
-            throw new NotImplementedException();
             var fakedRandomCards = Enum
                 .GetValues(typeof(Card))
                 .Cast<Card>()
                 .ToList();
+            var game = await _backgroundHelper.CreateGameAsync();
+            await _backgroundHelper.PlayerJoinAsync(game);
+            game = await _backgroundHelper.StartGameAsync(game);
+            (await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None))
+                .PlayerTurn
+                .SnapGame
+                .CentralPile
+                .Last
+                .Card.ShouldBe(Card.KING_TILE);
 
-            using (var module = await TestModuleHelpers
-                    .CreateAndBuildWithDefaultsAsync())
-            {
-                var service = module.GetService<ISnapGameServices>();
-                var dealer = module.GetService<IDealer>();
-
-                var game = await service.CreateAsync(CancellationToken.None);
-                game = await service.StarGameAsync(game, CancellationToken.None);
-                (await dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None))
-                    .PlayerTurn
-                    .SnapGame
-                    .CentralPile
-                    .Last
-                    .Card.ShouldBe(Card.KING_TILE);
-            }
         }
     }
 }

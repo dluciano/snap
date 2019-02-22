@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Dawlin.Util
+namespace Dawlin.Util.Impl.Exceptions
 {
     [Serializable]
     public class InvalidChangeTransition : Exception

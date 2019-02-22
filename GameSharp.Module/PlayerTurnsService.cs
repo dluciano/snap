@@ -3,10 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
+using GameSharp.Services.Abstract;
 
-namespace GameSharp.Services
+namespace GameSharp.Services.Impl
 {
-    public class PlayerTurnsService : IPlayerTurnsService
+    internal sealed class PlayerTurnsService : IPlayerTurnsService
     {
         private readonly GameSharpContext _db;
 

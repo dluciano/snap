@@ -4,7 +4,7 @@ using GameSharp.Entities;
 
 namespace Snap.Entities
 {
-    public sealed class PlayerData : IEntity
+    public class PlayerData : IEntity
     {
         public int Id { get; set; }
 

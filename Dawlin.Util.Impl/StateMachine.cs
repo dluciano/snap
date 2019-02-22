@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Dawlin.Util.Impl.Exceptions;
 
-namespace Dawlin.Util
+namespace Dawlin.Util.Impl
 {
     public sealed class StateMachine<TState, TTransitions> :
         IStateMachineProvider<TState, TTransitions>

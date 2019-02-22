@@ -8,7 +8,7 @@ using Snap.Services.Abstract;
 
 namespace Snap.Services.Impl
 {
-    public class CardPilesService : ICardPilesService
+    internal sealed class CardPilesService : ICardPilesService
     {
         private readonly SnapDbContext _db;
 

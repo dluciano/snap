@@ -13,6 +13,6 @@ namespace Snap.Server
         {
             _db = db;
         }
-        public async Task<Player> GetCurrentPlayer() => await _db.Players.FindAsync(1);
+        public async Task<Player> GetCurrentPlayerAsync() => await _db.Players.FindAsync(1);
     }
 }
