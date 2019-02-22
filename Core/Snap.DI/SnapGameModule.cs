@@ -13,7 +13,7 @@ namespace Snap.Services.Impl
         {
             base.Load(builder);
 
-            builder.RegisterType<CardRandomizer>().As<ICardRandomizer>();
+            builder.RegisterType<CardShuffler>().As<ICardShuffler>();
             builder.RegisterType<CardDealter>().As<ICardDealter>();
             builder.RegisterType<Dealer>().As<IDealer>();
 

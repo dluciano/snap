@@ -8,7 +8,9 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;
 using Snap.Fakes;
+using Snap.Services.Abstract;
 using Snap.Services.Impl;
+using Snap.Tests.Fakes;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Ioc.Autofac;
@@ -66,18 +68,9 @@ namespace Snap.Tests.Module
             builder.RegisterType<PlayerServiceSeedHelper>();
             builder.RegisterType<BackgroundHelper>();
 
-            //snapModule.Configure(services =>
-            //{
-            //    services.AddTransient<IPlayerRandomizer, FakeSecondPlayerFirst>();
-            //});
-            //snapModule.Configure(services =>
-            //{
-            //    services.AddTransient<ICardRandomizer>(p => new FakeRandomizer<Card>(cards));
-            //});
-            //snapModule.Configure(services =>
-            //{
-            //    services.AddTransient<ICardDealter, FakeCardDealter>();
-            //});
+            builder.RegisterType<FakeSecondPlayerFirst>().As<IPlayerChooser>();
+            builder.RegisterType<FakeCardShuflee>().As<ICardShuffler>();
+            builder.RegisterType<FakeCardDealter>().As<ICardDealter>();
 
             Container = builder.Build();
         }

@@ -18,7 +18,7 @@ namespace Snap.Services.Impl
     internal sealed class Dealer : IDealer
     {
         private readonly ICardDealter _cardDealter;
-        private readonly ICardRandomizer _carRandomizer;
+        private readonly ICardShuffler _carShuffler;
         private readonly SnapDbContext _db;
         private readonly INotificationService _notificationService;
         private readonly IPlayerChooser _playerChooser;
@@ -26,14 +26,14 @@ namespace Snap.Services.Impl
         private readonly IPlayerService _playerService;
 
         public Dealer(IPlayerChooser playerChooser,
-            ICardRandomizer carRandomizer,
+            ICardShuffler carShuffler,
             IPlayerService playerService,
             SnapDbContext db,
             ICardDealter cardDealter,
             INotificationService notificationService)
         {
             _playerChooser = playerChooser;
-            _carRandomizer = carRandomizer;
+            _carShuffler = carShuffler;
             _playerService = playerService;
             _db = db;
             _cardDealter = cardDealter;
@@ -74,7 +74,7 @@ namespace Snap.Services.Impl
 
         public IEnumerable<Card> ShuffleCards()
         {
-            return _carRandomizer.ShuffleCards();
+            return _carShuffler.ShuffleCards();
         }
 
         public IEnumerable<PlayerTurn> ChooseTurns(GameData game)

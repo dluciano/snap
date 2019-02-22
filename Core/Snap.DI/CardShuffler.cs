@@ -7,11 +7,11 @@ using Snap.Services.Abstract;
 
 namespace Snap.Services.Impl
 {
-    internal class CardRandomizer : ICardRandomizer
+    internal class CardShuffler : ICardShuffler
     {
         private readonly IListRandomizer _randomizer;
 
-        public CardRandomizer(IListRandomizer randomizer)
+        public CardShuffler(IListRandomizer randomizer)
         {
             _randomizer = randomizer;
         }

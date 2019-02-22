@@ -3,7 +3,7 @@ using Snap.Entities.Enums;
 
 namespace Snap.Services.Abstract
 {
-    public interface ICardRandomizer
+    public interface ICardShuffler
     {
         IEnumerable<Card> ShuffleCards();
     }

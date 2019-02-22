@@ -7,7 +7,7 @@ namespace Snap.Services.Abstract
 {
     public interface IDealer :
         ICardDealter,
-        ICardRandomizer,
+        ICardShuffler,
         IPlayerChooser
     {
         Task<PlayerGameplay> PopCurrentPlayerCardAsync(SnapGame game, CancellationToken token);

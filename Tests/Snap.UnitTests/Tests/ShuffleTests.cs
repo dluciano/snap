@@ -17,14 +17,14 @@ namespace Snap.Tests.Tests
         {
         }
 
-        public ShuffleTests(ICardRandomizer shuffleService,
+        public ShuffleTests(ICardShuffler shuffleService,
             BackgroundHelper backgroundHelper)
         {
             _shuffleService = shuffleService;
             _backgroundHelper = backgroundHelper;
         }
 
-        private readonly ICardRandomizer _shuffleService;
+        private readonly ICardShuffler _shuffleService;
         private readonly BackgroundHelper _backgroundHelper;
 
         [Fact]

@@ -18,18 +18,20 @@ namespace Snap.Tests.Fakes
         public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
         {
             PlayerTurn lastPlayerTurn = null;
-            return
-                _playerService.GetPlayers().Reverse().ToList().Select(p =>
+            var playersInverted = _playerService.GetPlayers().ToList();
+            playersInverted.Reverse();
+            var result = playersInverted.Select(p =>
+            {
+                var newTurn = new PlayerTurn
                 {
-                    var newTurn = new PlayerTurn
-                    {
-                        GameData = game,
-                        Player = p
-                    };
-                    if (game.FirstPlayer == null) game.FirstPlayer = newTurn;
-                    if (lastPlayerTurn != null) lastPlayerTurn.Next = newTurn;
-                    return lastPlayerTurn = newTurn;
-                });
+                    GameData = game,
+                    Player = p
+                };
+                if (game.FirstPlayer == null) game.FirstPlayer = newTurn;
+                if (lastPlayerTurn != null) lastPlayerTurn.Next = newTurn;
+                return lastPlayerTurn = newTurn;
+            });
+            return result;
         }
     }
 }
