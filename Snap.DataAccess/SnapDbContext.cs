@@ -6,18 +6,19 @@ namespace Snap.DataAccess
 {
     public sealed class SnapDbContext : GameSharpContext
     {
-        public DbSet<PlayerGameplay> PlayerGamePlays { get; set; }
-        public DbSet<PlayerData> PlayersData { get; set; }
-        public DbSet<SnapGame> SnapGames { get; set; }
-        public DbSet<StackNode> StackNodes { get; set; }
-
         public SnapDbContext()
         {
         }
+
         public SnapDbContext(DbContextOptions options) :
             base(options)
         {
         }
+
+        public DbSet<PlayerGameplay> PlayerGamePlays { get; set; }
+        public DbSet<PlayerData> PlayersData { get; set; }
+        public DbSet<SnapGame> SnapGames { get; set; }
+        public DbSet<StackNode> StackNodes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

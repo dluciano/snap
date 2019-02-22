@@ -10,17 +10,16 @@ namespace Snap.Tests.Tests
     [UseAutofacTestFramework]
     public class TurnsTests
     {
-        private readonly BackgroundHelper _backgroundHelper;
-
         public TurnsTests()
         {
-
         }
 
         public TurnsTests(BackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }
+
+        private readonly BackgroundHelper _backgroundHelper;
 
         [Fact]
         public async Task When_choosing_the_turns_should_not_be_repeated()
@@ -34,7 +33,8 @@ namespace Snap.Tests.Tests
             game.GameData
                 .PlayerTurns
                 .Select(p => p.Player.Username)
-                .ShouldBeUnique(); ;
+                .ShouldBeUnique();
+            ;
         }
 
         [Fact]

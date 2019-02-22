@@ -5,12 +5,6 @@ namespace GameSharp.DataAccess
 {
     public abstract class GameSharpContext : DbContext
     {
-        public DbSet<GameData> GameDatas { get; set; }
-        public DbSet<GameRoom> GameRooms { get; set; }
-        public DbSet<GameRoomPlayer> GameRoomPlayers { get; set; }
-        public DbSet<Player> Players { get; set; }
-        public DbSet<PlayerTurn> PlayerTurns { get; set; }
-
         protected GameSharpContext()
         {
         }
@@ -19,6 +13,12 @@ namespace GameSharp.DataAccess
             base(options)
         {
         }
+
+        public DbSet<GameData> GameDatas { get; set; }
+        public DbSet<GameRoom> GameRooms { get; set; }
+        public DbSet<GameRoomPlayer> GameRoomPlayers { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<PlayerTurn> PlayerTurns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

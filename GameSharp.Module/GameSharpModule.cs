@@ -10,7 +10,6 @@ namespace GameSharp.Services.Impl
             builder.RegisterType<GameRoomPlayerServices>().As<IGameRoomPlayerServices>();
             builder.RegisterType<PlayerTurnsService>().As<IPlayerTurnsService>();
             builder.RegisterType<RandomPlayerChooser>().As<IPlayerChooser>();
-
         }
     }
 }

@@ -1,12 +1,8 @@
 using System.Threading.Tasks;
 using Dawlin.Util.Impl.Exceptions;
 using GameSharp.Entities.Enums;
-using GameSharp.Services.Abstract;
 using Shouldly;
 using Snap.Entities;
-using Snap.Fakes;
-using Snap.Services.Abstract;
-using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;
 
@@ -15,17 +11,16 @@ namespace Snap.Tests.Tests
     [UseAutofacTestFramework]
     public class GameStateTest
     {
-        private readonly BackgroundHelper _backgroundHelper;
-
         public GameStateTest()
         {
-
         }
 
         public GameStateTest(BackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }
+
+        private readonly BackgroundHelper _backgroundHelper;
 
         [Fact]
         public async Task When_create_game_state_should_be_awaiting_player()
@@ -51,7 +46,6 @@ namespace Snap.Tests.Tests
             game.GameData
                 .CurrentState
                 .ShouldBe(GameState.PLAYING);
-
         }
 
         [Fact]

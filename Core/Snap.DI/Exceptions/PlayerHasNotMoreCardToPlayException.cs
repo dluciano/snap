@@ -14,11 +14,13 @@ namespace Snap.Services.Impl.Exceptions
         {
         }
 
-        public PlayerHasNotMoreCardToPlayException(string message, Exception innerException) : base(message, innerException)
+        public PlayerHasNotMoreCardToPlayException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected PlayerHasNotMoreCardToPlayException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected PlayerHasNotMoreCardToPlayException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

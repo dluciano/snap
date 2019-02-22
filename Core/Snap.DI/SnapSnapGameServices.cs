@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Dawlin.Util;
 using Dawlin.Util.Abstract;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
@@ -17,15 +16,15 @@ namespace Snap.Services.Impl
 {
     public class SnapSnapGameServices : ISnapGameServices
     {
-        private readonly IGameRoomPlayerServices _gameRoomService;
-        private readonly SnapDbContext _db;
-        private readonly INotificationService _notificationService;
-        private readonly ISnapGameConfigurationProvider _configuration;
-        private readonly IDealer _dealer;
-        private readonly IPlayerTurnsService _playerTurnsService;
         private readonly ICardPilesService _cardPilesServices;
+        private readonly ISnapGameConfigurationProvider _configuration;
+        private readonly SnapDbContext _db;
+        private readonly IDealer _dealer;
+        private readonly IGameRoomPlayerServices _gameRoomService;
+        private readonly INotificationService _notificationService;
+        private readonly IPlayerTurnsService _playerTurnsService;
         private readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachineProvider;
-        private IPlayerService _playerService;
+        private readonly IPlayerService _playerService;
 
         public SnapSnapGameServices(IGameRoomPlayerServices gameRoomService,
             ISnapGameConfigurationProvider configuration,
@@ -80,26 +79,22 @@ namespace Snap.Services.Impl
                     .GameRoom
                     .RoomPlayers
                     .Count(r => !r.IsViewer) < _configuration.MinRoomPlayers())
-            {
                 throw new NotEnoughPlayerInGameSession();
-            }
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
-                var turns = await _playerTurnsService.AddRangeAsync(token, _dealer.ChooseTurns(game.GameData).ToArray());
-                await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayerData()
+                var turns = await _playerTurnsService.AddRangeAsync(token,
+                    _dealer.ChooseTurns(game.GameData).ToArray());
+                await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayerData
                 {
                     SnapGame = game,
-                    PlayerTurn = pt,
+                    PlayerTurn = pt
                 }), CancellationToken.None);
                 var shuffledCards = _dealer.ShuffleCards();
                 await _cardPilesServices.AddRangeAsync(
                     _dealer.DealtCards(game.PlayersData.Select(p => p.StackEntity).ToList(), shuffledCards), token);
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
 
-                if (game.GameData.CurrentState != GameState.PLAYING)
-                {
-                    throw new InvalidGameStateException();
-                }
+                if (game.GameData.CurrentState != GameState.PLAYING) throw new InvalidGameStateException();
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
                 _notificationService?.OnGameStarted(this, new GameStartedEvent(game));

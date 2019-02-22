@@ -11,22 +11,6 @@ namespace Snap.Entities
     {
         public StackNode Last { get; set; }
 
-        public void Push(Card value) =>
-            Last = new StackNode
-            {
-                Previous = Last,
-                Card = value
-            };
-
-        public Card? PopCard()
-        {
-            if (Last == null)
-                return null;
-            var aux = Last;
-            Last = Last.Previous;
-            return aux.Card;
-        }
-
         public IEnumerator<StackNode> GetEnumerator()
         {
             var last = Last;
@@ -37,9 +21,32 @@ namespace Snap.Entities
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
-        public override string ToString() =>
-            string.Join(", ", this.Select(s => Enum.GetName(typeof(Card), s.Card)));
+        public void Push(Card value)
+        {
+            Last = new StackNode
+            {
+                Previous = Last,
+                Card = value
+            };
+        }
+
+        public Card? PopCard()
+        {
+            if (Last == null)
+                return null;
+            var aux = Last;
+            Last = Last.Previous;
+            return aux.Card;
+        }
+
+        public override string ToString()
+        {
+            return string.Join(", ", this.Select(s => Enum.GetName(typeof(Card), s.Card)));
+        }
     }
 }

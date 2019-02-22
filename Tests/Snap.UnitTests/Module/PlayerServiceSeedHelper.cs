@@ -8,25 +8,31 @@ namespace Snap.Tests.Module
 {
     public sealed class PlayerServiceSeedHelper
     {
-        private readonly IFakePlayerService _playerService;
         public const string FirstPlayerUsername = "First Player";
         public const string SecondPlayerUsername = "Second Player";
+        private readonly IFakePlayerService _playerService;
 
         public PlayerServiceSeedHelper(IFakePlayerService playerService)
         {
             _playerService = playerService;
         }
 
-        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername) =>
-            (await _playerService
-                .AddRangeAsync(FirstPlayerUsername))
-            .Single();
+        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername)
+        {
+            return (await _playerService
+                    .AddRangeAsync(FirstPlayerUsername))
+                .Single();
+        }
 
-        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername) =>
-            await LoginPlayerAsync((await SeedPlayerAsync(username)).Username);
+        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername)
+        {
+            return await LoginPlayerAsync((await SeedPlayerAsync(username)).Username);
+        }
 
-        public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername) =>
-            await _playerService
+        public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername)
+        {
+            return await _playerService
                 .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == username));
+        }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GameSharp.Entities;
-using GameSharp.Services;
 using GameSharp.Services.Abstract;
 
 namespace Snap.Fakes

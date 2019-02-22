@@ -26,7 +26,7 @@ namespace Snap.Fakes
 
         public async Task<IEnumerable<Player>> AddRangeAsync(params string[] usernames)
         {
-            var players = usernames?.Select(u => new Player { Username = u })?.ToList();
+            var players = usernames?.Select(u => new Player {Username = u})?.ToList();
             if (players == null)
                 return await Task.FromResult(Enumerable.Empty<Player>());
             await _db.Players.AddRangeAsync(players);
@@ -34,9 +34,14 @@ namespace Snap.Fakes
             return players;
         }
 
-        public IQueryable<Player> GetPlayers() =>
-           _db.Players;
+        public IQueryable<Player> GetPlayers()
+        {
+            return _db.Players;
+        }
 
-        public async Task<Player> GetCurrentPlayerAsync() => await Task.FromResult(_currentPlayer);
+        public async Task<Player> GetCurrentPlayerAsync()
+        {
+            return await Task.FromResult(_currentPlayer);
+        }
     }
 }

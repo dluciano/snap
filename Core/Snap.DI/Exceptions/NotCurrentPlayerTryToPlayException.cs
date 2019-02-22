@@ -14,11 +14,13 @@ namespace Snap.Services.Impl.Exceptions
         {
         }
 
-        public NotCurrentPlayerTryToPlayException(string message, Exception innerException) : base(message, innerException)
+        public NotCurrentPlayerTryToPlayException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected NotCurrentPlayerTryToPlayException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected NotCurrentPlayerTryToPlayException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

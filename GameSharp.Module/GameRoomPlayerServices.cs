@@ -30,15 +30,12 @@ namespace GameSharp.Services.Impl
             //    throw new InvalidGameStateException("The game is not in the state where players can join");
             //}
             var creator = await _playerService.GetCurrentPlayerAsync();
-            if (creator == null)
-            {
-                throw new UnauthorizedCreateException();
-            }
+            if (creator == null) throw new UnauthorizedCreateException();
             var entity = new GameRoomPlayer
             {
                 GameRoom = room,
                 Player = creator,
-                IsViewer = isViewer,
+                IsViewer = isViewer
             };
 
             await _db.GameRoomPlayers.AddAsync(entity, token);

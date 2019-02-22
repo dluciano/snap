@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
-using GameSharp.Services;
 using GameSharp.Services.Abstract;
 using GameSharp.Services.Impl.Exceptions;
 using Snap.DataAccess;
@@ -19,13 +17,13 @@ namespace Snap.Services.Impl
 {
     internal sealed class Dealer : IDealer
     {
-        private readonly IPlayerChooser _playerChooser;
-        private readonly ICardRandomizer _carRandomizer;
         private readonly ICardDealter _cardDealter;
+        private readonly ICardRandomizer _carRandomizer;
+        private readonly SnapDbContext _db;
+        private readonly INotificationService _notificationService;
+        private readonly IPlayerChooser _playerChooser;
 
         private readonly IPlayerService _playerService;
-        private readonly INotificationService _notificationService;
-        private readonly SnapDbContext _db;
 
         public Dealer(IPlayerChooser playerChooser,
             ICardRandomizer carRandomizer,
@@ -63,7 +61,7 @@ namespace Snap.Services.Impl
                 game.CurrentTurn.PlayerGameplay.Add(gamePlay);
                 game.CentralPile.Push(playerCard.Value);
 
-                if ((!CanSnap(game) && game.CurrentTurn.StackEntity.Last == null))
+                if (!CanSnap(game) && game.CurrentTurn.StackEntity.Last == null)
                     PlayerGameOver(game.CurrentTurn.PlayerTurn);
 
                 await _db.SaveChangesAsync(token);
@@ -72,6 +70,21 @@ namespace Snap.Services.Impl
                 trans.Commit();
                 return gamePlay;
             }
+        }
+
+        public IEnumerable<Card> ShuffleCards()
+        {
+            return _carRandomizer.ShuffleCards();
+        }
+
+        public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
+        {
+            return _playerChooser.ChooseTurns(game);
+        }
+
+        public IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards)
+        {
+            return _cardDealter.DealtCards(playersStacks, cards);
         }
 
         private void PlayerGameOver(PlayerTurn currentTurn)
@@ -104,14 +117,5 @@ namespace Snap.Services.Impl
             //Console.WriteLine($"Snap DONE. Central Pile: {game}");
             //Console.WriteLine($"User Pile: {game.Turns.Single(t => t.Player.Username == player.Username)}");
         }
-
-        public IEnumerable<Card> ShuffleCards() =>
-            _carRandomizer.ShuffleCards();
-
-        public IEnumerable<PlayerTurn> ChooseTurns(GameData game) =>
-            _playerChooser.ChooseTurns(game);
-
-        public IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
-            _cardDealter.DealtCards(playersStacks, cards);
     }
 }

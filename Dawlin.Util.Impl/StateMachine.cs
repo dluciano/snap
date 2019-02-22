@@ -31,22 +31,25 @@ namespace Dawlin.Util.Impl
 
         private sealed class Node : EqualityComparer<Node>
         {
-            public TState From { get; }
-            public TState To { get; }
-
             public Node(TState from, TState to)
             {
                 From = from;
                 To = to;
             }
 
-            public override bool Equals(Node x, Node y) =>
-                (x.From == null && y.To == null ||
-                 (x.From != null && y.From != null && x.From.Equals(y.To)));
+            public TState From { get; }
+            public TState To { get; }
 
-            public override int GetHashCode(Node obj) =>
-                obj.From.GetHashCode() ^ obj.To.GetHashCode();
+            public override bool Equals(Node x, Node y)
+            {
+                return x.From == null && y.To == null ||
+                       x.From != null && y.From != null && x.From.Equals(y.To);
+            }
+
+            public override int GetHashCode(Node obj)
+            {
+                return obj.From.GetHashCode() ^ obj.To.GetHashCode();
+            }
         }
     }
-
 }

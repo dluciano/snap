@@ -12,12 +12,8 @@ namespace Snap.Tests.Tests
     [UseAutofacTestFramework]
     public class DealtTests
     {
-        private readonly BackgroundHelper _backgroundHelper;
-        private readonly IFakePlayerService _playerService;
-
         public DealtTests()
         {
-
         }
 
         public DealtTests(BackgroundHelper backgroundHelper,
@@ -27,8 +23,11 @@ namespace Snap.Tests.Tests
             _playerService = playerService;
         }
 
+        private readonly BackgroundHelper _backgroundHelper;
+        private readonly IFakePlayerService _playerService;
+
         [Fact]
-        public async Task When_dealting_then_the_cards_of_each_player_should_not_be_repeated()
+        public async Task When_dealting_the_cards_every_player_should_have_a_proportional_amount_of_cards()
         {
             //Background or When
             var game = await _backgroundHelper.CreateGameAsync();
@@ -36,12 +35,10 @@ namespace Snap.Tests.Tests
             game = await _backgroundHelper.StartGameAsync(game);
 
             //Then
-            game.PlayersData
-                .Select(p => p.StackEntity)
-                .ToList().ForEach(playerStack =>
-                {
-                    playerStack.ToList().Select(s => s.Card).ShouldBeUnique();
-                });
+            var playersStacks = game.PlayersData.Select(p => p.StackEntity).ToList();
+            var cardsPerPlayer = Enum.GetValues(typeof(Card)).Length
+                                 / _playerService.GetPlayers().Count();
+            playersStacks.ShouldAllBe(p => p.Count() == cardsPerPlayer);
         }
 
         [Fact]
@@ -59,7 +56,7 @@ namespace Snap.Tests.Tests
         }
 
         [Fact]
-        public async Task When_dealting_the_cards_every_player_should_have_a_proportional_amount_of_cards()
+        public async Task When_dealting_then_the_cards_of_each_player_should_not_be_repeated()
         {
             //Background or When
             var game = await _backgroundHelper.CreateGameAsync();
@@ -67,10 +64,9 @@ namespace Snap.Tests.Tests
             game = await _backgroundHelper.StartGameAsync(game);
 
             //Then
-            var playersStacks = game.PlayersData.Select(p => p.StackEntity).ToList();
-            var cardsPerPlayer = Enum.GetValues(typeof(Card)).Length
-                                 / _playerService.GetPlayers().Count();
-            playersStacks.ShouldAllBe(p => p.Count() == cardsPerPlayer);
+            game.PlayersData
+                .Select(p => p.StackEntity)
+                .ToList().ForEach(playerStack => { playerStack.ToList().Select(s => s.Card).ShouldBeUnique(); });
         }
     }
 }

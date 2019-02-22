@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
-using Snap.Fakes;
 using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;
@@ -11,17 +10,17 @@ namespace Snap.Tests.Tests
     [UseAutofacTestFramework]
     public class GameCreationTest
     {
-        private readonly BackgroundHelper _backgroundHelper;
-
         public GameCreationTest()
         {
-
         }
 
         public GameCreationTest(BackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }
+
+        private readonly BackgroundHelper _backgroundHelper;
+
         [Fact]
         public async Task When_create_game_it_should_only_have_player_test()
         {

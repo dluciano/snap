@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dawlin.Util;
 using Dawlin.Util.Abstract;
 using GameSharp.Entities;
 using GameSharp.Services.Abstract;
@@ -15,6 +14,7 @@ namespace GameSharp.Services.Impl
         {
             _randomizer = randomizer;
         }
+
         public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
         {
             PlayerTurn lastPlayerTurn = null;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Autofac;
 using Dawlin.Util.Impl;
 using GameSharp.DataAccess;
@@ -16,6 +15,7 @@ using Xunit.Ioc.Autofac;
 using Xunit.Sdk;
 
 [assembly: TestFramework("Snap.Tests.Module.AutoFacTestConfiguration", "Snap.Tests")]
+
 namespace Snap.Tests.Module
 {
     public class AutoFacTestConfiguration : AutofacTestFramework
@@ -51,10 +51,7 @@ namespace Snap.Tests.Module
                     var db = args.Instance;
                     await db.Database.OpenConnectionAsync();
                     await db.Database.EnsureCreatedAsync();
-                }).OnRelease(context =>
-                {
-                    context.Database.CloseConnection();
-                });
+                }).OnRelease(context => { context.Database.CloseConnection(); });
 
             builder.RegisterType<FakePlayerService>()
                 .As<IPlayerService>()
