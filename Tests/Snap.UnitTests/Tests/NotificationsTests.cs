@@ -61,10 +61,6 @@ namespace Snap.Tests.Tests
         [Fact]
         private async Task When_first_player_pop_the_KING_TILE_then_all_players_should_be_notified()
         {
-            var fakedRandomCards = Enum
-                .GetValues(typeof(Card))
-                .Cast<Card>()
-                .ToList();
             var notified = false;
             PlayerGameplay gameplay = null;
             _notifier.CardPopEvent += (sender, e) =>

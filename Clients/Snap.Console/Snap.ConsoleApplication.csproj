@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core\Snap.DI\Snap.Services.Impl.csproj" />
     <ProjectReference Include="..\..\Core\Snap.Entities\Snap.Entities.csproj" />
   </ItemGroup>

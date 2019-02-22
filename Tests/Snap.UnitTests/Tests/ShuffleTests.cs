@@ -45,13 +45,13 @@ namespace Snap.Tests.Tests
         }
 
         [Fact]
-        public async Task When_shuffleling_cards_should_be_52()
+        public void When_shuffleling_cards_should_be_52()
         {
             _shuffleService.ShuffleCards().Count().ShouldBe(Enum.GetValues(typeof(Card)).Length);
         }
 
         [Fact]
-        public async Task When_shuffleling_cards_should_be_unique()
+        public void When_shuffleling_cards_should_be_unique()
         {
             _shuffleService.ShuffleCards().ShouldBeUnique();
         }
