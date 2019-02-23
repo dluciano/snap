@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
+using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NJsonSchema.Annotations;
-using Snap.Fakes;
 
 namespace Snap.Server.Controllers
 {
@@ -13,17 +13,17 @@ namespace Snap.Server.Controllers
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        public readonly IFakePlayerService _fakePlayerService;
+        public readonly IPlayerService _playerService;
 
-        public PlayerController(IFakePlayerService fakePlayerService)
+        public PlayerController(IPlayerService playerService)
         {
-            _fakePlayerService = fakePlayerService;
+            _playerService = playerService;
         }
 
         [HttpPost]
         public async Task<ActionResult<Player>> PostAsync([FromBody] [NotNull] string username,
             CancellationToken token) =>
-            (await _fakePlayerService.AddAsync(new Player
+            (await _playerService.AddAsync(new Player
             {
                 Username = username
             }, token));
