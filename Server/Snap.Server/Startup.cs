@@ -97,7 +97,6 @@ namespace Snap.Server
 
             builder.RegisterType<ServerPlayerService>()
                 .As<IPlayerService>()
-                .As<IFakePlayerService>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterModule<DawlinUtilModule>();
