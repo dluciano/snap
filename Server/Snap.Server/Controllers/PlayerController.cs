@@ -12,15 +12,15 @@ namespace Snap.Server.Controllers
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerProvider _playerProvider;
 
-        public PlayerController(IPlayerService playerService)
+        public PlayerController(IPlayerProvider playerProvider)
         {
-            _playerService = playerService;
+            _playerProvider = playerProvider;
         }
 
         [HttpPost]
         public async Task<ActionResult<Player>> PostAsync(CancellationToken token) =>
-            (await _playerService.AddAsync(token));
+            (await _playerProvider.AddAsync(token));
     }
 }

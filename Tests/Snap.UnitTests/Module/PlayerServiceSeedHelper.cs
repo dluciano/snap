@@ -11,21 +11,21 @@ namespace Snap.Tests.Module
     {
         public const string FirstPlayerUsername = "First Player";
         public const string SecondPlayerUsername = "Second Player";
-        private readonly IFakePlayerService _playerService;
+        private readonly IFakePlayerProvider _playerProvider;
 
-        public PlayerServiceSeedHelper(IFakePlayerService playerService)
+        public PlayerServiceSeedHelper(IFakePlayerProvider playerProvider)
         {
-            _playerService = playerService;
+            _playerProvider = playerProvider;
         }
 
         public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername,
             CancellationToken token = default)
         {
-            await _playerService.SetCurrentPlayer(players => Task.FromResult(new Player
+            await _playerProvider.SetCurrentPlayer(players => Task.FromResult(new Player
             {
                 Username = username
             }));
-            return await _playerService
+            return await _playerProvider
                 .AddAsync(token);
         }
 
@@ -34,7 +34,7 @@ namespace Snap.Tests.Module
             await LoginPlayerAsync((await SeedPlayerAsync(username, token)).Username);
 
         public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername) =>
-            await _playerService
+            await _playerProvider
                 .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == username));
     }
 }

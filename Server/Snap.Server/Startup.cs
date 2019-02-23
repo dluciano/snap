@@ -96,8 +96,8 @@ namespace Snap.Server
                     //await db.Database.EnsureCreatedAsync();
                 });
 
-            builder.RegisterType<ServerPlayerService>()
-                .As<IPlayerService>()
+            builder.RegisterType<ServerPlayerProvider>()
+                .As<IPlayerProvider>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterModule<DawlinUtilModule>();

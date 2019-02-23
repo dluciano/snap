@@ -8,11 +8,11 @@ using Snap.DataAccess;
 
 namespace Snap.Server
 {
-    internal class ServerPlayerService : PlayerServiceBase
+    internal class ServerPlayerProvider : PlayerProviderBase
     {
         private readonly IHttpContextAccessor _httpContext;
 
-        public ServerPlayerService(SnapDbContext db,
+        public ServerPlayerProvider(SnapDbContext db,
             IHttpContextAccessor httpContext)
             : base(db)
         {

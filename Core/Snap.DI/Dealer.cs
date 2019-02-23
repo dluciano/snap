@@ -23,18 +23,18 @@ namespace Snap.Services.Impl
         private readonly INotificationService _notificationService;
         private readonly IPlayerChooser _playerChooser;
 
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerProvider _playerProvider;
 
         public Dealer(IPlayerChooser playerChooser,
             ICardShuffler carShuffler,
-            IPlayerService playerService,
+            IPlayerProvider playerProvider,
             SnapDbContext db,
             ICardDealter cardDealter,
             INotificationService notificationService)
         {
             _playerChooser = playerChooser;
             _carShuffler = carShuffler;
-            _playerService = playerService;
+            _playerProvider = playerProvider;
             _db = db;
             _cardDealter = cardDealter;
             _notificationService = notificationService;
@@ -54,7 +54,7 @@ namespace Snap.Services.Impl
         {
             if (game.GameData.CurrentState != GameState.PLAYING)
                 throw new InvalidGameStateException();
-            if (game.CurrentTurn.PlayerTurn.Player.Username != (await _playerService.GetCurrentPlayerAsync()).Username)
+            if (game.CurrentTurn.PlayerTurn.Player.Username != (await _playerProvider.GetCurrentPlayerAsync()).Username)
                 throw new NotCurrentPlayerTryToPlayException();
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {

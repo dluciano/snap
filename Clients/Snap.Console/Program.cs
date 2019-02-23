@@ -23,21 +23,21 @@ namespace Snap.ConsoleApplication
         private readonly ISnapGameServices _snapGameServices;
         private readonly IDealer _dealer;
         private readonly INotificationService _notifier;
-        private readonly IFakePlayerService _playerService;
+        private readonly IFakePlayerProvider _playerProvider;
         private readonly IGameRoomPlayerServices _gameRoomService;
         private readonly IGameRoomServices _roomService;
 
         public Program(ISnapGameServices snapGameServices,
             IDealer dealer,
             INotificationService notifier,
-            IFakePlayerService playerService,
+            IFakePlayerProvider playerProvider,
             IGameRoomPlayerServices gameRoomService,
             IGameRoomServices roomService)
         {
             _snapGameServices = snapGameServices;
             _dealer = dealer;
             _notifier = notifier;
-            _playerService = playerService;
+            _playerProvider = playerProvider;
             _gameRoomService = gameRoomService;
             _roomService = roomService;
         }
@@ -71,9 +71,9 @@ namespace Snap.ConsoleApplication
                     await db.Database.EnsureCreatedAsync();
                 }).OnRelease(context => { context.Database.CloseConnection(); });
 
-            builder.RegisterType<FakePlayerService>()
-                .As<IPlayerService>()
-                .As<IFakePlayerService>()
+            builder.RegisterType<FakePlayerProvider>()
+                .As<IPlayerProvider>()
+                .As<IFakePlayerProvider>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterModule<DawlinUtilModule>();
@@ -84,15 +84,15 @@ namespace Snap.ConsoleApplication
 
         internal async Task Start()
         {
-            await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
+            await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
 
-            await _playerService.AddAsync(CancellationToken.None);
-            await _playerService.AddAsync(CancellationToken.None);
-            await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
+            await _playerProvider.AddAsync(CancellationToken.None);
+            await _playerProvider.AddAsync(CancellationToken.None);
+            await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
 
             var room = await _roomService.CreateAsync(CancellationToken.None);
 
-            await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 2"));
+            await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 2"));
             await _gameRoomService.AddPlayersAsync(room, false, CancellationToken.None);
 
             var game = await _snapGameServices.StarGameAsync(room, CancellationToken.None);
@@ -102,7 +102,7 @@ namespace Snap.ConsoleApplication
             Console.WriteLine($"Current Player is: {game.CurrentTurn.PlayerTurn.Player.Username }");
             Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
 
-            await _playerService.SetCurrentPlayer(game);
+            await _playerProvider.SetCurrentPlayer(game);
 
             _notifier.CardPopEvent += async (sender, e) =>
              {
@@ -115,7 +115,7 @@ namespace Snap.ConsoleApplication
                  Console.WriteLine($"Current Player is: {e.NextPlayer.PlayerTurn.Player.Username}");
                  Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
 
-                 await _playerService.SetCurrentPlayer(game);
+                 await _playerProvider.SetCurrentPlayer(game);
              };
 
             var finish = false;

@@ -6,7 +6,7 @@ using GameSharp.Services.Abstract;
 
 namespace Snap.Fakes
 {
-    public interface IFakePlayerService : IPlayerService
+    public interface IFakePlayerProvider : IPlayerProvider
     {
         Task<Player> SetCurrentPlayer(Func<IQueryable<Player>, Task<Player>> action);
         IQueryable<Player> GetPlayers();

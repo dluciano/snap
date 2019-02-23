@@ -56,9 +56,9 @@ namespace Snap.Tests.Module
                     await db.Database.EnsureCreatedAsync();
                 }).OnRelease(context => { context.Database.CloseConnection(); });
 
-            builder.RegisterType<FakePlayerService>()
-                .As<IPlayerService>()
-                .As<IFakePlayerService>()
+            builder.RegisterType<FakePlayerProvider>()
+                .As<IPlayerProvider>()
+                .As<IFakePlayerProvider>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterModule<DawlinUtilModule>();

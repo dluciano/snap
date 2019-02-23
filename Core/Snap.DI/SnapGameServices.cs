@@ -23,7 +23,7 @@ namespace Snap.Services.Impl
         private readonly INotificationService _notificationService;
         private readonly IPlayerTurnsService _playerTurnsService;
         private readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachineProvider;
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerProvider _playerProvider;
 
         public SnapGameServices(ISnapGameConfigurationProvider configuration,
             IDealer dealer,
@@ -32,11 +32,11 @@ namespace Snap.Services.Impl
             IStateMachineProvider<GameState, GameSessionTransitions> stateMachineProvider,
             SnapDbContext db,
             INotificationService notificationService,
-            IPlayerService playerService)
+            IPlayerProvider playerProvider)
         {
             _db = db;
             _notificationService = notificationService;
-            _playerService = playerService;
+            _playerProvider = playerProvider;
             _stateMachineProvider = stateMachineProvider;
             _configuration = configuration;
             _dealer = dealer;
@@ -47,7 +47,7 @@ namespace Snap.Services.Impl
         public async Task<SnapGame> StarGameAsync(GameRoom room, CancellationToken token)
         {
             //TODO: Validate that only players can start the game
-            var creator = await _playerService.GetCurrentPlayerAsync();
+            var creator = await _playerProvider.GetCurrentPlayerAsync();
             if (creator == null)
                 throw new UnauthorizedCreateException();
 

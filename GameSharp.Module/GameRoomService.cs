@@ -10,15 +10,15 @@ namespace GameSharp.Services.Impl
     internal sealed class GameRoomServices : IGameRoomServices
     {
         private readonly GameSharpContext _db;
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerProvider _playerProvider;
         private readonly IGameRoomPlayerServices _roomPlayerServices;
 
         public GameRoomServices(GameSharpContext db,
-            IPlayerService playerService,
+            IPlayerProvider playerProvider,
             IGameRoomPlayerServices roomPlayerServices)
         {
             _db = db;
-            _playerService = playerService;
+            _playerProvider = playerProvider;
             _roomPlayerServices = roomPlayerServices;
         }
 
@@ -26,7 +26,7 @@ namespace GameSharp.Services.Impl
         {
             using (var tran = await _db.Database.BeginTransactionAsync(token))
             {
-                var creator = await _playerService.GetCurrentPlayerAsync();
+                var creator = await _playerProvider.GetCurrentPlayerAsync();
                 if (creator == null)
                     throw new UnauthorizedCreateException();
 

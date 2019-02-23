@@ -17,14 +17,14 @@ namespace Snap.Tests.Tests
         }
 
         public DealtTests(BackgroundHelper backgroundHelper,
-            IFakePlayerService playerService)
+            IFakePlayerProvider playerProvider)
         {
             _backgroundHelper = backgroundHelper;
-            _playerService = playerService;
+            _playerProvider = playerProvider;
         }
 
         private readonly BackgroundHelper _backgroundHelper;
-        private readonly IFakePlayerService _playerService;
+        private readonly IFakePlayerProvider _playerProvider;
 
         [Fact]
         public async Task When_dealting_the_cards_every_player_should_have_a_proportional_amount_of_cards()
@@ -37,7 +37,7 @@ namespace Snap.Tests.Tests
             //Then
             var playersStacks = game.PlayersData.Select(p => p.StackEntity).ToList();
             var cardsPerPlayer = Enum.GetValues(typeof(Card)).Length
-                                 / _playerService.GetPlayers().Count();
+                                 / _playerProvider.GetPlayers().Count();
             playersStacks.ShouldAllBe(p => p.Count() == cardsPerPlayer);
         }
 

@@ -8,16 +8,16 @@ namespace Snap.Tests.Fakes
 {
     internal sealed class FakeSecondPlayerFirst : IPlayerChooser
     {
-        private readonly IFakePlayerService _playerService;
+        private readonly IFakePlayerProvider _playerProvider;
 
-        public FakeSecondPlayerFirst(IFakePlayerService playerService)
+        public FakeSecondPlayerFirst(IFakePlayerProvider playerProvider)
         {
-            _playerService = playerService;
+            _playerProvider = playerProvider;
         }
 
         public IEnumerable<PlayerTurn> ChooseTurns(IEnumerable<Player> players)
         {
-            var playersInverted = _playerService.GetPlayers().ToList();
+            var playersInverted = _playerProvider.GetPlayers().ToList();
             playersInverted.Reverse();
             return playersInverted.Select(p => new PlayerTurn
             {

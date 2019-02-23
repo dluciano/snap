@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\Core\Snap.Services\Snap.Services.Abstract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

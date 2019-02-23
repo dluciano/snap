@@ -8,11 +8,11 @@ using Snap.DataAccess;
 
 namespace Snap.Fakes
 {
-    public sealed class FakePlayerService : PlayerServiceBase, IFakePlayerService
+    public sealed class FakePlayerProvider : PlayerProviderBase, IFakePlayerProvider
     {
         private Player _currentPlayer;
 
-        public FakePlayerService(SnapDbContext db)
+        public FakePlayerProvider(SnapDbContext db)
             : base(db)
         {
         }

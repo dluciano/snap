@@ -5,11 +5,11 @@ using GameSharp.Entities;
 
 namespace GameSharp.Services.Abstract
 {
-    public abstract class PlayerServiceBase : IPlayerService
+    public abstract class PlayerProviderBase : IPlayerProvider
     {
         protected readonly GameSharpContext _db;
 
-        protected PlayerServiceBase(GameSharpContext db)
+        protected PlayerProviderBase(GameSharpContext db)
         {
             _db = db;
         }

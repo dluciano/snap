@@ -10,13 +10,13 @@ namespace GameSharp.Services.Impl
     internal sealed class GameRoomPlayerServices : IGameRoomPlayerServices
     {
         private readonly GameSharpContext _db;
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerProvider _playerProvider;
 
         public GameRoomPlayerServices(GameSharpContext db,
-            IPlayerService playerService)
+            IPlayerProvider playerProvider)
         {
             _db = db;
-            _playerService = playerService;
+            _playerProvider = playerProvider;
         }
 
         public async Task<GameRoomPlayer> AddPlayersAsync(GameRoom room,
@@ -29,7 +29,7 @@ namespace GameSharp.Services.Impl
                 //TODO: Make exception handling i18n
                 throw new GameNotAcceptingMorePlayersException();
             }
-            var creator = await _playerService.GetCurrentPlayerAsync();
+            var creator = await _playerProvider.GetCurrentPlayerAsync();
             if (creator == null)
                 throw new UnauthorizedCreateException();
 
