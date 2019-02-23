@@ -24,6 +24,15 @@ namespace GameSharp.DataAccess
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder
+                .Entity<Player>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder
+                .Entity<GameData>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder
                 .Entity<GameData>()
                 .HasOne(p => p.FirstPlayer)
                 .WithMany(r => r.FirstPlayers);
@@ -41,6 +50,10 @@ namespace GameSharp.DataAccess
 
             modelBuilder
                 .Entity<GameRoomPlayer>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder
+                .Entity<GameRoomPlayer>()
                 .HasOne(p => p.GameRoom)
                 .WithMany(r => r.RoomPlayers);
             modelBuilder
@@ -50,12 +63,17 @@ namespace GameSharp.DataAccess
 
             modelBuilder
                 .Entity<PlayerTurn>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder
+                .Entity<PlayerTurn>()
                 .HasOne(p => p.Player)
                 .WithMany(r => r.PlayerTurns);
-            //modelBuilder
-            //    .Entity<PlayerTurn>()
-            //    .HasOne(p => p.GameData)
-            //    .WithMany(r => r.PlayerTurns);
+
+            modelBuilder
+                .Entity<GameRoom>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
         }
     }
 }

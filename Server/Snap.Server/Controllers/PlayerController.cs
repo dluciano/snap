@@ -4,7 +4,6 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NJsonSchema.Annotations;
 
 namespace Snap.Server.Controllers
 {
@@ -13,7 +12,7 @@ namespace Snap.Server.Controllers
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        public readonly IPlayerService _playerService;
+        private readonly IPlayerService _playerService;
 
         public PlayerController(IPlayerService playerService)
         {
@@ -21,11 +20,7 @@ namespace Snap.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Player>> PostAsync([FromBody] [NotNull] string username,
-            CancellationToken token) =>
-            (await _playerService.AddAsync(new Player
-            {
-                Username = username
-            }, token));
+        public async Task<ActionResult<Player>> PostAsync(CancellationToken token) =>
+            (await _playerService.AddAsync(token));
     }
 }

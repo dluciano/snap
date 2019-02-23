@@ -14,8 +14,9 @@ namespace GameSharp.Services.Abstract
             _db = db;
         }
 
-        public async Task<Player> AddAsync(Player player, CancellationToken token = default(CancellationToken))
+        public async Task<Player> AddAsync(CancellationToken token = default(CancellationToken))
         {
+            var player = await this.GetCurrentPlayerAsync();
             await _db.Players.AddAsync(player, token);
             await _db.SaveChangesAsync(token);
             return player;

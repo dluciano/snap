@@ -4,6 +4,7 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NJsonSchema.Annotations;
 using Snap.DataAccess;
 
 namespace Snap.Server.Controllers
@@ -31,11 +32,11 @@ namespace Snap.Server.Controllers
             (await _roomService.CreateAsync(token));
 
         [HttpPost("{id}/Players")]
-        public async Task<ActionResult<GameRoomPlayer>> PostPlayerAsync([FromRoute]int id,
+        public async Task<ActionResult<GameRoomPlayer>> PostPlayerAsync([NotNull][FromRoute]int id,
             bool isViewer,
             CancellationToken token)
         {
-            var room = await _db.FindAsync<GameRoom>(id, token);
+            var room = await _db.FindAsync<GameRoom>(id);
             if (room == null)
             {
                 return NotFound();

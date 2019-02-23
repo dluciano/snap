@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,6 @@ using NSwag;
 using NSwag.AspNetCore;
 using NSwag.SwaggerGeneration.Processors.Security;
 using Snap.DataAccess;
-using Snap.Fakes;
 using Snap.Services.Impl;
 
 namespace Snap.Server
@@ -38,7 +36,17 @@ namespace Snap.Server
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddDbContext<SnapDbContext>(options =>
+            {
+                //options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
+                //    config => config.MigrationsAssembly(this.GetType().Assembly.FullName));
+                options.UseSqlServer(Configuration.GetConnectionString("MSQLDefaultConnection"),
+                    config => config.MigrationsAssembly(this.GetType().Assembly.FullName));
+            });
+
             services
                 .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
             .AddIdentityServerAuthentication(options =>
@@ -77,23 +85,16 @@ namespace Snap.Server
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder
-                .Register(t =>
-                {
-                    var context = new SnapDbContext(new DbContextOptionsBuilder()
-                        .UseSqlite(new SqliteConnection("DataSource=:memory:"))
-                        .Options);
-                    return context;
-                })
-                .AsSelf()
+                .Register(t => t.Resolve<SnapDbContext>())
                 .As<GameSharpContext>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope()
                 .OnActivated(async args =>
                 {
                     var db = args.Instance;
-                    await db.Database.OpenConnectionAsync();
-                    await db.Database.EnsureCreatedAsync();
-                }).OnRelease(context => { context.Database.CloseConnection(); });
+                    //await db.Database.MigrateAsync();
+                    //await db.Database.EnsureCreatedAsync();
+                });
 
             builder.RegisterType<ServerPlayerService>()
                 .As<IPlayerService>()

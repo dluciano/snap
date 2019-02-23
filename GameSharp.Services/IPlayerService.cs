@@ -8,6 +8,6 @@ namespace GameSharp.Services.Abstract
     public interface IPlayerService
     {
         Task<Player> GetCurrentPlayerAsync();
-        Task<Player> AddAsync(Player player, CancellationToken token = default(CancellationToken));
+        Task<Player> AddAsync(CancellationToken token = default(CancellationToken));
     }
 }

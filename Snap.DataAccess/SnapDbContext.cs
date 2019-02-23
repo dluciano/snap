@@ -34,6 +34,10 @@ namespace Snap.DataAccess
             base.OnModelCreating(modelBuilder);
             modelBuilder
                 .Entity<SnapGame>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+            modelBuilder
+                .Entity<SnapGame>()
                 .OwnsOne(p => p.CentralPile);
             modelBuilder
                 .Entity<SnapGame>()
@@ -42,6 +46,11 @@ namespace Snap.DataAccess
                 .Entity<SnapGame>()
                 .HasOne(p => p.GameData)
                 .WithMany(p => p.SnapGames);
+
+            modelBuilder
+                .Entity<PlayerData>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
             modelBuilder
                 .Entity<PlayerData>()
                 .OwnsOne(p => p.StackEntity);
@@ -49,6 +58,16 @@ namespace Snap.DataAccess
                 .Entity<PlayerData>()
                 .HasOne(p => p.SnapGame)
                 .WithMany(r => r.PlayersData);
+
+            modelBuilder
+                .Entity<PlayerGameplay>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder
+                .Entity<StackNode>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
         }
     }
 }

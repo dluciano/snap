@@ -84,14 +84,10 @@ namespace Snap.ConsoleApplication
 
         internal async Task Start()
         {
-            await _playerService.AddAsync(new Player
-            {
-                Username = "User 1"
-            }, CancellationToken.None);
-            await _playerService.AddAsync(new Player
-            {
-                Username = "User 2"
-            }, CancellationToken.None);
+            await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
+
+            await _playerService.AddAsync(CancellationToken.None);
+            await _playerService.AddAsync(CancellationToken.None);
             await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
 
             var room = await _roomService.CreateAsync(CancellationToken.None);
