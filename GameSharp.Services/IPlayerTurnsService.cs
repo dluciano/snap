@@ -7,7 +7,6 @@ namespace GameSharp.Services.Abstract
 {
     public interface IPlayerTurnsService
     {
-        Task<IEnumerable<PlayerTurn>> PushListAsync(IEnumerable<PlayerTurn> turns,
-              GameData gameData, CancellationToken token);
+        Task<IEnumerable<PlayerTurn>> PushListAsync(IEnumerable<PlayerTurn> turns, CancellationToken token);
     }
 }

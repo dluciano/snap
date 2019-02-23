@@ -22,8 +22,6 @@ namespace Snap.Tests.Tests
 
         private readonly BackgroundHelper _backgroundHelper;
 
-
-
         [Fact]
         public async Task When_game_start_then_game_should_be_in_state_playing()
         {

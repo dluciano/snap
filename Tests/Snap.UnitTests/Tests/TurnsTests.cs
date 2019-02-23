@@ -31,7 +31,7 @@ namespace Snap.Tests.Tests
 
             //Then
             game.GameData
-                .PlayerTurns
+                .Turns
                 .Select(p => p.Player.Username)
                 .ShouldBeUnique();
             ;

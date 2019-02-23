@@ -55,22 +55,28 @@ namespace Snap.Services.Impl
 
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
-                var gameData = new SnapGameData();
-                var shuffledCards = _dealer.ShuffleCards();
                 var turns = _dealer
                     .ChooseTurns(room.RoomPlayers.Where(p => !p.IsViewer)
                         .Select(p => p.Player));
-                turns = await _playerTurnsService.PushListAsync(turns, gameData, token);
+
+                turns = await _playerTurnsService.PushListAsync(turns, token);
 
                 var game = new SnapGame
                 {
-                    GameData = gameData
+                    GameData = new SnapGameData
+                    {
+                        FirstPlayer = turns.First()
+                    },
+                    CentralPile = new StackEntity(),
                 };
+
                 await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayerData
                 {
                     SnapGame = game,
                     PlayerTurn = pt
                 }), CancellationToken.None);
+
+                var shuffledCards = _dealer.ShuffleCards();
 
                 await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game.PlayersData.Select(p => p.StackEntity).ToList(), shuffledCards), token);
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
@@ -78,6 +84,7 @@ namespace Snap.Services.Impl
 
                 if (game.GameData.CurrentState != GameState.PLAYING)
                     throw new InvalidGameStateException();
+
                 game.GameData.NextTurn();
 
                 await _db.SaveChangesAsync(token);

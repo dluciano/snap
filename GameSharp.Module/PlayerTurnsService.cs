@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
 using GameSharp.Services.Abstract;
@@ -17,20 +18,18 @@ namespace GameSharp.Services.Impl
             _db = db;
         }
 
-        public async Task<IEnumerable<PlayerTurn>> PushListAsync(IEnumerable<PlayerTurn> turns, GameData gameData, CancellationToken token)
+        public async Task<IEnumerable<PlayerTurn>> PushListAsync(IEnumerable<PlayerTurn> turns, CancellationToken token)
         {
             PlayerTurn lastPlayerTurn = null;
             var t = turns.ToList();
-            t.ToList().ForEach(p =>
+            t.ToList().ForEach(async p =>
             {
-                p.GameData = gameData;
-                if (gameData.FirstPlayer == null)
-                    gameData.FirstPlayer = p;
                 if (lastPlayerTurn != null)
                     lastPlayerTurn.Next = p;
                 lastPlayerTurn = p;
+
             });
-            await _db.AddRangeAsync(t, token);
+            await _db.PlayerTurns.AddRangeAsync(t, token);
             await _db.SaveChangesAsync(token);
             return t;
         }

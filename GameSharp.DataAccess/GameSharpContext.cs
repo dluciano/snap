@@ -52,10 +52,10 @@ namespace GameSharp.DataAccess
                 .Entity<PlayerTurn>()
                 .HasOne(p => p.Player)
                 .WithMany(r => r.PlayerTurns);
-            modelBuilder
-                .Entity<PlayerTurn>()
-                .HasOne(p => p.GameData)
-                .WithMany(r => r.PlayerTurns);
+            //modelBuilder
+            //    .Entity<PlayerTurn>()
+            //    .HasOne(p => p.GameData)
+            //    .WithMany(r => r.PlayerTurns);
         }
     }
 }
