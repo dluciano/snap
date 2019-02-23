@@ -16,6 +16,7 @@ using NSwag;
 using NSwag.AspNetCore;
 using NSwag.SwaggerGeneration.Processors.Security;
 using Snap.DataAccess;
+using Snap.Server.Provider;
 using Snap.Services.Impl;
 
 namespace Snap.Server
