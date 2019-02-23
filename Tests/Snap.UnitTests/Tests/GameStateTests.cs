@@ -3,6 +3,7 @@ using Dawlin.Util.Impl.Exceptions;
 using GameSharp.Entities.Enums;
 using Shouldly;
 using Snap.Entities;
+using Snap.Services.Impl.Exceptions;
 using Xunit;
 using Xunit.Ioc.Autofac;
 
@@ -49,7 +50,8 @@ namespace Snap.Tests.Tests
             await StartGameAsync();
 
             //Then
-            await StartGameAsync().ShouldThrowAsync<InvalidChangeTransition>();
+            await StartGameAsync()
+                .ShouldThrowAsync<GameAlreadyStartedException>();
 
             async Task<SnapGame> StartGameAsync()
             {

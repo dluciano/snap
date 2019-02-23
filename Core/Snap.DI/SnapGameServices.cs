@@ -46,6 +46,7 @@ namespace Snap.Services.Impl
 
         public async Task<SnapGame> StarGameAsync(GameRoom room, CancellationToken token)
         {
+            //TODO: Validate that only players can start the game
             var creator = await _playerService.GetCurrentPlayerAsync();
             if (creator == null)
                 throw new UnauthorizedCreateException();
@@ -53,22 +54,24 @@ namespace Snap.Services.Impl
             if (room.RoomPlayers.Count(r => !r.IsViewer) < _configuration.MinRoomPlayers())
                 throw new NotEnoughPlayerInGameSession();
 
+            if (!room.CanJoin)
+                throw new GameAlreadyStartedException();
+
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
+                var game = new SnapGame
+                {
+                    CentralPile = new StackEntity(),
+                    GameData = new SnapGameData()
+                };
+                _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
+
                 var turns = _dealer
                     .ChooseTurns(room.RoomPlayers.Where(p => !p.IsViewer)
                         .Select(p => p.Player));
 
                 turns = await _playerTurnsService.PushListAsync(turns, token);
-
-                var game = new SnapGame
-                {
-                    GameData = new SnapGameData
-                    {
-                        FirstPlayer = turns.First()
-                    },
-                    CentralPile = new StackEntity(),
-                };
+                game.GameData.FirstPlayer = turns.First();
 
                 await _db.PlayersData.AddRangeAsync(turns.Select(pt => new PlayerData
                 {
@@ -79,7 +82,7 @@ namespace Snap.Services.Impl
                 var shuffledCards = _dealer.ShuffleCards();
 
                 await _cardPilesServices.AddRangeAsync(_dealer.DealtCards(game.PlayersData.Select(p => p.StackEntity).ToList(), shuffledCards), token);
-                _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
+
                 room.CanJoin = false;
 
                 if (game.GameData.CurrentState != GameState.PLAYING)

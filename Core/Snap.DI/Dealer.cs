@@ -89,12 +89,14 @@ namespace Snap.Services.Impl
 
         private bool CanSnap(SnapGame game)
         {
-            //if (game.CentralPileLast == null || game.CentralPileLast.Previous == null) return false;
-            //var last = (byte)((byte)game.CentralPileLast.Card << 4) >> 4;
-            //var previous = (byte)((byte)game.CentralPileLast.Previous.Card << 4) >> 4;
+            if (game.CentralPile == null || 
+                game.CentralPile.Last == null
+                || game.CentralPile.Last.Previous == null)
+                return false;
+            var last = (byte)((byte)game.CentralPile.Last.Card << 4) >> 4;
+            var previous = (byte)((byte)game.CentralPile.Last.Previous.Card << 4) >> 4;
 
-            //return last == previous;
-            throw new NotImplementedException();
+            return last == previous;
         }
 
         public void Snap(GameRoom game, Player player)
