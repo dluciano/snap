@@ -86,7 +86,7 @@ namespace Snap.Server
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder
-                .Register(t => t.Resolve<SnapDbContext>())
+                .Register<GameSharpContext>(t => t.Resolve<SnapDbContext>())
                 .As<GameSharpContext>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope()

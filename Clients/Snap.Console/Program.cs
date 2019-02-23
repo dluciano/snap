@@ -54,7 +54,7 @@ namespace Snap.ConsoleApplication
             builder
                 .Register(t =>
                 {
-                    var context = new SnapDbContext(new DbContextOptionsBuilder()
+                    var context = new SnapDbContext(new DbContextOptionsBuilder<SnapDbContext>()
                         .UseSqlite(new SqliteConnection("DataSource=:memory:"))
                         .Options);
                     return context;

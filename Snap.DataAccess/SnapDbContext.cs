@@ -10,7 +10,7 @@ namespace Snap.DataAccess
         {
         }
 
-        public SnapDbContext(DbContextOptions options) :
+        public SnapDbContext(DbContextOptions<SnapDbContext> options) :
             base(options)
         {
         }
