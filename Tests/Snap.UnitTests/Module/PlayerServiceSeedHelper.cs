@@ -18,22 +18,15 @@ namespace Snap.Tests.Module
             _playerService = playerService;
         }
 
-        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername, CancellationToken token = default)
-        {
-            return (await _playerService
-                    .AddRangeAsync(token, username))
-                .Single();
-        }
+        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername, CancellationToken token = default) =>
+            await _playerService
+                .AddAsync(new Player { Username = username }, token);
 
-        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername, CancellationToken token = default)
-        {
-            return await LoginPlayerAsync((await SeedPlayerAsync(username, token)).Username);
-        }
+        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername, CancellationToken token = default) => 
+            await LoginPlayerAsync((await SeedPlayerAsync(username, token)).Username);
 
-        public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername)
-        {
-            return await _playerService
+        public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername) =>
+            await _playerService
                 .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == username));
-        }
     }
 }

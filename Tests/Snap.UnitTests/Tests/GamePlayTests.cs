@@ -32,13 +32,12 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_first_player_play_then_central_pile_should_have_KING_TILE()
         {
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
             await _playerHelperService.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
             var r = (await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None));
-                r.PlayerTurn
-                .SnapGame
+            r.PlayerTurn.SnapGame
                 .CentralPile
                 .Last
                 .Card.ShouldBe(Card.KING_TILE);
@@ -47,15 +46,10 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_first_player_play_then_the_pop_card_should_be_KING_TILE()
         {
-            //using (var module = await new SnapModuleManager()
-            //    .WithFakeCardRandomizer(fakedRandomCards)
-            //    .WithFakeDealter()
-            //    .WithFakeSecondPlayerFirstRandomizer()
-            //    .BuildWithDefaultsAsync())
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
             await _playerHelperService.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
 
             //When

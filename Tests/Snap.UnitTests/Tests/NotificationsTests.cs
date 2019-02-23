@@ -41,10 +41,6 @@ namespace Snap.Tests.Tests
         [Fact]
         private async Task When_a_game_is_started_players_should_be_notified_with_the_game_stared_state()
         {
-            var fakedRandomCards = Enum
-                .GetValues(typeof(Card))
-                .Cast<Card>()
-                .ToList();
             var notified = false;
             _notifier.GameStartEvent += (sender, e) =>
             {
@@ -52,9 +48,9 @@ namespace Snap.Tests.Tests
                 e.Game.GameData.CurrentState.ShouldBe(GameState.PLAYING);
             };
 
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game, PlayerServiceSeedHelper.SecondPlayerUsername);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room, PlayerServiceSeedHelper.SecondPlayerUsername);
+            await _backgroundHelper.StartGameAsync(room);
             notified.ShouldBeTrue();
         }
 
@@ -69,9 +65,9 @@ namespace Snap.Tests.Tests
                 notified = true;
                 gameplay.Card.ShouldBe(Card.KING_TILE);
             };
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game, PlayerServiceSeedHelper.SecondPlayerUsername);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room, PlayerServiceSeedHelper.SecondPlayerUsername);
+            var game = await _backgroundHelper.StartGameAsync(room);
             await _playerServiceSeedHelper.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
             await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
             notified.ShouldBeTrue();
@@ -82,10 +78,6 @@ namespace Snap.Tests.Tests
         [Fact]
         private async Task When_player_2_pop_then_player_1_should_be_notified_as_the_current_player()
         {
-            var fakedRandomCards = Enum
-                .GetValues(typeof(Card))
-                .Cast<Card>()
-                .ToList();
             var notified = false;
             PlayerGameplay gameplay = null;
             _notifier.CardPopEvent += (sender, e) =>
@@ -94,9 +86,9 @@ namespace Snap.Tests.Tests
                 notified = true;
                 e.NextPlayer.PlayerTurn.Player.Username.ShouldBe(PlayerServiceSeedHelper.FirstPlayerUsername);
             };
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game, PlayerServiceSeedHelper.SecondPlayerUsername);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room, PlayerServiceSeedHelper.SecondPlayerUsername);
+            var game = await _backgroundHelper.StartGameAsync(room);
             await _playerServiceSeedHelper.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
             await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
 

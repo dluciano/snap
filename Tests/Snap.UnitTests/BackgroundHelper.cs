@@ -12,34 +12,37 @@ namespace Snap.Tests
     {
         private readonly ISnapGameServices _gameService;
         private readonly PlayerServiceSeedHelper _playerSeedHelper;
-        private readonly IGameRoomPlayerServices _roomService;
+        private readonly IGameRoomPlayerServices _roomPlayerService;
+        private readonly IGameRoomServices _roomService;
 
         public BackgroundHelper(ISnapGameServices gameService,
-            IGameRoomPlayerServices roomService,
-            PlayerServiceSeedHelper playerSeedHelper)
+            IGameRoomPlayerServices roomPlayerService,
+            PlayerServiceSeedHelper playerSeedHelper,
+            IGameRoomServices roomService)
         {
             _gameService = gameService;
-            _roomService = roomService;
+            _roomPlayerService = roomPlayerService;
             _playerSeedHelper = playerSeedHelper;
+            _roomService = roomService;
         }
 
-        public async Task<SnapGame> CreateGameAsync()
+        public async Task<GameRoom> CreateRoomAsync()
         {
             await _playerSeedHelper.SeedAndLoginAsync();
-            return await _gameService.CreateAsync(CancellationToken.None);
+            return await _roomService.CreateAsync(CancellationToken.None);
         }
 
-        public async Task<GameRoomPlayer> PlayerJoinAsync(SnapGame game,
+        public async Task<GameRoomPlayer> PlayerJoinAsync(GameRoom room,
             string username = PlayerServiceSeedHelper.SecondPlayerUsername)
         {
             await _playerSeedHelper.SeedAndLoginAsync(username);
-            return await _roomService.AddPlayersAsync(game.GameData.GameRoom, false, CancellationToken.None);
+            return await _roomPlayerService.AddPlayersAsync(room, false, CancellationToken.None);
         }
 
-        public async Task<SnapGame> StartGameAsync(SnapGame game)
+        public async Task<SnapGame> StartGameAsync(GameRoom room)
         {
             await _playerSeedHelper.LoginPlayerAsync();
-            return await _gameService.StarGameAsync(game, CancellationToken.None);
+            return await _gameService.StarGameAsync(room, CancellationToken.None);
         }
     }
 }

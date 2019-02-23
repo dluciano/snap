@@ -35,9 +35,7 @@ namespace Snap.Server.Controllers
                 ModelState.AddModelError(nameof(roomId), $"The {nameof(roomId)} is required");
                 return BadRequest();
             }
-
-            var game = _db.SnapGames.Single(s => s.GameData.GameRoom.Id == room.Id);
-            return await _service.StarGameAsync(game, token);
+            return await _service.StarGameAsync(room, token);
         }
     }
 }

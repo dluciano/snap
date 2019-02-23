@@ -5,7 +5,6 @@ using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Snap.DataAccess;
-using Snap.Services.Abstract;
 
 namespace Snap.Server.Controllers
 {
@@ -14,22 +13,22 @@ namespace Snap.Server.Controllers
     [ApiController]
     public class GameRoomController : ControllerBase
     {
-        private readonly ISnapGameServices _service;
+        private readonly IGameRoomServices _roomService;
         private readonly SnapDbContext _db;
         private readonly IGameRoomPlayerServices _gameRoomService;
 
-        public GameRoomController(ISnapGameServices service,
+        public GameRoomController(IGameRoomServices roomService,
             SnapDbContext db,
             IGameRoomPlayerServices gameRoomService)
         {
-            _service = service;
+            _roomService = roomService;
             _db = db;
             _gameRoomService = gameRoomService;
         }
 
         [HttpPost]
         public async Task<ActionResult<GameRoom>> PostAsync(CancellationToken token) =>
-            (await _service.CreateAsync(token)).GameData.GameRoom;
+            (await _roomService.CreateAsync(token));
 
         [HttpPost("{id}/Players")]
         public async Task<ActionResult<GameRoomPlayer>> PostPlayerAsync([FromRoute]int id,

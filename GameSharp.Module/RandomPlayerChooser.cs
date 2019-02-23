@@ -15,24 +15,12 @@ namespace GameSharp.Services.Impl
             _randomizer = randomizer;
         }
 
-        public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
-        {
-            PlayerTurn lastPlayerTurn = null;
-            return _randomizer
-                .Generate(game
-                    .GameRoom.RoomPlayers
-                    .Where(p => !p.IsViewer).Select(p => p.Player))
-                .Select(p =>
+        public IEnumerable<PlayerTurn> ChooseTurns(IEnumerable<Player> players) =>
+            _randomizer
+                .Generate(players)
+                .Select(p => new PlayerTurn
                 {
-                    var newTurn = new PlayerTurn
-                    {
-                        GameData = game,
-                        Player = p
-                    };
-                    if (game.FirstPlayer == null) game.FirstPlayer = newTurn;
-                    if (lastPlayerTurn != null) lastPlayerTurn.Next = newTurn;
-                    return lastPlayerTurn = newTurn;
+                    Player = p
                 });
-        }
     }
 }

@@ -30,9 +30,9 @@ namespace Snap.Tests.Tests
         public async Task When_dealting_the_cards_every_player_should_have_a_proportional_amount_of_cards()
         {
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             var playersStacks = game.PlayersData.Select(p => p.StackEntity).ToList();
@@ -45,9 +45,9 @@ namespace Snap.Tests.Tests
         public async Task When_dealting_then_none_of_the_cards_should_be_repeated()
         {
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             game.PlayersData
@@ -59,9 +59,9 @@ namespace Snap.Tests.Tests
         public async Task When_dealting_then_the_cards_of_each_player_should_not_be_repeated()
         {
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             game.PlayersData

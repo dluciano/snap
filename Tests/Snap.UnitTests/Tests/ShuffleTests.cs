@@ -31,9 +31,9 @@ namespace Snap.Tests.Tests
         public async Task When_shuffle_with_two_player_then_only_two_players_should_exists()
         {
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             game.PlayersData.Count.ShouldBe(2);
@@ -45,15 +45,11 @@ namespace Snap.Tests.Tests
         }
 
         [Fact]
-        public void When_shuffleling_cards_should_be_52()
-        {
+        public void When_shuffleling_cards_should_be_52() =>
             _shuffleService.ShuffleCards().Count().ShouldBe(Enum.GetValues(typeof(Card)).Length);
-        }
 
         [Fact]
-        public void When_shuffleling_cards_should_be_unique()
-        {
+        public void When_shuffleling_cards_should_be_unique() =>
             _shuffleService.ShuffleCards().ShouldBeUnique();
-        }
     }
 }

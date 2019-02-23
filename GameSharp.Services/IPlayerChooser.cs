@@ -5,6 +5,6 @@ namespace GameSharp.Services.Abstract
 {
     public interface IPlayerChooser
     {
-        IEnumerable<PlayerTurn> ChooseTurns(GameData game);
+        IEnumerable<PlayerTurn> ChooseTurns(IEnumerable<Player> players);
     }
 }

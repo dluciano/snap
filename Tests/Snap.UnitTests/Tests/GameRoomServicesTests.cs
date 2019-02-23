@@ -33,12 +33,12 @@ namespace Snap.Tests.Tests
         public async Task When_player_2_join_as_viewer_then_two_player_should_exists_and_player_2_should_be_viewer()
         {
             //Background
-            var game = await _backgroundHelper.CreateGameAsync();
+            var room = await _backgroundHelper.CreateRoomAsync();
             await _playerHelperService.SeedAndLoginAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
 
             //When
             var gameRoomPlayer = await _gameRoomPlayerServices
-                .AddPlayersAsync(game.GameData.GameRoom, true, CancellationToken.None);
+                .AddPlayersAsync(room, true, CancellationToken.None);
 
             //Then
             gameRoomPlayer.GameRoom.RoomPlayers.Single(p =>
@@ -51,10 +51,10 @@ namespace Snap.Tests.Tests
         public async Task When_player_2_join_then_two_player_should_exists()
         {
             //Background
-            var game = await _backgroundHelper.CreateGameAsync();
+            var room = await _backgroundHelper.CreateRoomAsync();
 
             //When
-            var roomPlayer = await _backgroundHelper.PlayerJoinAsync(game);
+            var roomPlayer = await _backgroundHelper.PlayerJoinAsync(room);
 
             //Then
             roomPlayer.GameRoom.RoomPlayers.Count.ShouldBe(2);

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.DataAccess;
@@ -16,11 +17,22 @@ namespace GameSharp.Services.Impl
             _db = db;
         }
 
-        public async Task<PlayerTurn[]> AddRangeAsync(CancellationToken token, params PlayerTurn[] turns)
+        public async Task<IEnumerable<PlayerTurn>> PushListAsync(IEnumerable<PlayerTurn> turns, GameData gameData, CancellationToken token)
         {
-            await _db.AddRangeAsync(turns ?? Enumerable.Empty<PlayerTurn>(), token);
+            PlayerTurn lastPlayerTurn = null;
+            var t = turns.ToList();
+            t.ToList().ForEach(p =>
+            {
+                p.GameData = gameData;
+                if (gameData.FirstPlayer == null)
+                    gameData.FirstPlayer = p;
+                if (lastPlayerTurn != null)
+                    lastPlayerTurn.Next = p;
+                lastPlayerTurn = p;
+            });
+            await _db.AddRangeAsync(t, token);
             await _db.SaveChangesAsync(token);
-            return turns;
+            return t;
         }
     }
 }

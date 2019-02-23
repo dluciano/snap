@@ -24,13 +24,15 @@ namespace GameSharp.Services.Impl
             CancellationToken token)
         {
             //TODO: Implement this correctly
-            //if (!isViewer && room.GameData.CurrentState != GameState.AWAITING_PLAYERS)
-            //{
-            //    //TODO: Make exception handling i18n
-            //    throw new InvalidGameStateException("The game is not in the state where players can join");
-            //}
+            if (!isViewer && !room.CanJoin)
+            {
+                //TODO: Make exception handling i18n
+                throw new GameNotAcceptingMorePlayersException();
+            }
             var creator = await _playerService.GetCurrentPlayerAsync();
-            if (creator == null) throw new UnauthorizedCreateException();
+            if (creator == null)
+                throw new UnauthorizedCreateException();
+
             var entity = new GameRoomPlayer
             {
                 GameRoom = room,

@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using GameSharp.Entities;
+using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Http;
 using Snap.DataAccess;
-using Snap.Fakes;
 
 namespace Snap.Server
 {
-    internal class ServerPlayerService : FakePlayerService
+    internal class ServerPlayerService : PlayerServiceBase
     {
         private readonly IHttpContextAccessor _httpContext;
 

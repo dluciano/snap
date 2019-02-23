@@ -15,23 +15,14 @@ namespace Snap.Tests.Fakes
             _playerService = playerService;
         }
 
-        public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
+        public IEnumerable<PlayerTurn> ChooseTurns(IEnumerable<Player> players)
         {
-            PlayerTurn lastPlayerTurn = null;
             var playersInverted = _playerService.GetPlayers().ToList();
             playersInverted.Reverse();
-            var result = playersInverted.Select(p =>
+            return playersInverted.Select(p => new PlayerTurn
             {
-                var newTurn = new PlayerTurn
-                {
-                    GameData = game,
-                    Player = p
-                };
-                if (game.FirstPlayer == null) game.FirstPlayer = newTurn;
-                if (lastPlayerTurn != null) lastPlayerTurn.Next = newTurn;
-                return lastPlayerTurn = newTurn;
+                Player = p
             });
-            return result;
         }
     }
 }

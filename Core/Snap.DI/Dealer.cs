@@ -40,6 +40,15 @@ namespace Snap.Services.Impl
             _notificationService = notificationService;
         }
 
+        public IEnumerable<Card> ShuffleCards() =>
+            _carShuffler.ShuffleCards();
+
+        public IEnumerable<PlayerTurn> ChooseTurns(IEnumerable<Player> players) =>
+            _playerChooser.ChooseTurns(players);
+
+        public IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards) =>
+            _cardDealter.DealtCards(playersStacks, cards);
+
         //Game loop
         public async Task<PlayerGameplay> PopCurrentPlayerCardAsync(SnapGame game, CancellationToken token)
         {
@@ -72,21 +81,6 @@ namespace Snap.Services.Impl
             }
         }
 
-        public IEnumerable<Card> ShuffleCards()
-        {
-            return _carShuffler.ShuffleCards();
-        }
-
-        public IEnumerable<PlayerTurn> ChooseTurns(GameData game)
-        {
-            return _playerChooser.ChooseTurns(game);
-        }
-
-        public IEnumerable<StackNode> DealtCards(IList<StackEntity> playersStacks, IEnumerable<Card> cards)
-        {
-            return _cardDealter.DealtCards(playersStacks, cards);
-        }
-
         private void PlayerGameOver(PlayerTurn currentTurn)
         {
             //When a gamer lost then delete them from the turns
@@ -100,7 +94,7 @@ namespace Snap.Services.Impl
             //var previous = (byte)((byte)game.CentralPileLast.Previous.Card << 4) >> 4;
 
             //return last == previous;
-            return false;
+            throw new NotImplementedException();
         }
 
         public void Snap(GameRoom game, Player player)

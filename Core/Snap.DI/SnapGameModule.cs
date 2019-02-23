@@ -3,7 +3,6 @@ using Dawlin.Util.Abstract;
 using Dawlin.Util.Impl;
 using GameSharp.Entities.Enums;
 using Snap.Services.Abstract;
-using Snap.Services.Impl.Notifications;
 
 namespace Snap.Services.Impl
 {
@@ -17,16 +16,14 @@ namespace Snap.Services.Impl
             builder.RegisterType<CardDealter>().As<ICardDealter>();
             builder.RegisterType<Dealer>().As<IDealer>();
 
-            builder.RegisterType<SnapSnapGameServices>().As<ISnapGameServices>();
+            builder.RegisterType<SnapGameServices>().As<ISnapGameServices>();
             builder.RegisterType<SnapGameConfigurationProvider>().As<ISnapGameConfigurationProvider>();
             builder.RegisterType<CardPilesService>().As<ICardPilesService>();
             builder.RegisterType<DefaultNotificationService>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
             builder.Register(context => new StateMachine<GameState, GameSessionTransitions>()
-                    .AddTransition(GameState.NONE, GameState.AWAITING_PLAYERS,
-                        GameSessionTransitions.CREATE_GAME)
-                    .AddTransition(GameState.AWAITING_PLAYERS, GameState.PLAYING,
+                    .AddTransition(GameState.NONE, GameState.PLAYING,
                         GameSessionTransitions.START_GAME)
                     .AddTransition(GameState.PLAYING, GameState.FINISHED,
                         GameSessionTransitions.FINISH_GAME)

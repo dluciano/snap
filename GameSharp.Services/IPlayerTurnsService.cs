@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 
@@ -6,6 +7,7 @@ namespace GameSharp.Services.Abstract
 {
     public interface IPlayerTurnsService
     {
-        Task<PlayerTurn[]> AddRangeAsync(CancellationToken token, params PlayerTurn[] turns);
+        Task<IEnumerable<PlayerTurn>> PushListAsync(IEnumerable<PlayerTurn> turns,
+              GameData gameData, CancellationToken token);
     }
 }

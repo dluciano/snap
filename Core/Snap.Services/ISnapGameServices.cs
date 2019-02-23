@@ -1,12 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using GameSharp.Entities;
 using Snap.Entities;
 
 namespace Snap.Services.Abstract
 {
     public interface ISnapGameServices
     {
-        Task<SnapGame> CreateAsync(CancellationToken token);
-        Task<SnapGame> StarGameAsync(SnapGame game, CancellationToken token);
+        Task<SnapGame> StarGameAsync(GameRoom game, CancellationToken token);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +23,9 @@ namespace Snap.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Player>> PostAsync([FromBody] [NotNull] string username,
             CancellationToken token) =>
-            (await _fakePlayerService.AddRangeAsync(token, username)).Single();
+            (await _fakePlayerService.AddAsync(new Player
+            {
+                Username = username
+            }, token));
     }
 }

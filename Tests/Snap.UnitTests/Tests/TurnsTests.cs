@@ -25,9 +25,9 @@ namespace Snap.Tests.Tests
         public async Task When_choosing_the_turns_should_not_be_repeated()
         {
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             game.GameData
@@ -40,13 +40,10 @@ namespace Snap.Tests.Tests
         [Fact]
         public async Task When_game_start_with_2_player_then_player_2_should_be_the_current_player()
         {
-            //using (var module = await new SnapModuleManager()
-            //    .WithFakeSecondPlayerFirstRandomizer()
-            //    .BuildWithDefaultsAsync())
             //Background or When
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
-            game = await _backgroundHelper.StartGameAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             game.CurrentTurn

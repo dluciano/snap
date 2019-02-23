@@ -22,25 +22,17 @@ namespace Snap.Tests.Tests
 
         private readonly BackgroundHelper _backgroundHelper;
 
-        [Fact]
-        public async Task When_create_game_state_should_be_awaiting_player()
-        {
-            //When
-            var game = (await _backgroundHelper.CreateGameAsync()).GameData;
 
-            //Then
-            game.CurrentState.ShouldBe(GameState.AWAITING_PLAYERS);
-        }
 
         [Fact]
         public async Task When_game_start_then_game_should_be_in_state_playing()
         {
             //Background
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
 
             //When
-            game = await _backgroundHelper.StartGameAsync(game);
+            var game = await _backgroundHelper.StartGameAsync(room);
 
             //Then
             game.GameData
@@ -49,11 +41,11 @@ namespace Snap.Tests.Tests
         }
 
         [Fact]
-        public async Task When_restarting_the_game_then_it_should_throw_an_error()
+        public async Task When_try_to_start_a_ongoin_game_then_it_should_throw_an_error()
         {
             //Background
-            var game = await _backgroundHelper.CreateGameAsync();
-            await _backgroundHelper.PlayerJoinAsync(game);
+            var room = await _backgroundHelper.CreateRoomAsync();
+            await _backgroundHelper.PlayerJoinAsync(room);
 
             //When
             await StartGameAsync();
@@ -63,7 +55,7 @@ namespace Snap.Tests.Tests
 
             async Task<SnapGame> StartGameAsync()
             {
-                return await _backgroundHelper.StartGameAsync(game);
+                return await _backgroundHelper.StartGameAsync(room);
             }
         }
     }
