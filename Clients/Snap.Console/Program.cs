@@ -25,18 +25,21 @@ namespace Snap.ConsoleApplication
         private readonly INotificationService _notifier;
         private readonly IFakePlayerService _playerService;
         private readonly IGameRoomPlayerServices _gameRoomService;
+        private readonly IGameRoomServices _roomService;
 
         public Program(ISnapGameServices snapGameServices,
             IDealer dealer,
             INotificationService notifier,
             IFakePlayerService playerService,
-            IGameRoomPlayerServices gameRoomService)
+            IGameRoomPlayerServices gameRoomService,
+            IGameRoomServices roomService)
         {
             _snapGameServices = snapGameServices;
             _dealer = dealer;
             _notifier = notifier;
             _playerService = playerService;
             _gameRoomService = gameRoomService;
+            _roomService = roomService;
         }
 
         public static async Task Main(string[] args)
@@ -81,15 +84,22 @@ namespace Snap.ConsoleApplication
 
         internal async Task Start()
         {
-            await _playerService.AddAsync(CancellationToken.None, "User 1", "User 2");
+            await _playerService.AddAsync(new Player
+            {
+                Username = "User 1"
+            }, CancellationToken.None);
+            await _playerService.AddAsync(new Player
+            {
+                Username = "User 2"
+            }, CancellationToken.None);
             await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
 
-            var game = await _snapGameServices.CreateAsync(CancellationToken.None);
+            var room = await _roomService.CreateAsync(CancellationToken.None);
 
             await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 2"));
-            await _gameRoomService.AddPlayersAsync(game.GameData.GameRoom, false, CancellationToken.None);
+            await _gameRoomService.AddPlayersAsync(room, false, CancellationToken.None);
 
-            game = await _snapGameServices.StarGameAsync(game, CancellationToken.None);
+            var game = await _snapGameServices.StarGameAsync(room, CancellationToken.None);
 
             Console.WriteLine("Press any key to Pop, 's' to Snap! " +
                                      "or 'q' to finish: ");
