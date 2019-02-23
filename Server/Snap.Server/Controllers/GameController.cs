@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using GameSharp.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
 using Snap.DataAccess;
 using Snap.Entities;
@@ -29,13 +28,12 @@ namespace Snap.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<SnapGame>> PostAsync([NotNull] [FromBody] int roomId, CancellationToken token)
         {
-            var room = await _db.FindAsync<GameRoom>(roomId);
-            if (room == null)
-            {
-                ModelState.AddModelError(nameof(roomId), $"The {nameof(roomId)} is required");
-                return BadRequest();
-            }
-            return await _service.StarGameAsync(room, token);
+            var room = await _db.GameRooms
+                .Include(p => p.RoomPlayers)
+                .SingleOrDefaultAsync(p => p.Id == roomId, token);
+            if (room != null)
+                return await _service.StarGameAsync(room, token);
+            return BadRequest();
         }
     }
 }

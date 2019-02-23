@@ -4,6 +4,7 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
 using Snap.DataAccess;
 
@@ -36,7 +37,9 @@ namespace Snap.Server.Controllers
             bool isViewer,
             CancellationToken token)
         {
-            var room = await _db.FindAsync<GameRoom>(id);
+            var room = await _db.GameRooms.
+                Include(p => p.RoomPlayers)
+                .SingleOrDefaultAsync(p => p.Id == id, token);
             if (room == null)
             {
                 return NotFound();

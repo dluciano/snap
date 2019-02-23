@@ -54,7 +54,7 @@ namespace Snap.Services.Impl
         {
             if (game.GameData.CurrentState != GameState.PLAYING)
                 throw new InvalidGameStateException();
-            if (game.CurrentTurn.PlayerTurn.Player.Username != (await _playerProvider.GetCurrentPlayerAsync()).Username)
+            if (game.CurrentTurn.PlayerTurn.Player.Id != (await _playerProvider.GetCurrentPlayerAsync()).Id)
                 throw new NotCurrentPlayerTryToPlayException();
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
@@ -73,8 +73,9 @@ namespace Snap.Services.Impl
                 if (!CanSnap(game) && game.CurrentTurn.StackEntity.Last == null)
                     PlayerGameOver(game.CurrentTurn.PlayerTurn);
 
-                await _db.SaveChangesAsync(token);
                 game.GameData.NextTurn();
+                await _db.SaveChangesAsync(token);
+
                 _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, game.CurrentTurn));
                 trans.Commit();
                 return gamePlay;
@@ -89,7 +90,7 @@ namespace Snap.Services.Impl
 
         private bool CanSnap(SnapGame game)
         {
-            if (game.CentralPile == null || 
+            if (game.CentralPile == null ||
                 game.CentralPile.Last == null
                 || game.CentralPile.Last.Previous == null)
                 return false;

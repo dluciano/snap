@@ -1,7 +1,9 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
 using Snap.DataAccess;
 using Snap.Entities;
@@ -26,7 +28,18 @@ namespace Snap.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<PlayerGameplay>> PostAsync([NotNull] [FromBody] int gameId, CancellationToken token)
         {
-            var game = await _db.FindAsync<SnapGame>(gameId);
+            var game = await _db
+                .SnapGames
+                .Include(g => g.CentralPile.Last)
+                .ThenInclude(p => p.Previous)
+                .Include(g => g.GameData)
+                .ThenInclude(gd => gd.CurrentTurn)
+                .ThenInclude(pt => pt.Next)
+                .Include(p => p.GameData.CurrentTurn.Player)
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.StackEntity.Last)
+                .ThenInclude(n => n.Previous)
+                .SingleOrDefaultAsync(p => p.Id == gameId, token);
             if (game == null)
             {
                 ModelState.AddModelError(nameof(gameId), $"The {nameof(gameId)} is required");
