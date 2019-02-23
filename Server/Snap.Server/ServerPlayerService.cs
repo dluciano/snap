@@ -1,18 +1,28 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using GameSharp.Entities;
-using GameSharp.Services;
+using Microsoft.AspNetCore.Http;
 using Snap.DataAccess;
+using Snap.Fakes;
 
 namespace Snap.Server
 {
-    internal class ServerPlayerService : IPlayerService
+    internal class ServerPlayerService : FakePlayerService
     {
-        private readonly SnapDbContext _db;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public ServerPlayerService(SnapDbContext db)
+        public ServerPlayerService(SnapDbContext db,
+            IHttpContextAccessor httpContext)
+            : base(db)
         {
-            _db = db;
+            _httpContext = httpContext;
         }
-        public async Task<Player> GetCurrentPlayerAsync() => await _db.Players.FindAsync(1);
+
+        public override async Task<Player> GetCurrentPlayerAsync()
+        {
+            var claims = _httpContext.HttpContext.User.Claims;
+            var claim = claims.Single(c => c.Type == "email");
+            return await _db.Players.FindAsync(claim.Value);
+        }
     }
 }

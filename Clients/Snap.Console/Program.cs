@@ -81,7 +81,7 @@ namespace Snap.ConsoleApplication
 
         internal async Task Start()
         {
-            await _playerService.AddRangeAsync("User 1", "User 2");
+            await _playerService.AddRangeAsync(CancellationToken.None, "User 1", "User 2");
             await _playerService.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
 
             var game = await _snapGameServices.CreateAsync(CancellationToken.None);

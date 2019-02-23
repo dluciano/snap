@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +18,16 @@ namespace Snap.Tests.Module
             _playerService = playerService;
         }
 
-        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername)
+        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername, CancellationToken token = default)
         {
             return (await _playerService
-                    .AddRangeAsync(username))
+                    .AddRangeAsync(token, username))
                 .Single();
         }
 
-        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername)
+        public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername, CancellationToken token = default)
         {
-            return await LoginPlayerAsync((await SeedPlayerAsync(username)).Username);
+            return await LoginPlayerAsync((await SeedPlayerAsync(username, token)).Username);
         }
 
         public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace Snap.Fakes
 {
     public class FakePlayerService : IFakePlayerService
     {
-        private readonly SnapDbContext _db;
+        protected readonly SnapDbContext _db;
         private Player _currentPlayer;
 
         public FakePlayerService(SnapDbContext db)
@@ -24,24 +25,18 @@ namespace Snap.Fakes
             return _currentPlayer = await _db.Players.SingleAsync(p => p.Id == playerId);
         }
 
-        public async Task<IEnumerable<Player>> AddRangeAsync(params string[] usernames)
+        public async Task<IEnumerable<Player>> AddRangeAsync(CancellationToken token, params string[] usernames)
         {
-            var players = usernames?.Select(u => new Player {Username = u})?.ToList();
+            var players = usernames?.Select(u => new Player { Username = u })?.ToList();
             if (players == null)
                 return await Task.FromResult(Enumerable.Empty<Player>());
-            await _db.Players.AddRangeAsync(players);
-            await _db.SaveChangesAsync();
+            await _db.Players.AddRangeAsync(players, token);
+            await _db.SaveChangesAsync(token);
             return players;
         }
 
-        public IQueryable<Player> GetPlayers()
-        {
-            return _db.Players;
-        }
+        public IQueryable<Player> GetPlayers() => _db.Players;
 
-        public async Task<Player> GetCurrentPlayerAsync()
-        {
-            return await Task.FromResult(_currentPlayer);
-        }
+        public virtual async Task<Player> GetCurrentPlayerAsync() => await Task.FromResult(_currentPlayer);
     }
 }

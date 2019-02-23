@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Snap.Server
 {
@@ -12,6 +15,7 @@ namespace Snap.Server
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureServices(services => services.AddAutofac())
                 .UseStartup<Startup>();
     }
 }
