@@ -8,6 +8,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ using NSwag.AspNetCore;
 using NSwag.SwaggerGeneration.Processors.Security;
 using Snap.DataAccess;
 using Snap.Server.Provider;
+using Snap.Server.Services;
 using Snap.Services.Impl;
 
 namespace Snap.Server
@@ -28,7 +30,7 @@ namespace Snap.Server
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,8 +39,6 @@ namespace Snap.Server
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDbContext<SnapDbContext>(options =>
             {
@@ -64,7 +64,6 @@ namespace Snap.Server
                     new SecurityDefinitionAppender("oauth", new SwaggerSecurityScheme
                     {
                         Type = SwaggerSecuritySchemeType.OAuth2,
-                        //Description = "Foo",
                         Flow = SwaggerOAuth2Flow.Implicit,
                         AuthorizationUrl = "https://localhost:52365/connect/authorize",
                         TokenUrl = "https://localhost:52365/connect/token",
@@ -75,6 +74,8 @@ namespace Snap.Server
                     }));
                 document.OperationProcessors.Add(new OperationSecurityScopeProcessor("oauth"));
             });
+
+            services.AddSignalR();
         }
 
         // ConfigureContainer is where you can register things directly
@@ -82,23 +83,20 @@ namespace Snap.Server
         // here will override registrations made in ConfigureServices.
         // Don't build the container; that gets done for you. If you
         // need a reference to the container, you need to use the
-        // "Without ConfigureContainer" mechanism shown later.
+        // "Without ConfigureContainer" mechanism.
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterType<HttpContextAccessor>()
+                .As<IHttpContextAccessor>()
+                .SingleInstance();
+            builder.RegisterType<ServerPlayerProvider>()
+                .As<IPlayerProvider>()
+                .InstancePerLifetimeScope();
+
             builder
                 .Register<GameSharpContext>(t => t.Resolve<SnapDbContext>())
                 .As<GameSharpContext>()
                 .AsImplementedInterfaces()
-                .InstancePerLifetimeScope()
-                .OnActivated(async args =>
-                {
-                    var db = args.Instance;
-                    //await db.Database.MigrateAsync();
-                    //await db.Database.EnsureCreatedAsync();
-                });
-
-            builder.RegisterType<ServerPlayerProvider>()
-                .As<IPlayerProvider>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterModule<DawlinUtilModule>();
@@ -124,7 +122,6 @@ namespace Snap.Server
 
             app.UseAuthentication();
 
-            // Register the Swagger generator and the Swagger UI middlewares
             app.UseSwagger();
             app.UseSwaggerUi3(settings =>
             {
@@ -136,6 +133,12 @@ namespace Snap.Server
                         { "nonce", "636864884858396406.MWI4ZjNkYWItOGU1My00YmFiLTg1MTAtMWQzOTY2OTM4YzRkOGFhOGI1OGItODc0YS00NGEyLWI3NzgtYzU0YmJiMzk5NWY0" }
                     }
                 };
+            });
+
+            app.UseSignalR(routes =>
+            {
+                //TODO: Add this to the configServ and to the apppsettings
+                routes.MapHub<SignalRNotificationHub>("/game_notifications");
             });
 
             app.UseMvc();

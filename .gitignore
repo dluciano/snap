@@ -459,4 +459,3 @@ ASALocalRun/
 healthchecksdb
 
 # End of https://www.gitignore.io/api/vim,sonar,macos,linux,windows,sonarqube,visualstudio,visualstudiocode
-**/Migrations

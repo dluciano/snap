@@ -7,6 +7,7 @@ namespace Snap.Entities
     {
         public Card Card { get; set; }
         public PlayerData PlayerTurn { get; set; }
+        public SnapGameData GameData { get; set; }
         public int Id { get; set; }
     }
 }

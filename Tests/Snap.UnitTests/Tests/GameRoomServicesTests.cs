@@ -38,7 +38,7 @@ namespace Snap.Tests.Tests
 
             //When
             var gameRoomPlayer = await _gameRoomPlayerServices
-                .AddPlayersAsync(room, true, CancellationToken.None);
+                .AddPlayersAsync(room.Id, true, CancellationToken.None);
 
             //Then
             gameRoomPlayer.GameRoom.RoomPlayers.Single(p =>

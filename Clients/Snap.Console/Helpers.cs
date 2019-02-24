@@ -7,8 +7,8 @@ namespace Snap.ConsoleApplication
 {
     internal static class Helpers
     {
-        public static async Task<Player> SetCurrentPlayer(this IFakePlayerProvider provider, SnapGame game) =>
+        public static async Task<Player> SetCurrentPlayer(this IFakePlayerProvider provider, Player player) =>
             await provider
-                .SetCurrentPlayer(dbPlayers => Task.FromResult(game.CurrentTurn.PlayerTurn.Player));
+                .SetCurrentPlayer(dbPlayers => Task.FromResult(player));
     }
 }

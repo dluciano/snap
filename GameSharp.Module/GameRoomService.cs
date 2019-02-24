@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
@@ -22,7 +23,7 @@ namespace GameSharp.Services.Impl
             _roomPlayerServices = roomPlayerServices;
         }
 
-        public async Task<GameRoom> CreateAsync(CancellationToken token)
+        public async Task<GameRoom> CreateAsync(CancellationToken token = default(CancellationToken))
         {
             using (var tran = await _db.Database.BeginTransactionAsync(token))
             {
@@ -30,16 +31,17 @@ namespace GameSharp.Services.Impl
                 if (creator == null)
                     throw new UnauthorizedCreateException();
 
-                var entity = new GameRoom
+                var room = new GameRoom
                 {
-                    CanJoin = true
+                    CanJoin = true,
+                    GameIdentifier = Guid.NewGuid()
                 };
-                await _db.GameRooms.AddAsync(entity, token);
+                await _db.GameRooms.AddAsync(room, token);
                 await _db.SaveChangesAsync(token);
 
-                await _roomPlayerServices.AddPlayersAsync(entity, false, token);
+                await _roomPlayerServices.AddPlayersAsync(room.Id, false, token);
                 tran.Commit();
-                return entity;
+                return room;
             }
         }
     }

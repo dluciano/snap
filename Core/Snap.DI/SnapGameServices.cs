@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Abstract.Entities.Exceptions;
 using Dawlin.Util.Abstract;
-using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services.Abstract;
 using GameSharp.Services.Impl.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;
@@ -44,8 +45,17 @@ namespace Snap.Services.Impl
             _cardPilesServices = cardPilesServices;
         }
 
-        public async Task<SnapGame> StarGameAsync(GameRoom room, CancellationToken token)
+        public async Task<SnapGame> StarGameAsync(int roomId, CancellationToken token = default(CancellationToken))
         {
+            var room = await _db.GameRooms
+                .Include(p => p.RoomPlayers)
+                .ThenInclude(rp => rp.Player)
+                .SingleOrDefaultAsync(p => p.Id == roomId, token);
+            if (room == null)
+            {
+                throw new EntityNotFoundException("The room do not exists");
+            }
+
             //TODO: Validate that only players can start the game
             var creator = await _playerProvider.GetCurrentPlayerAsync();
             if (creator == null)
@@ -62,7 +72,10 @@ namespace Snap.Services.Impl
                 var game = new SnapGame
                 {
                     CentralPile = new StackEntity(),
-                    GameData = new SnapGameData()
+                    GameData = new SnapGameData
+                    {
+                        Room = room
+                    }
                 };
                 _stateMachineProvider.ChangeState(game.GameData, GameSessionTransitions.START_GAME);
 
@@ -91,7 +104,7 @@ namespace Snap.Services.Impl
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
 
-                _notificationService?.OnGameStarted(this, new GameStartedEvent(game));
+                await _notificationService?.OnGameStarted(this, new GameStartedEvent(game), token);
 
                 trans.Commit();
                 return game;

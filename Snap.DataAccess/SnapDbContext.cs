@@ -1,4 +1,5 @@
 ﻿using GameSharp.DataAccess;
+using GameSharp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Snap.Entities;
 
@@ -48,6 +49,12 @@ namespace Snap.DataAccess
                 .WithMany(p => p.SnapGames);
 
             modelBuilder
+                .Entity<SnapGameData>()
+                .HasOne(p => p.Room)
+                .WithOne(p => (SnapGameData)p.GamesData)
+                .HasForeignKey<SnapGameData>(p => p.GameRoomId);
+
+            modelBuilder
                 .Entity<PlayerData>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
@@ -63,6 +70,10 @@ namespace Snap.DataAccess
                 .Entity<PlayerGameplay>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
+            modelBuilder
+                .Entity<PlayerGameplay>()
+                .HasOne(p => p.GameData)
+                .WithMany(p => p.PlayerGamePlays);
 
             modelBuilder
                 .Entity<StackNode>()

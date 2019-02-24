@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Snap.Services.Impl.Notifications
 {
+    public delegate Task AsyncEventHandler<in T>(object sender, T args, CancellationToken token = default(CancellationToken));
+
     public interface INotificationService
     {
-        event EventHandler<GameStartedEvent> GameStartEvent;
-        event EventHandler<CardPopEvent> CardPopEvent;
-        void OnGameStarted(object sender, GameStartedEvent e);
-        void OnCardPop(object sender, CardPopEvent e);
+        event AsyncEventHandler<GameStartedEvent> GameStartEvent;
+        event AsyncEventHandler<CardPopEvent> CardPopEvent;
+        Task OnGameStarted(object sender, GameStartedEvent e, CancellationToken token = default(CancellationToken));
+        Task OnCardPop(object sender, CardPopEvent e, CancellationToken token = default(CancellationToken));
     }
 }

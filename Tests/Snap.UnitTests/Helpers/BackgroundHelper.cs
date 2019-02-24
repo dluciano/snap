@@ -35,13 +35,13 @@ namespace Snap.Tests.Helpers
             string username = PlayerServiceSeedHelper.SecondPlayerUsername)
         {
             await _playerSeedHelper.SeedAndLoginAsync(username);
-            return await _roomPlayerService.AddPlayersAsync(room, false, CancellationToken.None);
+            return await _roomPlayerService.AddPlayersAsync(room.Id, false, CancellationToken.None);
         }
 
         public async Task<SnapGame> StartGameAsync(GameRoom room)
         {
             await _playerSeedHelper.LoginPlayerAsync();
-            return await _gameService.StarGameAsync(room, CancellationToken.None);
+            return await _gameService.StarGameAsync(room.Id, CancellationToken.None);
         }
     }
 }

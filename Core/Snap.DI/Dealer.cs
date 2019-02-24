@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Abstract.Entities.Exceptions;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services.Abstract;
 using GameSharp.Services.Impl.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Entities.Enums;
@@ -50,8 +52,36 @@ namespace Snap.Services.Impl
             _cardDealter.DealtCards(playersStacks, cards);
 
         //Game loop
-        public async Task<PlayerGameplay> PopCurrentPlayerCardAsync(SnapGame game, CancellationToken token)
+        public async Task<PlayerGameplay> PopCurrentPlayerCardAsync(int gameId, CancellationToken token = default(CancellationToken))
         {
+            var game = await _db
+                .SnapGames
+                .Include(g => g.CentralPile.Last)
+                .ThenInclude(p => p.Previous)
+
+                .Include(g => g.GameData)
+                .ThenInclude(gd => gd.CurrentTurn)
+                .ThenInclude(pt => pt.Next)
+                .Include(p => p.GameData.CurrentTurn.Player)
+
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.PlayerTurn)
+                .ThenInclude(pt => pt.Player)
+
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.PlayerTurn)
+                .ThenInclude(pt => pt.Next)
+
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.StackEntity.Last)
+                .ThenInclude(n => n.Previous)
+
+                .SingleOrDefaultAsync(p => p.Id == gameId, token);
+            if (game == null)
+            {
+                throw new EntityNotFoundException("The game does not exists");
+            }
+
             if (game.GameData.CurrentState != GameState.PLAYING)
                 throw new InvalidGameStateException();
             if (game.CurrentTurn.PlayerTurn.Player.Id != (await _playerProvider.GetCurrentPlayerAsync()).Id)
@@ -65,7 +95,8 @@ namespace Snap.Services.Impl
                 var gamePlay = new PlayerGameplay
                 {
                     Card = playerCard.Value,
-                    PlayerTurn = game.CurrentTurn
+                    PlayerTurn = game.CurrentTurn,
+                    GameData = game.GameData
                 };
                 game.CurrentTurn.PlayerGameplay.Add(gamePlay);
                 game.CentralPile.Push(playerCard.Value);
@@ -76,7 +107,7 @@ namespace Snap.Services.Impl
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
 
-                _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, game.CurrentTurn));
+                await _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, game.CurrentTurn), token);
                 trans.Commit();
                 return gamePlay;
             }

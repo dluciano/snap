@@ -81,7 +81,7 @@ namespace Snap.ConsoleApplication
             return builder.Build();
         }
 
-        internal async Task Start()
+        private async Task Start()
         {
             await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
 
@@ -92,29 +92,27 @@ namespace Snap.ConsoleApplication
             var room = await _roomService.CreateAsync(CancellationToken.None);
 
             await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 2"));
-            await _gameRoomService.AddPlayersAsync(room, false, CancellationToken.None);
+            await _gameRoomService.AddPlayersAsync(room.Id, false, CancellationToken.None);
 
-            var game = await _snapGameServices.StarGameAsync(room, CancellationToken.None);
+            var game = await _snapGameServices.StarGameAsync(room.Id, CancellationToken.None);
 
             Console.WriteLine("Press any key to Pop, 's' to Snap! " +
                                      "or 'q' to finish: ");
             Console.WriteLine($"Current Player is: {game.CurrentTurn.PlayerTurn.Player.Username }");
             Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
 
-            await _playerProvider.SetCurrentPlayer(game);
-
-            _notifier.CardPopEvent += async (sender, e) =>
+            await _playerProvider.SetCurrentPlayer(game.CurrentTurn.PlayerTurn.Player);
+            _notifier.CardPopEvent += async (sender, e, token) =>
              {
                  Division();
 
-                 Console.WriteLine($"Card Poped: {Enum.GetName(typeof(Card), e.GamePlay.Card) }");
+                 Console.WriteLine($"Card Pop: {Enum.GetName(typeof(Card), e.GamePlay.Card) }");
                  Console.WriteLine($"Player cards: {e.GamePlay.PlayerTurn.StackEntity}");
                  Console.WriteLine($"Central Pile: {e.GamePlay.PlayerTurn.SnapGame.CentralPile}");
                  Division();
                  Console.WriteLine($"Current Player is: {e.NextPlayer.PlayerTurn.Player.Username}");
                  Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
-
-                 await _playerProvider.SetCurrentPlayer(game);
+                 await _playerProvider.SetCurrentPlayer(game.CurrentTurn.PlayerTurn.Player);
              };
 
             var finish = false;
@@ -134,7 +132,7 @@ namespace Snap.ConsoleApplication
                         //_dealer.Snap(game, p);
                         break;
                     default:
-                        await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
+                        await _dealer.PopCurrentPlayerCardAsync(game.Id, CancellationToken.None);
                         break;
                 }
             }

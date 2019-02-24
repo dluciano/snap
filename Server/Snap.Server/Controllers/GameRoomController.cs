@@ -4,9 +4,9 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
-using Snap.DataAccess;
+using Snap.Entities;
+using Snap.Services.Abstract;
 
 namespace Snap.Server.Controllers
 {
@@ -16,35 +16,30 @@ namespace Snap.Server.Controllers
     public class GameRoomController : ControllerBase
     {
         private readonly IGameRoomServices _roomService;
-        private readonly SnapDbContext _db;
         private readonly IGameRoomPlayerServices _gameRoomService;
+        private readonly ISnapGameServices _snapGameServices;
 
         public GameRoomController(IGameRoomServices roomService,
-            SnapDbContext db,
-            IGameRoomPlayerServices gameRoomService)
+            IGameRoomPlayerServices gameRoomService,
+            ISnapGameServices snapGameServices)
         {
             _roomService = roomService;
-            _db = db;
             _gameRoomService = gameRoomService;
+            _snapGameServices = snapGameServices;
         }
 
         [HttpPost]
         public async Task<ActionResult<GameRoom>> PostAsync(CancellationToken token) =>
-            (await _roomService.CreateAsync(token));
+            await _roomService.CreateAsync(token);
 
-        [HttpPost("{id}/Players")]
-        public async Task<ActionResult<GameRoomPlayer>> PostPlayerAsync([NotNull][FromRoute]int id,
+        [HttpPost("{roomId}/Players")]
+        public async Task<ActionResult<GameRoomPlayer>> PostPlayerAsync([NotNull][FromRoute]int roomId,
             bool isViewer,
-            CancellationToken token)
-        {
-            var room = await _db.GameRooms.
-                Include(p => p.RoomPlayers)
-                .SingleOrDefaultAsync(p => p.Id == id, token);
-            if (room == null)
-            {
-                return NotFound();
-            }
-            return await _gameRoomService.AddPlayersAsync(room, isViewer, token);
-        }
+            CancellationToken token) =>
+            await _gameRoomService.AddPlayersAsync(roomId, isViewer, token);
+
+        [HttpPost("{roomId}/Game")]
+        public async Task<ActionResult<SnapGame>> PostAsync([NotNull] [FromQuery] int roomId, CancellationToken token) =>
+            await _snapGameServices.StarGameAsync(roomId, token);
     }
 }

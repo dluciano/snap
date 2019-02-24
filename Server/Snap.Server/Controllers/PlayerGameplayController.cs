@@ -16,47 +16,16 @@ namespace Snap.Server.Controllers
     [ApiController]
     public class PlayerGameplayController : ControllerBase
     {
-        private readonly SnapDbContext _db;
         private readonly IDealer _dealer;
 
-        public PlayerGameplayController(SnapDbContext db, IDealer dealer)
+        public PlayerGameplayController(IDealer dealer)
         {
-            _db = db;
+
             _dealer = dealer;
         }
 
         [HttpPost]
-        public async Task<ActionResult<PlayerGameplay>> PostAsync([NotNull] [FromBody] int gameId, CancellationToken token)
-        {
-            var game = await _db
-                .SnapGames
-                .Include(g => g.CentralPile.Last)
-                    .ThenInclude(p => p.Previous)
-
-                .Include(g => g.GameData)
-                    .ThenInclude(gd => gd.CurrentTurn)
-                    .ThenInclude(pt => pt.Next)
-                    .Include(p => p.GameData.CurrentTurn.Player)
-
-                .Include(p => p.PlayersData)
-                    .ThenInclude(pd => pd.PlayerTurn)
-                        .ThenInclude(pt => pt.Player)
-
-                .Include(p => p.PlayersData)
-                    .ThenInclude(pd => pd.PlayerTurn)
-                        .ThenInclude(pt => pt.Next)
-
-                .Include(p => p.PlayersData)
-                    .ThenInclude(pd => pd.StackEntity.Last)
-                        .ThenInclude(n => n.Previous)
-
-                .SingleOrDefaultAsync(p => p.Id == gameId, token);
-            if (game == null)
-            {
-                ModelState.AddModelError(nameof(gameId), $"The {nameof(gameId)} is required");
-                return BadRequest();
-            }
-            return await _dealer.PopCurrentPlayerCardAsync(game, token);
-        }
+        public async Task<ActionResult<PlayerGameplay>> PostAsync([NotNull] [FromBody] int gameId, CancellationToken token) =>
+            await _dealer.PopCurrentPlayerCardAsync(gameId, token);
     }
 }

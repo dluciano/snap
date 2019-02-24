@@ -1,17 +1,24 @@
-﻿using System;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Snap.Services.Impl.Notifications;
 
 namespace Snap.Services.Impl
 {
     internal sealed class DefaultNotificationService : INotificationService
     {
-        public event EventHandler<CardPopEvent> CardPopEvent;
-        public event EventHandler<GameStartedEvent> GameStartEvent;
+        public event AsyncEventHandler<GameStartedEvent> GameStartEvent;
+        public event AsyncEventHandler<CardPopEvent> CardPopEvent;
 
-        public void OnCardPop(object sender, CardPopEvent e) =>
-            CardPopEvent?.Invoke(sender, e);
+        public async Task OnCardPop(object sender, CardPopEvent e, CancellationToken token = default(CancellationToken))
+        {
+            if (CardPopEvent != null)
+                await CardPopEvent?.Invoke(sender, e, token);
+        }
 
-        public void OnGameStarted(object sender, GameStartedEvent e) =>
-            GameStartEvent?.Invoke(sender, e);
+        public async Task OnGameStarted(object sender, GameStartedEvent e, CancellationToken token = default(CancellationToken))
+        {
+            if (GameStartEvent != null)
+                await GameStartEvent?.Invoke(sender, e, token);
+        }
     }
 }

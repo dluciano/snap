@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dawlin.Abstract.Entities;
+using GameSharp.Entities;
 
 namespace Snap.Entities
 {

@@ -7,6 +7,6 @@ namespace Snap.Services.Abstract
 {
     public interface ISnapGameServices
     {
-        Task<SnapGame> StarGameAsync(GameRoom game, CancellationToken token);
+        Task<SnapGame> StarGameAsync(int roomId, CancellationToken token);
     }
 }

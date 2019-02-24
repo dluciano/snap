@@ -1,9 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Abstract.Entities.Exceptions;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using GameSharp.Services.Impl.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameSharp.Services.Impl
 {
@@ -19,10 +21,18 @@ namespace GameSharp.Services.Impl
             _playerProvider = playerProvider;
         }
 
-        public async Task<GameRoomPlayer> AddPlayersAsync(GameRoom room,
+        public async Task<GameRoomPlayer> AddPlayersAsync(int roomId,
             bool isViewer,
-            CancellationToken token)
+            CancellationToken token = default(CancellationToken))
         {
+            var room = await _db.GameRooms.
+                Include(p => p.RoomPlayers)
+                .SingleOrDefaultAsync(p => p.Id == roomId, token);
+            if (room == null)
+            {
+                throw new EntityNotFoundException("The room does not exists");
+            }
+
             //TODO: Implement this correctly
             if (!isViewer && !room.CanJoin)
             {

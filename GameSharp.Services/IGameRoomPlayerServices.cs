@@ -6,7 +6,7 @@ namespace GameSharp.Services.Abstract
 {
     public interface IGameRoomPlayerServices
     {
-        Task<GameRoomPlayer> AddPlayersAsync(GameRoom game,
+        Task<GameRoomPlayer> AddPlayersAsync(int roomId,
             bool isViewer,
             CancellationToken token);
     }

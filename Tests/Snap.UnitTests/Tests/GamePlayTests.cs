@@ -37,7 +37,7 @@ namespace Snap.Tests.Tests
             await _backgroundHelper.PlayerJoinAsync(room);
             var game = await _backgroundHelper.StartGameAsync(room);
             await _playerHelperService.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
-            var r = (await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None));
+            var r = (await _dealer.PopCurrentPlayerCardAsync(game.Id, CancellationToken.None));
             r.PlayerTurn.SnapGame
                 .CentralPile
                 .Last
@@ -54,7 +54,7 @@ namespace Snap.Tests.Tests
             await _playerHelperService.LoginPlayerAsync(PlayerServiceSeedHelper.SecondPlayerUsername);
 
             //When
-            var gameplay = await _dealer.PopCurrentPlayerCardAsync(game, CancellationToken.None);
+            var gameplay = await _dealer.PopCurrentPlayerCardAsync(game.Id, CancellationToken.None);
 
             //Then
             gameplay.Card.ShouldBe(Card.KING_TILE);

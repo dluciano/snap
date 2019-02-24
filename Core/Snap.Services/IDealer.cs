@@ -10,6 +10,6 @@ namespace Snap.Services.Abstract
         ICardShuffler,
         IPlayerChooser
     {
-        Task<PlayerGameplay> PopCurrentPlayerCardAsync(SnapGame game, CancellationToken token);
+        Task<PlayerGameplay> PopCurrentPlayerCardAsync(int gameId, CancellationToken token = default(CancellationToken));
     }
 }
