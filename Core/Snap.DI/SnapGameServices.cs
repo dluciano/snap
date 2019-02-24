@@ -89,7 +89,6 @@ namespace Snap.Services.Impl
                     throw new InvalidGameStateException();
 
                 game.GameData.NextTurn();
-
                 await _db.SaveChangesAsync(token);
 
                 _notificationService?.OnGameStarted(this, new GameStartedEvent(game));

@@ -30,6 +30,7 @@ namespace Snap.Server.Controllers
         {
             var room = await _db.GameRooms
                 .Include(p => p.RoomPlayers)
+                .ThenInclude(rp => rp.Player)
                 .SingleOrDefaultAsync(p => p.Id == roomId, token);
             if (room != null)
                 return await _service.StarGameAsync(room, token);

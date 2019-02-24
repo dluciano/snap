@@ -7,7 +7,6 @@ namespace GameSharp.Entities
     {
         public Player Player { get; set; }
         public PlayerTurn Next { get; set; }
-        //public GameData GameData { get; set; }
 
         public ICollection<GameData> FirstPlayers { get; } = new HashSet<GameData>();
         public ICollection<GameData> CurrentTurns { get; } = new HashSet<GameData>();
