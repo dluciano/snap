@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GameSharp.DataAccess\GameSharp.DataAccess.csproj" />
+    <ProjectReference Include="..\GameSharp.Entities\GameSharp.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

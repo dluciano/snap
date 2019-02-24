@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="12.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Dawlin\Dawlin.Util.Impl\Dawlin.Util.Impl.csproj" />
+    <ProjectReference Include="..\..\..\GameSharp\GameSharp.Module\GameSharp.Services.Impl.csproj" />
+    <ProjectReference Include="..\..\..\GameSharp\GameSharp.Services\GameSharp.Services.Abstract.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.DataAccess\Snap.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.Services.Impl\Snap.Services.Impl.csproj" />
+  </ItemGroup>
+
+</Project>

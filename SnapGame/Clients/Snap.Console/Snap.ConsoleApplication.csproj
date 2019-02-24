@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.109.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Snap.Fakes\Snap.Fakes.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.Services.Abstract\Snap.Services.Abstract.csproj" />
+    <ProjectReference Include="..\..\Core\Snap.Services.Impl\Snap.Services.Impl.csproj" />
+  </ItemGroup>
+
+</Project>
