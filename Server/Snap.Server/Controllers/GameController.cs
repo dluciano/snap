@@ -11,17 +11,17 @@ namespace Snap.Server.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayerGameplayController : ControllerBase
+    public class GameController : ControllerBase
     {
         private readonly IDealer _dealer;
 
-        public PlayerGameplayController(IDealer dealer)
+        public GameController(IDealer dealer)
         {
             _dealer = dealer;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<PlayerGameplay>> PostAsync([NotNull] [FromBody] int gameId, CancellationToken token) =>
+        [HttpPost("{gameId}/PlayerGameplay")]
+        public async Task<ActionResult<PlayerGameplay>> PostAsync([NotNull] [FromRoute] int gameId, CancellationToken token) =>
             await _dealer.PopCurrentPlayerCardAsync(gameId, token);
     }
 }

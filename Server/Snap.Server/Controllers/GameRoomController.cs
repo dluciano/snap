@@ -39,7 +39,7 @@ namespace Snap.Server.Controllers
             await _gameRoomService.AddPlayersAsync(roomId, isViewer, token);
 
         [HttpPost("{roomId}/Game")]
-        public async Task<ActionResult<SnapGame>> PostAsync([NotNull] [FromQuery] int roomId, CancellationToken token) =>
+        public async Task<ActionResult<SnapGame>> PostAsync([NotNull] [FromRoute] int roomId, CancellationToken token) =>
             await _snapGameServices.StarGameAsync(roomId, token);
     }
 }
