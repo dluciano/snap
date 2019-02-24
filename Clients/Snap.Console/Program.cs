@@ -83,15 +83,13 @@ namespace Snap.ConsoleApplication
 
         private async Task Start()
         {
-            await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
+            var player1 = await _playerProvider.LoginAndCreateUser("User 1");
+            var player2 = await _playerProvider.LoginAndCreateUser("User 2");
 
-            await _playerProvider.AddAsync(CancellationToken.None);
-            await _playerProvider.AddAsync(CancellationToken.None);
-            await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 1"));
-
+            await _playerProvider.Authenticate(players => players.SingleAsync(p => p.Username == player1.Username));
             var room = await _roomService.CreateAsync(CancellationToken.None);
 
-            await _playerProvider.SetCurrentPlayer(players => players.SingleAsync(p => p.Username == "User 2"));
+            await _playerProvider.Authenticate(players => players.SingleAsync(p => p.Username == player2.Username));
             await _gameRoomService.AddPlayersAsync(room.Id, false, CancellationToken.None);
 
             var game = await _snapGameServices.StarGameAsync(room.Id, CancellationToken.None);

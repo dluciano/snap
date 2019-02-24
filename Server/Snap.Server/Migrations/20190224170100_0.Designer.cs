@@ -10,7 +10,7 @@ using Snap.DataAccess;
 namespace Snap.Server.Migrations
 {
     [DbContext(typeof(SnapDbContext))]
-    [Migration("20190223102113_0")]
+    [Migration("20190224170100_0")]
     partial class _0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,15 +36,11 @@ namespace Snap.Server.Migrations
 
                     b.Property<int?>("FirstPlayerId");
 
-                    b.Property<int?>("GameRoomId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentTurnId");
 
                     b.HasIndex("FirstPlayerId");
-
-                    b.HasIndex("GameRoomId");
 
                     b.ToTable("GameDatas");
 
@@ -58,6 +54,8 @@ namespace Snap.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("CanJoin");
+
+                    b.Property<Guid>("GameIdentifier");
 
                     b.HasKey("Id");
 
@@ -144,9 +142,13 @@ namespace Snap.Server.Migrations
 
                     b.Property<byte>("Card");
 
+                    b.Property<int?>("GameDataId");
+
                     b.Property<int?>("PlayerTurnId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameDataId");
 
                     b.HasIndex("PlayerTurnId");
 
@@ -193,6 +195,12 @@ namespace Snap.Server.Migrations
                 {
                     b.HasBaseType("GameSharp.Entities.GameData");
 
+                    b.Property<int>("GameRoomId");
+
+                    b.HasIndex("GameRoomId")
+                        .IsUnique()
+                        .HasFilter("[GameRoomId] IS NOT NULL");
+
                     b.HasDiscriminator().HasValue("SnapGameData");
                 });
 
@@ -205,10 +213,6 @@ namespace Snap.Server.Migrations
                     b.HasOne("GameSharp.Entities.PlayerTurn", "FirstPlayer")
                         .WithMany("FirstPlayers")
                         .HasForeignKey("FirstPlayerId");
-
-                    b.HasOne("GameSharp.Entities.GameRoom", "GameRoom")
-                        .WithMany("GameDatas")
-                        .HasForeignKey("GameRoomId");
                 });
 
             modelBuilder.Entity("GameSharp.Entities.GameRoomPlayer", b =>
@@ -270,6 +274,10 @@ namespace Snap.Server.Migrations
 
             modelBuilder.Entity("Snap.Entities.PlayerGameplay", b =>
                 {
+                    b.HasOne("Snap.Entities.SnapGameData", "GameData")
+                        .WithMany("PlayerGamePlays")
+                        .HasForeignKey("GameDataId");
+
                     b.HasOne("Snap.Entities.PlayerData", "PlayerTurn")
                         .WithMany("PlayerGameplay")
                         .HasForeignKey("PlayerTurnId");
@@ -315,6 +323,14 @@ namespace Snap.Server.Migrations
                     b.HasOne("Snap.Entities.StackNode", "Previous")
                         .WithMany()
                         .HasForeignKey("PreviousId");
+                });
+
+            modelBuilder.Entity("Snap.Entities.SnapGameData", b =>
+                {
+                    b.HasOne("GameSharp.Entities.GameRoom", "Room")
+                        .WithOne("GamesData")
+                        .HasForeignKey("Snap.Entities.SnapGameData", "GameRoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

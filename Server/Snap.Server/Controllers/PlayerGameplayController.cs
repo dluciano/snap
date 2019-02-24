@@ -1,11 +1,8 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
-using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;
 
@@ -20,7 +17,6 @@ namespace Snap.Server.Controllers
 
         public PlayerGameplayController(IDealer dealer)
         {
-
             _dealer = dealer;
         }
 

@@ -23,11 +23,7 @@ namespace Snap.Services.Impl
             builder.RegisterType<DefaultNotificationService>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterType<SnapGameCommands>()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
+            
             builder.Register(context => new StateMachine<GameState, GameSessionTransitions>()
                     .AddTransition(GameState.NONE, GameState.PLAYING,
                         GameSessionTransitions.START_GAME)

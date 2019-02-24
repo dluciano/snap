@@ -17,7 +17,7 @@ namespace Snap.Fakes
         {
         }
 
-        public async Task<Player> SetCurrentPlayer(Func<IQueryable<Player>, Task<Player>> action)
+        public async Task<Player> Authenticate(Func<IQueryable<Player>, Task<Player>> action)
         {
             var player = (await action?.Invoke(_db.Players));
             var exists = await _db.Players.SingleOrDefaultAsync(p => p.Id == player.Id);

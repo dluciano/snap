@@ -20,7 +20,7 @@ namespace Snap.Tests.Helpers
         private async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername,
             CancellationToken token = default)
         {
-            await _playerProvider.SetCurrentPlayer(players => Task.FromResult(new Player
+            await _playerProvider.Authenticate(players => Task.FromResult(new Player
             {
                 Username = username
             }));
@@ -33,6 +33,6 @@ namespace Snap.Tests.Helpers
 
         public async Task<Player> LoginPlayerAsync(string username = FirstPlayerUsername) =>
             await _playerProvider
-                .SetCurrentPlayer(async players => await players.SingleAsync(p => p.Username == username));
+                .Authenticate(async players => await players.SingleAsync(p => p.Username == username));
     }
 }

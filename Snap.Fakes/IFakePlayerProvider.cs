@@ -8,7 +8,7 @@ namespace Snap.Fakes
 {
     public interface IFakePlayerProvider : IPlayerProvider
     {
-        Task<Player> SetCurrentPlayer(Func<IQueryable<Player>, Task<Player>> action);
+        Task<Player> Authenticate(Func<IQueryable<Player>, Task<Player>> action);
         IQueryable<Player> GetPlayers();
     }
 }

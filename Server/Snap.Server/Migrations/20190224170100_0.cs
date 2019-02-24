@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Snap.Server.Migrations
@@ -13,7 +14,8 @@ namespace Snap.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CanJoin = table.Column<bool>(nullable: false)
+                    CanJoin = table.Column<bool>(nullable: false),
+                    GameIdentifier = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -114,9 +116,9 @@ namespace Snap.Server.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FirstPlayerId = table.Column<int>(nullable: true),
                     CurrentTurnId = table.Column<int>(nullable: true),
-                    GameRoomId = table.Column<int>(nullable: true),
                     CurrentState = table.Column<byte>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false)
+                    Discriminator = table.Column<string>(nullable: false),
+                    GameRoomId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -138,7 +140,7 @@ namespace Snap.Server.Migrations
                         column: x => x.GameRoomId,
                         principalTable: "GameRooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,11 +216,18 @@ namespace Snap.Server.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Card = table.Column<byte>(nullable: false),
-                    PlayerTurnId = table.Column<int>(nullable: true)
+                    PlayerTurnId = table.Column<int>(nullable: true),
+                    GameDataId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlayerGamePlays", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlayerGamePlays_GameDatas_GameDataId",
+                        column: x => x.GameDataId,
+                        principalTable: "GameDatas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PlayerGamePlays_PlayersData_PlayerTurnId",
                         column: x => x.PlayerTurnId,
@@ -240,7 +249,9 @@ namespace Snap.Server.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_GameDatas_GameRoomId",
                 table: "GameDatas",
-                column: "GameRoomId");
+                column: "GameRoomId",
+                unique: true,
+                filter: "[GameRoomId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameRoomPlayers_GameRoomId",
@@ -251,6 +262,11 @@ namespace Snap.Server.Migrations
                 name: "IX_GameRoomPlayers_PlayerId",
                 table: "GameRoomPlayers",
                 column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerGamePlays_GameDataId",
+                table: "PlayerGamePlays",
+                column: "GameDataId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlayerGamePlays_PlayerTurnId",

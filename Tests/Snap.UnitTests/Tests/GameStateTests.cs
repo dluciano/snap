@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Dawlin.Util.Impl.Exceptions;
 using GameSharp.Entities.Enums;
 using Shouldly;
 using Snap.Entities;
