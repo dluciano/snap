@@ -11,6 +11,7 @@ using Snap.Fakes;
 using Snap.Services.Abstract;
 using Snap.Services.Impl;
 using Snap.Tests.Fakes;
+using Snap.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Ioc.Autofac;
@@ -36,7 +37,6 @@ namespace Snap.Tests.Module
                 .As<ITestOutputHelper>()
                 .InstancePerLifetimeScope();
 
-            // configure your container
             builder
                 .Register(t =>
                 {
@@ -65,11 +65,13 @@ namespace Snap.Tests.Module
             builder.RegisterModule<GameSharpModule>();
             builder.RegisterModule<SnapGameModule>();
 
-            builder.RegisterType<PlayerServiceSeedHelper>();
-            builder.RegisterType<BackgroundHelper>();
+            builder.RegisterType<PlayerServiceSeedHelper>()
+                .AsImplementedInterfaces();
+            builder.RegisterType<BackgroundHelper>()
+                .AsImplementedInterfaces();
 
             builder.RegisterType<FakeSecondPlayerFirst>().As<IPlayerChooser>();
-            builder.RegisterType<FakeCardShuflee>().As<ICardShuffler>();
+            builder.RegisterType<FakeCardShuffle>().As<ICardShuffler>();
             builder.RegisterType<FakeCardDealter>().As<ICardDealter>();
 
             Container = builder.Build();

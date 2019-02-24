@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
+using Snap.Tests.Helpers;
 using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;
@@ -16,8 +17,8 @@ namespace Snap.Tests.Tests
         {
         }
 
-        public GamePlayTests(BackgroundHelper backgroundHelper,
-            PlayerServiceSeedHelper playerHelperService,
+        public GamePlayTests(IBackgroundHelper backgroundHelper,
+            IPlayerServiceSeedHelper playerHelperService,
             IDealer dealer)
         {
             _backgroundHelper = backgroundHelper;
@@ -25,8 +26,8 @@ namespace Snap.Tests.Tests
             _dealer = dealer;
         }
 
-        private readonly BackgroundHelper _backgroundHelper;
-        private readonly PlayerServiceSeedHelper _playerHelperService;
+        private readonly IBackgroundHelper _backgroundHelper;
+        private readonly IPlayerServiceSeedHelper _playerHelperService;
         private readonly IDealer _dealer;
 
         [Fact]

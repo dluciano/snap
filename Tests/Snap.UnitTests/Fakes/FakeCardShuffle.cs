@@ -6,7 +6,7 @@ using Snap.Services.Abstract;
 
 namespace Snap.Tests.Fakes
 {
-    internal class FakeCardShuflee : ICardShuffler
+    internal class FakeCardShuffle : ICardShuffler
     {
         public IEnumerable<Card> ShuffleCards() =>
             Enum

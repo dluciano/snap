@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Snap.Entities.Enums;
 using Snap.Fakes;
+using Snap.Tests.Helpers;
 using Xunit;
 using Xunit.Ioc.Autofac;
 
@@ -16,14 +17,14 @@ namespace Snap.Tests.Tests
         {
         }
 
-        public DealtTests(BackgroundHelper backgroundHelper,
+        public DealtTests(IBackgroundHelper backgroundHelper,
             IFakePlayerProvider playerProvider)
         {
             _backgroundHelper = backgroundHelper;
             _playerProvider = playerProvider;
         }
 
-        private readonly BackgroundHelper _backgroundHelper;
+        private readonly IBackgroundHelper _backgroundHelper;
         private readonly IFakePlayerProvider _playerProvider;
 
         [Fact]

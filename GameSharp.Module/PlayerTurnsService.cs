@@ -22,13 +22,13 @@ namespace GameSharp.Services.Impl
         {
             PlayerTurn lastPlayerTurn = null;
             var t = turns.ToList();
-            t.ToList().ForEach(async p =>
-            {
-                if (lastPlayerTurn != null)
-                    lastPlayerTurn.Next = p;
-                lastPlayerTurn = p;
+            t.ToList().ForEach(p =>
+           {
+               if (lastPlayerTurn != null)
+                   lastPlayerTurn.Next = p;
+               lastPlayerTurn = p;
 
-            });
+           });
             await _db.PlayerTurns.AddRangeAsync(t, token);
             await _db.SaveChangesAsync(token);
             return t;

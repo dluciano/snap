@@ -4,20 +4,19 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Snap.Entities;
 using Snap.Services.Abstract;
-using Snap.Tests.Module;
 
-namespace Snap.Tests
+namespace Snap.Tests.Helpers
 {
-    public class BackgroundHelper
+    internal class BackgroundHelper : IBackgroundHelper
     {
         private readonly ISnapGameServices _gameService;
-        private readonly PlayerServiceSeedHelper _playerSeedHelper;
+        private readonly IPlayerServiceSeedHelper _playerSeedHelper;
         private readonly IGameRoomPlayerServices _roomPlayerService;
         private readonly IGameRoomServices _roomService;
 
         public BackgroundHelper(ISnapGameServices gameService,
             IGameRoomPlayerServices roomPlayerService,
-            PlayerServiceSeedHelper playerSeedHelper,
+            IPlayerServiceSeedHelper playerSeedHelper,
             IGameRoomServices roomService)
         {
             _gameService = gameService;

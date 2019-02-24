@@ -8,6 +8,7 @@ using Snap.Entities;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
 using Snap.Services.Impl.Notifications;
+using Snap.Tests.Helpers;
 using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;
@@ -22,8 +23,8 @@ namespace Snap.Tests.Tests
 
         }
 
-        public NotificationsTests(BackgroundHelper backgroundHelper,
-            PlayerServiceSeedHelper playerServiceSeedHelper,
+        public NotificationsTests(IBackgroundHelper backgroundHelper,
+            IPlayerServiceSeedHelper playerServiceSeedHelper,
             IDealer dealer,
             INotificationService notifier)
         {
@@ -33,8 +34,8 @@ namespace Snap.Tests.Tests
             _notifier = notifier;
         }
 
-        private readonly BackgroundHelper _backgroundHelper;
-        private readonly PlayerServiceSeedHelper _playerServiceSeedHelper;
+        private readonly IBackgroundHelper _backgroundHelper;
+        private readonly IPlayerServiceSeedHelper _playerServiceSeedHelper;
         private readonly IDealer _dealer;
         private readonly INotificationService _notifier;
 

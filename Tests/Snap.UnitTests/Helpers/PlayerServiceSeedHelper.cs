@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Snap.Fakes;
 
-namespace Snap.Tests.Module
+namespace Snap.Tests.Helpers
 {
-    public sealed class PlayerServiceSeedHelper
+    internal sealed class PlayerServiceSeedHelper : IPlayerServiceSeedHelper
     {
         public const string FirstPlayerUsername = "First Player";
         public const string SecondPlayerUsername = "Second Player";
@@ -18,7 +17,7 @@ namespace Snap.Tests.Module
             _playerProvider = playerProvider;
         }
 
-        public async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername,
+        private async Task<Player> SeedPlayerAsync(string username = FirstPlayerUsername,
             CancellationToken token = default)
         {
             await _playerProvider.SetCurrentPlayer(players => Task.FromResult(new Player
@@ -28,7 +27,6 @@ namespace Snap.Tests.Module
             return await _playerProvider
                 .AddAsync(token);
         }
-
 
         public async Task<Player> SeedAndLoginAsync(string username = FirstPlayerUsername, CancellationToken token = default) =>
             await LoginPlayerAsync((await SeedPlayerAsync(username, token)).Username);

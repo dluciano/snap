@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Snap.Entities.Enums;
 using Snap.Services.Abstract;
+using Snap.Tests.Helpers;
 using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;
@@ -18,14 +19,14 @@ namespace Snap.Tests.Tests
         }
 
         public ShuffleTests(ICardShuffler shuffleService,
-            BackgroundHelper backgroundHelper)
+            IBackgroundHelper backgroundHelper)
         {
             _shuffleService = shuffleService;
             _backgroundHelper = backgroundHelper;
         }
 
         private readonly ICardShuffler _shuffleService;
-        private readonly BackgroundHelper _backgroundHelper;
+        private readonly IBackgroundHelper _backgroundHelper;
 
         [Fact]
         public async Task When_shuffle_with_two_player_then_only_two_players_should_exists()

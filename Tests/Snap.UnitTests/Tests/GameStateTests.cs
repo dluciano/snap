@@ -4,6 +4,7 @@ using GameSharp.Entities.Enums;
 using Shouldly;
 using Snap.Entities;
 using Snap.Services.Impl.Exceptions;
+using Snap.Tests.Helpers;
 using Xunit;
 using Xunit.Ioc.Autofac;
 
@@ -16,12 +17,12 @@ namespace Snap.Tests.Tests
         {
         }
 
-        public GameStateTests(BackgroundHelper backgroundHelper)
+        public GameStateTests(IBackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }
 
-        private readonly BackgroundHelper _backgroundHelper;
+        private readonly IBackgroundHelper _backgroundHelper;
 
         [Fact]
         public async Task When_game_start_then_game_should_be_in_state_playing()

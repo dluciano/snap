@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
+using Snap.Tests.Helpers;
 using Snap.Tests.Module;
 using Xunit;
 using Xunit.Ioc.Autofac;
@@ -14,12 +15,12 @@ namespace Snap.Tests.Tests
         {
         }
 
-        public GameCreationTests(BackgroundHelper backgroundHelper)
+        public GameCreationTests(IBackgroundHelper backgroundHelper)
         {
             _backgroundHelper = backgroundHelper;
         }
 
-        private readonly BackgroundHelper _backgroundHelper;
+        private readonly IBackgroundHelper _backgroundHelper;
 
         [Fact]
         public async Task When_create_game_room_should_accept_player()

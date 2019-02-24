@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Services.Abstract;
 using Shouldly;
-using Snap.Tests.Module;
+using Snap.Tests.Helpers;
 using Xunit;
 using Xunit.Ioc.Autofac;
 
@@ -16,8 +16,8 @@ namespace Snap.Tests.Tests
         {
         }
 
-        public GameRoomServicesTests(BackgroundHelper backgroundHelper,
-            PlayerServiceSeedHelper playerHelperService,
+        public GameRoomServicesTests(IBackgroundHelper backgroundHelper,
+            IPlayerServiceSeedHelper playerHelperService,
             IGameRoomPlayerServices gameRoomPlayerServices)
         {
             _backgroundHelper = backgroundHelper;
@@ -25,8 +25,8 @@ namespace Snap.Tests.Tests
             _gameRoomPlayerServices = gameRoomPlayerServices;
         }
 
-        private readonly BackgroundHelper _backgroundHelper;
-        private readonly PlayerServiceSeedHelper _playerHelperService;
+        private readonly IBackgroundHelper _backgroundHelper;
+        private readonly IPlayerServiceSeedHelper _playerHelperService;
         private readonly IGameRoomPlayerServices _gameRoomPlayerServices;
 
         [Fact]
