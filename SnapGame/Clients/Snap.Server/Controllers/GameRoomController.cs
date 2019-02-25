@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
+using NSwag.Annotations;
 using Snap.DataAccess;
 
 namespace Snap.Server.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class GameRoomController : ControllerBase
@@ -21,14 +21,16 @@ namespace Snap.Server.Controllers
             _db = db;
         }
 
-        [HttpGet]
+        [SwaggerOperation("getAllRooms")]
+        [HttpGet, Route("game/")]
         public async Task<ActionResult<GameRoom>> GetAllAsync(CancellationToken token) =>
             Ok(await _db.GameRooms.ToListAsync(token));
 
-        [HttpGet("/{id}")]
+        [SwaggerOperation("getRoomById")]
+        [HttpGet, Route("game/{id}")]
         public async Task<ActionResult<GameRoom>> GetAsync([NotNull][FromRoute]int id, CancellationToken token)
         {
-            var room = await _db.GameRooms.FindAsync(id, token);
+            var room = await _db.GameRooms.FindAsync(new object[] { id }, token);
             if (room == null)
                 return NotFound();
             return Ok(room);

@@ -4,7 +4,9 @@ using GameSharp.Entities;
 using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NJsonSchema.Annotations;
+using NSwag.Annotations;
 using Snap.DataAccess;
 
 namespace Snap.Server.Controllers
@@ -24,16 +26,13 @@ namespace Snap.Server.Controllers
             _db = db;
         }
 
-        [HttpGet("/{id}")]
-        public async Task<ActionResult<Player>> Get([NotNull] [FromRoute] int id, CancellationToken token)
+        [SwaggerOperation("getPlayerById")]
+        [HttpGet("/me")]
+        public async Task<ActionResult<Player>> GetPlayerAsync(CancellationToken token)
         {
-            var player = _db.Players.Find(id);
+            var player = await _playerProvider.GetCurrentPlayerAsync();
             if (player == null)
                 return NotFound();
-            if (player.Id != id)
-            {
-                return Unauthorized();
-            }
             return Ok(player);
         }
 
