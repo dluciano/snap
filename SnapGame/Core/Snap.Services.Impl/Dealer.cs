@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dawlin.Abstract.Entities.Exceptions;
+using Dawlin.Util.Abstract;
 using GameSharp.Entities;
 using GameSharp.Entities.Enums;
 using GameSharp.Services.Abstract;
@@ -22,24 +23,21 @@ namespace Snap.Services.Impl
         private readonly ICardDealter _cardDealter;
         private readonly ICardShuffler _carShuffler;
         private readonly SnapDbContext _db;
-        private readonly INotificationService _notificationService;
         private readonly IPlayerChooser _playerChooser;
-
+        public event AsyncEventHandler<CardPopEvent> OnCardPopEvent;
         private readonly IPlayerProvider _playerProvider;
 
         public Dealer(IPlayerChooser playerChooser,
             ICardShuffler carShuffler,
             IPlayerProvider playerProvider,
             SnapDbContext db,
-            ICardDealter cardDealter,
-            INotificationService notificationService)
+            ICardDealter cardDealter)
         {
             _playerChooser = playerChooser;
             _carShuffler = carShuffler;
             _playerProvider = playerProvider;
             _db = db;
             _cardDealter = cardDealter;
-            _notificationService = notificationService;
         }
 
         public IEnumerable<Card> ShuffleCards() =>
@@ -54,6 +52,12 @@ namespace Snap.Services.Impl
         //Game loop
         public async Task<PlayerGameplay> PopCurrentPlayerCardAsync(int gameId, CancellationToken token = default(CancellationToken))
         {
+            var player = (await _playerProvider.GetCurrentPlayerAsync());
+            if (player == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
             var game = await _db
                 .SnapGames
                 .Include(g => g.CentralPile.Last)
@@ -84,8 +88,9 @@ namespace Snap.Services.Impl
 
             if (game.GameData.CurrentState != GameState.PLAYING)
                 throw new InvalidGameStateException();
-            if (game.CurrentTurn.PlayerTurn.Player.Id != (await _playerProvider.GetCurrentPlayerAsync()).Id)
+            if (game.CurrentTurn.PlayerTurn.Player.Id != player.Id)
                 throw new NotCurrentPlayerTryToPlayException();
+
             using (var trans = await _db.Database.BeginTransactionAsync(token))
             {
                 var playerCard = game.CurrentTurn.StackEntity.PopCard();
@@ -107,7 +112,9 @@ namespace Snap.Services.Impl
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
 
-                await _notificationService.OnCardPop(this, new CardPopEvent(gamePlay, game.CurrentTurn), token);
+                if (OnCardPopEvent != null)
+                    await OnCardPopEvent?.Invoke(this, new CardPopEvent(gamePlay, game.CurrentTurn), token);
+
                 trans.Commit();
                 return gamePlay;
             }

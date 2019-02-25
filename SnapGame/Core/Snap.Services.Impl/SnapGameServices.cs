@@ -10,18 +10,18 @@ using Microsoft.EntityFrameworkCore;
 using Snap.DataAccess;
 using Snap.Entities;
 using Snap.Services.Abstract;
-using Snap.Services.Abstract.Notifications;
 using Snap.Services.Impl.Exceptions;
 
 namespace Snap.Services.Impl
 {
     public class SnapGameServices : ISnapGameServices
     {
+        public event AsyncEventHandler<SnapGame> OnGameStartEvent;
+
         private readonly ICardPilesService _cardPilesServices;
         private readonly ISnapGameConfigurationProvider _configuration;
         private readonly SnapDbContext _db;
         private readonly IDealer _dealer;
-        private readonly INotificationService _notificationService;
         private readonly IPlayerTurnsService _playerTurnsService;
         private readonly IStateMachineProvider<GameState, GameSessionTransitions> _stateMachineProvider;
         private readonly IPlayerProvider _playerProvider;
@@ -32,11 +32,9 @@ namespace Snap.Services.Impl
             ICardPilesService cardPilesServices,
             IStateMachineProvider<GameState, GameSessionTransitions> stateMachineProvider,
             SnapDbContext db,
-            INotificationService notificationService,
             IPlayerProvider playerProvider)
         {
             _db = db;
-            _notificationService = notificationService;
             _playerProvider = playerProvider;
             _stateMachineProvider = stateMachineProvider;
             _configuration = configuration;
@@ -104,7 +102,8 @@ namespace Snap.Services.Impl
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
 
-                await _notificationService?.OnGameStarted(this, new GameStartedEvent(game), token);
+                if (OnGameStartEvent != null)
+                    await OnGameStartEvent?.Invoke(this, game, token);
 
                 trans.Commit();
                 return game;

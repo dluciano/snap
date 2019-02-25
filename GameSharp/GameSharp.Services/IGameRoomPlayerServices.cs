@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Util.Abstract;
 using GameSharp.Entities;
 
 namespace GameSharp.Services.Abstract
@@ -9,5 +10,7 @@ namespace GameSharp.Services.Abstract
         Task<GameRoomPlayer> AddPlayersAsync(int roomId,
             bool isViewer,
             CancellationToken token);
+
+        event AsyncEventHandler<GameRoomPlayer> OnPlayerJoinedEvent;
     }
 }

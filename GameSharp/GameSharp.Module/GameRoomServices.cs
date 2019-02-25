@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Util.Abstract;
 using GameSharp.DataAccess;
 using GameSharp.Entities;
 using GameSharp.Services.Abstract;
@@ -13,6 +14,7 @@ namespace GameSharp.Services.Impl
         private readonly GameSharpContext _db;
         private readonly IPlayerProvider _playerProvider;
         private readonly IGameRoomPlayerServices _roomPlayerServices;
+        public event AsyncEventHandler<GameRoom> OnRoomCreatedEvent;
 
         public GameRoomServices(GameSharpContext db,
             IPlayerProvider playerProvider,
@@ -40,6 +42,8 @@ namespace GameSharp.Services.Impl
                 await _db.SaveChangesAsync(token);
 
                 await _roomPlayerServices.AddPlayersAsync(room.Id, false, token);
+                //TODO: test this and all other notifications
+                OnRoomCreatedEvent?.Invoke(this, room, token);
                 tran.Commit();
                 return room;
             }

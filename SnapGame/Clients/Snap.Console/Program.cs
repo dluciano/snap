@@ -20,21 +20,18 @@ namespace Snap.ConsoleApplication
     {
         private readonly ISnapGameServices _snapGameServices;
         private readonly IDealer _dealer;
-        private readonly INotificationService _notifier;
         private readonly IFakePlayerProvider _playerProvider;
         private readonly IGameRoomPlayerServices _gameRoomService;
         private readonly IGameRoomServices _roomService;
 
         public Program(ISnapGameServices snapGameServices,
             IDealer dealer,
-            INotificationService notifier,
             IFakePlayerProvider playerProvider,
             IGameRoomPlayerServices gameRoomService,
             IGameRoomServices roomService)
         {
             _snapGameServices = snapGameServices;
             _dealer = dealer;
-            _notifier = notifier;
             _playerProvider = playerProvider;
             _gameRoomService = gameRoomService;
             _roomService = roomService;
@@ -99,18 +96,18 @@ namespace Snap.ConsoleApplication
             Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
 
             await _playerProvider.SetCurrentPlayer(game.CurrentTurn.PlayerTurn.Player);
-            _notifier.CardPopEvent += async (sender, e, token) =>
-             {
-                 Division();
+            _dealer.OnCardPopEvent += async (sender, e, token) =>
+              {
+                  Division();
 
-                 Console.WriteLine($"Card Pop: {Enum.GetName(typeof(Card), e.GamePlay.Card) }");
-                 Console.WriteLine($"Player cards: {e.GamePlay.PlayerTurn.StackEntity}");
-                 Console.WriteLine($"Central Pile: {e.GamePlay.PlayerTurn.SnapGame.CentralPile}");
-                 Division();
-                 Console.WriteLine($"Current Player is: {e.NextPlayer.PlayerTurn.Player.Username}");
-                 Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
-                 await _playerProvider.SetCurrentPlayer(game.CurrentTurn.PlayerTurn.Player);
-             };
+                  Console.WriteLine($"Card Pop: {Enum.GetName(typeof(Card), e.GamePlay.Card) }");
+                  Console.WriteLine($"Player cards: {e.GamePlay.PlayerTurn.StackEntity}");
+                  Console.WriteLine($"Central Pile: {e.GamePlay.PlayerTurn.SnapGame.CentralPile}");
+                  Division();
+                  Console.WriteLine($"Current Player is: {e.NextPlayer.PlayerTurn.Player.Username}");
+                  Console.WriteLine($"Player cards: {game.CurrentTurn.StackEntity}");
+                  await _playerProvider.SetCurrentPlayer(game.CurrentTurn.PlayerTurn.Player);
+              };
 
             var finish = false;
             while (!finish)

@@ -1,12 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
-using GameSharp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
-using Snap.Entities;
-using Snap.Services.Abstract;
+using Snap.DataAccess;
 
 namespace Snap.Server.Controllers
 {
@@ -15,31 +14,24 @@ namespace Snap.Server.Controllers
     [ApiController]
     public class GameRoomController : ControllerBase
     {
-        private readonly IGameRoomServices _roomService;
-        private readonly IGameRoomPlayerServices _gameRoomService;
-        private readonly ISnapGameServices _snapGameServices;
+        private readonly SnapDbContext _db;
 
-        public GameRoomController(IGameRoomServices roomService,
-            IGameRoomPlayerServices gameRoomService,
-            ISnapGameServices snapGameServices)
+        public GameRoomController(SnapDbContext db)
         {
-            _roomService = roomService;
-            _gameRoomService = gameRoomService;
-            _snapGameServices = snapGameServices;
+            _db = db;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<GameRoom>> PostAsync(CancellationToken token) =>
-            await _roomService.CreateAsync(token);
+        [HttpGet]
+        public async Task<ActionResult<GameRoom>> GetAllAsync(CancellationToken token) =>
+            Ok(await _db.GameRooms.ToListAsync(token));
 
-        [HttpPost("{roomId}/Players")]
-        public async Task<ActionResult<GameRoomPlayer>> PostPlayerAsync([NotNull][FromRoute]int roomId,
-            bool isViewer,
-            CancellationToken token) =>
-            await _gameRoomService.AddPlayersAsync(roomId, isViewer, token);
-
-        [HttpPost("{roomId}/Game")]
-        public async Task<ActionResult<SnapGame>> PostAsync([NotNull] [FromRoute] int roomId, CancellationToken token) =>
-            await _snapGameServices.StarGameAsync(roomId, token);
+        [HttpGet("/{id}")]
+        public async Task<ActionResult<GameRoom>> GetAsync([NotNull][FromRoute]int id, CancellationToken token)
+        {
+            var room = await _db.GameRooms.FindAsync(id, token);
+            if (room == null)
+                return NotFound();
+            return Ok(room);
+        }
     }
 }

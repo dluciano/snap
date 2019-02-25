@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Autofac;
 using Dawlin.Util.Impl;
 using GameSharp.DataAccess;
@@ -8,7 +9,6 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,23 +50,36 @@ namespace Snap.Server
 
             services
                 .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            .AddIdentityServerAuthentication(options =>
-            {
-                options.Authority = "https://localhost:52365";
-                options.RequireHttpsMetadata = false;
-                options.Validate();
-            });
+                .AddIdentityServerAuthentication(options =>
+                    {
+                        options.Authority = Configuration["SnapGameOAuth:Authority"];
+                        options.TokenRetriever = CustomTokenRetriever.FromHeaderAndQueryString;
+                        options.Validate();
+                    });
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy",
+                builder =>
+                {
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins(Configuration["CorsPolicy:Origin"])
+                        .AllowCredentials();
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins("http://localhost:7456")
+                        .AllowCredentials();
+                }));
 
             services.AddOpenApiDocument(document =>
             {
-                document.Title = "Snap Game API";
+                document.Title = Configuration["SwaggerConfig:Title"];
                 document.DocumentProcessors.Add(
                     new SecurityDefinitionAppender("oauth", new SwaggerSecurityScheme
                     {
                         Type = SwaggerSecuritySchemeType.OAuth2,
                         Flow = SwaggerOAuth2Flow.Implicit,
-                        AuthorizationUrl = "https://localhost:52365/connect/authorize",
-                        TokenUrl = "https://localhost:52365/connect/token",
+                        AuthorizationUrl = Configuration["SwaggerConfig:OAuth:AuthorizationUrl"],
+                        TokenUrl = Configuration["SwaggerConfig:OAuth:TokenUrl"],
                         Scopes = new Dictionary<string, string>
                         {
                             { "snapgame ", "Read access to protected resources" },
@@ -119,7 +132,7 @@ namespace Snap.Server
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
 
             app.UseSwagger();
@@ -127,18 +140,18 @@ namespace Snap.Server
             {
                 settings.OAuth2Client = new OAuth2ClientSettings
                 {
-                    ClientId = "snapGameApiDevSwagger",
+                    ClientId = Configuration["SwaggerConfig:OAuth:ClientId"],
+                    ClientSecret = Configuration["SwaggerConfig:OAuth:ClientSecret"],
                     AdditionalQueryStringParameters =
                     {
-                        { "nonce", "636864884858396406.MWI4ZjNkYWItOGU1My00YmFiLTg1MTAtMWQzOTY2OTM4YzRkOGFhOGI1OGItODc0YS00NGEyLWI3NzgtYzU0YmJiMzk5NWY0" }
+                        { "nonce", Guid.NewGuid().ToString() }
                     }
                 };
             });
 
             app.UseSignalR(routes =>
             {
-                //TODO: Add this to the configServ and to the apppsettings
-                routes.MapHub<SignalRNotificationHub>("/game_notifications");
+                routes.MapHub<SignalRNotificationHub>(Configuration["Hub:EndpointUrl"]);
             });
 
             app.UseMvc();

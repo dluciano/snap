@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Dawlin.Util.Abstract;
 using GameSharp.Services.Abstract;
 using Snap.Entities;
+using Snap.Services.Abstract.Notifications;
 
 namespace Snap.Services.Abstract
 {
@@ -11,5 +13,6 @@ namespace Snap.Services.Abstract
         IPlayerChooser
     {
         Task<PlayerGameplay> PopCurrentPlayerCardAsync(int gameId, CancellationToken token = default(CancellationToken));
+        event AsyncEventHandler<CardPopEvent> OnCardPopEvent;
     }
 }

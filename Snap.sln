@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.ConsoleApplication", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snap.Server", "SnapGame\Clients\Snap.Server\Snap.Server.csproj", "{16BC4A83-7558-4251-B473-02DBA4449C01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snap.Web", "SnapGame\Clients\Snap.Web\Snap.Web.csproj", "{06401108-8971-4571-A4E7-9D51A1CC4256}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{16BC4A83-7558-4251-B473-02DBA4449C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16BC4A83-7558-4251-B473-02DBA4449C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16BC4A83-7558-4251-B473-02DBA4449C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06401108-8971-4571-A4E7-9D51A1CC4256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06401108-8971-4571-A4E7-9D51A1CC4256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06401108-8971-4571-A4E7-9D51A1CC4256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06401108-8971-4571-A4E7-9D51A1CC4256}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +135,7 @@ Global
 		{74C0392F-56CF-4C70-89DC-62A4352AA1EA} = {A6CF54F0-B610-4091-A4FE-F0763EEAA55E}
 		{E1158F58-C10F-4566-BF4A-800B87AC15EA} = {3A5A8311-8123-4072-AF76-51015F519AA9}
 		{16BC4A83-7558-4251-B473-02DBA4449C01} = {3A5A8311-8123-4072-AF76-51015F519AA9}
+		{06401108-8971-4571-A4E7-9D51A1CC4256} = {3A5A8311-8123-4072-AF76-51015F519AA9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09F34F17-F3DE-4160-A09B-083B9AE6A512}
