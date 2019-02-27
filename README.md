@@ -1,7 +1,7 @@
-# snap
-The snap card game
+# Snap
+The Snap Card Game
 
-Terms:
+Foders:
 - Clients: it contains three projects. First, the console app, then a REST API project that has some endpoints to get the room, players of the system and lastly the game itself WIP (work in progress)
 - The core: it contains the logic of the game.
 - Gamesharp: a library to manage game rooms and player turns. WIP
