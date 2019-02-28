@@ -10,7 +10,7 @@ using Snap.DataAccess;
 namespace Snap.Server.Migrations
 {
     [DbContext(typeof(SnapDbContext))]
-    [Migration("20190224170100_0")]
+    [Migration("20190228122332_0")]
     partial class _0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,9 +55,13 @@ namespace Snap.Server.Migrations
 
                     b.Property<bool>("CanJoin");
 
+                    b.Property<int?>("CreatedById");
+
                     b.Property<Guid>("GameIdentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("GameRooms");
                 });
@@ -68,17 +72,18 @@ namespace Snap.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GameRoomId");
-
                     b.Property<bool>("IsViewer");
 
-                    b.Property<int?>("PlayerId");
+                    b.Property<int>("PlayerId");
+
+                    b.Property<int>("RoomId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameRoomId");
+                    b.HasIndex("RoomId");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId", "RoomId")
+                        .IsUnique();
 
                     b.ToTable("GameRoomPlayers");
                 });
@@ -215,15 +220,24 @@ namespace Snap.Server.Migrations
                         .HasForeignKey("FirstPlayerId");
                 });
 
+            modelBuilder.Entity("GameSharp.Entities.GameRoom", b =>
+                {
+                    b.HasOne("GameSharp.Entities.Player", "CreatedBy")
+                        .WithMany("CreatedRooms")
+                        .HasForeignKey("CreatedById");
+                });
+
             modelBuilder.Entity("GameSharp.Entities.GameRoomPlayer", b =>
                 {
-                    b.HasOne("GameSharp.Entities.GameRoom", "GameRoom")
-                        .WithMany("RoomPlayers")
-                        .HasForeignKey("GameRoomId");
-
                     b.HasOne("GameSharp.Entities.Player", "Player")
                         .WithMany("GameRoomPlayers")
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GameSharp.Entities.GameRoom", "GameRoom")
+                        .WithMany("RoomPlayers")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("GameSharp.Entities.PlayerTurn", b =>

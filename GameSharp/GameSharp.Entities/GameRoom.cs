@@ -11,5 +11,6 @@ namespace GameSharp.Entities
         public bool CanJoin { get; set; }
         public Guid GameIdentifier { get; set; }
         public GameData GamesData { get; set; }
+        public Player CreatedBy { get; set; }
     }
 }

@@ -8,5 +8,7 @@ namespace GameSharp.Entities
         public bool IsViewer { get; set; }
         public GameRoom GameRoom { get; set; }
         public int Id { get; set; }
+        public int PlayerId { get; set; }
+        public int RoomId { get; set; }
     }
 }

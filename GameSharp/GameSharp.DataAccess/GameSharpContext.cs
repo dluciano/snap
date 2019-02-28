@@ -1,5 +1,4 @@
-﻿using System.Net;
-using GameSharp.Entities;
+﻿using GameSharp.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameSharp.DataAccess
@@ -52,11 +51,17 @@ namespace GameSharp.DataAccess
             modelBuilder
                 .Entity<GameRoomPlayer>()
                 .HasOne(p => p.GameRoom)
-                .WithMany(r => r.RoomPlayers);
+                .WithMany(r => r.RoomPlayers)
+                .HasForeignKey(p => p.RoomId);
             modelBuilder
                 .Entity<GameRoomPlayer>()
                 .HasOne(p => p.Player)
-                .WithMany(r => r.GameRoomPlayers);
+                .WithMany(r => r.GameRoomPlayers)
+                .HasForeignKey(r => r.PlayerId);
+            modelBuilder
+                .Entity<GameRoomPlayer>()
+                .HasIndex(p => new { p.PlayerId, p.RoomId })
+                .IsUnique();
 
             modelBuilder
                 .Entity<PlayerTurn>()
@@ -71,6 +76,10 @@ namespace GameSharp.DataAccess
                 .Entity<GameRoom>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
+            modelBuilder
+                .Entity<GameRoom>()
+                .HasOne(p => p.CreatedBy)
+                .WithMany(p=>p.CreatedRooms);
         }
     }
 }

@@ -68,6 +68,9 @@ namespace Snap.Services.Impl
                 .ThenInclude(pt => pt.Next)
                 .Include(p => p.GameData.CurrentTurn.Player)
 
+                .Include(g => g.GameData)
+                .ThenInclude(gd => gd.Room)
+
                 .Include(p => p.PlayersData)
                 .ThenInclude(pd => pd.PlayerTurn)
                 .ThenInclude(pt => pt.Player)
@@ -112,8 +115,8 @@ namespace Snap.Services.Impl
                 game.GameData.NextTurn();
                 await _db.SaveChangesAsync(token);
 
-                if (OnCardPopEvent != null)
-                    await OnCardPopEvent?.Invoke(this, new CardPopEvent(gamePlay, game.CurrentTurn), token);
+                await OnCardPopEvent?.Invoke(this, new CardPopEvent(gamePlay, game.CurrentTurn), token);
+                token.ThrowIfCancellationRequested();
 
                 trans.Commit();
                 return gamePlay;

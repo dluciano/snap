@@ -11,14 +11,12 @@ using Snap.Services.Abstract.Notifications;
 namespace Snap.Server.Services
 {
     [Authorize]
-    public sealed class SignalRNotificationHub : Hub
+    internal sealed class SignalRNotificationHub : Hub
     {
         private readonly IGameRoomPlayerServices _gameRoomService;
         private readonly IGameRoomServices _roomService;
         private readonly ISnapGameServices _snapGameService;
         private readonly IDealer _dealer;
-        public const string JOIN_GAME = nameof(JoinGame);
-        public const string GAME_STARTED = nameof(StartGame);
 
         public SignalRNotificationHub(IGameRoomPlayerServices gameRoomService,
             IGameRoomServices roomService,
@@ -32,50 +30,43 @@ namespace Snap.Server.Services
 
             _roomService.OnRoomCreatedEvent += OnRoomCreatedEvent;
             _gameRoomService.OnPlayerJoinedEvent += OnPlayerJoined;
-            _snapGameService.OnGameStartEvent += SnapGameServiceOnOnGameStartEvent;
-            _dealer.OnCardPopEvent += DealerOnOnCardPopEvent;
+            _snapGameService.OnGameStartEvent += OnGameStartEvent;
+            _dealer.OnCardPopEvent += OnCardPopEvent;
         }
 
-        private async Task DealerOnOnCardPopEvent(object sender, CardPopEvent args, CancellationToken token) =>
-            await NotifyRoomGroup(nameof(JoinGame), args.GamePlay.GameData.Room, args, token);
+        private async Task OnCardPopEvent(object sender, CardPopEvent args, CancellationToken token) =>
+            await NotifyRoomGroup(nameof(PopCard), args.GamePlay.GameData.Room, new { card = args.GamePlay.Card, currentPlayer = args.NextPlayer.PlayerTurn.Player.Username }, token);
 
-        private async Task SnapGameServiceOnOnGameStartEvent(object sender, SnapGame args, CancellationToken token = default(CancellationToken)) =>
-            await NotifyRoomGroup(nameof(JoinGame), args.GameData.Room, args, token);
+        private async Task OnGameStartEvent(object sender, SnapGame args, CancellationToken token = default(CancellationToken)) =>
+            await NotifyRoomGroup(nameof(StartGame), args.GameData.Room, new { gameId = args.Id, currentPlayer = args.CurrentTurn.PlayerTurn.Player.Username }, token);
 
         private async Task OnPlayerJoined(object sender, GameRoomPlayer args, CancellationToken token = default(CancellationToken))
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, args.GameRoom.GameIdentifier.ToString(), token);
-            await NotifyRoomGroup(nameof(JoinGame), args.GameRoom, args, token);
+            await NotifyRoomGroup(nameof(JoinGame), args.GameRoom, new { username = args.Player.Username, roomId = args.RoomId }, token);
         }
 
-        private async Task OnRoomCreatedEvent(object sender, GameRoom args, CancellationToken token = default(CancellationToken)) =>
+        private async Task OnRoomCreatedEvent(object sender, GameRoom args, CancellationToken token = default(CancellationToken))
+        {
+            var methodName = nameof(CreateRoom);
+            var data = new { roomId = args.Id, createdBy = args.CreatedBy.Username };
             await Groups.AddToGroupAsync(Context.ConnectionId, args.GameIdentifier.ToString(), token);
-
-        public async Task<GameRoom> CreateRoom() =>
-            await _roomService.CreateAsync(Context.ConnectionAborted);
-
-        public async Task<GameRoomPlayer> JoinGame(int roomId, bool isViewer)
-        {
-            var token = CancellationToken.None;
-            var roomPlayer = await _gameRoomService.AddPlayersAsync(roomId, isViewer, Context.ConnectionAborted);
-            return roomPlayer;
+            await Clients
+                .All
+                .SendAsync(methodName, data, token);
         }
 
-        public async Task<SnapGame> StartGame(int roomId)
-        {
-            var token = Context.ConnectionAborted;
-            var game = await _snapGameService.StarGameAsync(roomId, token);
-            await NotifyRoomGroup(nameof(StartGame), game.GameData.Room, game, token);
-            return game;
-        }
+        public async Task<int> CreateRoom() =>
+            (await _roomService.CreateAsync(Context.ConnectionAborted)).Id;
 
-        public async Task<PlayerGameplay> PopCard(int gameId)
-        {
-            var token = Context.ConnectionAborted;
-            var gameplay = await _dealer.PopCurrentPlayerCardAsync(gameId, token);
-            await NotifyRoomGroup(nameof(PopCard), gameplay.GameData.Room, gameplay, token);
-            return gameplay;
-        }
+        public async Task<int> JoinGame(int roomId, bool isViewer) =>
+            (await _gameRoomService.AddPlayersAsync(roomId, isViewer, Context.ConnectionAborted)).Id;
+
+        public async Task<int> StartGame(int roomId) =>
+            (await _snapGameService.StarGameAsync(roomId, Context.ConnectionAborted)).Id;
+
+        public async Task<int> PopCard(int gameId) =>
+            (await _dealer.PopCurrentPlayerCardAsync(gameId, Context.ConnectionAborted)).Id;
 
         private async Task NotifyRoomGroup<TData>(string method, GameRoom room, TData data, CancellationToken token) =>
             await Clients.Group(room.GameIdentifier.ToString()).SendAsync(method, data, token);
@@ -87,8 +78,8 @@ namespace Snap.Server.Services
                 return;
             _roomService.OnRoomCreatedEvent -= OnRoomCreatedEvent;
             _gameRoomService.OnPlayerJoinedEvent -= OnPlayerJoined;
-            _snapGameService.OnGameStartEvent -= SnapGameServiceOnOnGameStartEvent;
-            _dealer.OnCardPopEvent -= DealerOnOnCardPopEvent;
+            _snapGameService.OnGameStartEvent -= OnGameStartEvent;
+            _dealer.OnCardPopEvent -= OnCardPopEvent;
         }
     }
 }

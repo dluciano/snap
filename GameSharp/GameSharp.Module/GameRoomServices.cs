@@ -36,7 +36,8 @@ namespace GameSharp.Services.Impl
                 var room = new GameRoom
                 {
                     CanJoin = true,
-                    GameIdentifier = Guid.NewGuid()
+                    GameIdentifier = Guid.NewGuid(),
+                    CreatedBy = creator
                 };
                 await _db.GameRooms.AddAsync(room, token);
                 await _db.SaveChangesAsync(token);
@@ -44,6 +45,7 @@ namespace GameSharp.Services.Impl
                 await _roomPlayerServices.AddPlayersAsync(room.Id, false, token);
                 //TODO: test this and all other notifications
                 OnRoomCreatedEvent?.Invoke(this, room, token);
+                token.ThrowIfCancellationRequested();
                 tran.Commit();
                 return room;
             }

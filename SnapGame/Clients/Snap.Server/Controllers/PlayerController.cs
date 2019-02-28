@@ -27,7 +27,7 @@ namespace Snap.Server.Controllers
         }
 
         [SwaggerOperation("getPlayerById")]
-        [HttpGet("/me")]
+        [HttpGet("me")]
         public async Task<ActionResult<Player>> GetPlayerAsync(CancellationToken token)
         {
             var player = await _playerProvider.GetCurrentPlayerAsync();

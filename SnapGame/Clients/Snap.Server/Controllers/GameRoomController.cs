@@ -1,11 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NJsonSchema.Annotations;
-using NSwag.Annotations;
 using Snap.DataAccess;
 
 namespace Snap.Server.Controllers
@@ -21,16 +19,18 @@ namespace Snap.Server.Controllers
             _db = db;
         }
 
-        [SwaggerOperation("getAllRooms")]
-        [HttpGet, Route("game/")]
+        [HttpGet]
         public async Task<ActionResult<GameRoom>> GetAllAsync(CancellationToken token) =>
             Ok(await _db.GameRooms.ToListAsync(token));
 
-        [SwaggerOperation("getRoomById")]
-        [HttpGet, Route("game/{id}")]
+        [HttpGet, Route("{id}")]
         public async Task<ActionResult<GameRoom>> GetAsync([NotNull][FromRoute]int id, CancellationToken token)
         {
-            var room = await _db.GameRooms.FindAsync(new object[] { id }, token);
+            var room = await _db
+                .GameRooms
+                .Include(gr => gr.RoomPlayers)
+                .ThenInclude(rp => rp.Player)
+                .SingleOrDefaultAsync(r => r.Id == id, token);
             if (room == null)
                 return NotFound();
             return Ok(room);

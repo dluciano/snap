@@ -6,9 +6,8 @@ namespace Snap.Services.Impl.Helpers
 {
     internal static class EntitiesHelper
     {
-        public static IIncludableQueryable<SnapGame, StackNode> IncludeAll(this DbSet<SnapGame> repo)
-        {
-            return repo
+        public static IIncludableQueryable<SnapGame, StackNode> IncludeAll(this DbSet<SnapGame> repo) =>
+            repo
                 .Include(g => g.CentralPile.Last)
                 .ThenInclude(p => p.Previous)
 
@@ -28,6 +27,5 @@ namespace Snap.Services.Impl.Helpers
                 .Include(p => p.PlayersData)
                 .ThenInclude(pd => pd.StackEntity.Last)
                 .ThenInclude(n => n.Previous);
-        }
     }
 }

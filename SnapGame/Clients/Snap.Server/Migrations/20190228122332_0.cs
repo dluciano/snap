@@ -9,20 +9,6 @@ namespace Snap.Server.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "GameRooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CanJoin = table.Column<bool>(nullable: false),
-                    GameIdentifier = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameRooms", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Players",
                 columns: table => new
                 {
@@ -56,27 +42,21 @@ namespace Snap.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameRoomPlayers",
+                name: "GameRooms",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PlayerId = table.Column<int>(nullable: true),
-                    IsViewer = table.Column<bool>(nullable: false),
-                    GameRoomId = table.Column<int>(nullable: true)
+                    CanJoin = table.Column<bool>(nullable: false),
+                    GameIdentifier = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameRoomPlayers", x => x.Id);
+                    table.PrimaryKey("PK_GameRooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GameRoomPlayers_GameRooms_GameRoomId",
-                        column: x => x.GameRoomId,
-                        principalTable: "GameRooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GameRoomPlayers_Players_PlayerId",
-                        column: x => x.PlayerId,
+                        name: "FK_GameRooms_Players_CreatedById",
+                        column: x => x.CreatedById,
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -106,6 +86,33 @@ namespace Snap.Server.Migrations
                         principalTable: "Players",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GameRoomPlayers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    IsViewer = table.Column<bool>(nullable: false),
+                    PlayerId = table.Column<int>(nullable: false),
+                    RoomId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameRoomPlayers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GameRoomPlayers_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GameRoomPlayers_GameRooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "GameRooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -254,14 +261,20 @@ namespace Snap.Server.Migrations
                 filter: "[GameRoomId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameRoomPlayers_GameRoomId",
+                name: "IX_GameRoomPlayers_RoomId",
                 table: "GameRoomPlayers",
-                column: "GameRoomId");
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameRoomPlayers_PlayerId",
+                name: "IX_GameRoomPlayers_PlayerId_RoomId",
                 table: "GameRoomPlayers",
-                column: "PlayerId");
+                columns: new[] { "PlayerId", "RoomId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameRooms_CreatedById",
+                table: "GameRooms",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlayerGamePlays_GameDataId",

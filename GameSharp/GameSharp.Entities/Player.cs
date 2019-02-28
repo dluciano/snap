@@ -9,5 +9,6 @@ namespace GameSharp.Entities
         public ICollection<GameRoomPlayer> GameRoomPlayers { get; } = new HashSet<GameRoomPlayer>();
         public ICollection<PlayerTurn> PlayerTurns { get; } = new HashSet<PlayerTurn>();
         public int Id { get; set; }
+        public ICollection<GameRoom> CreatedRooms { get; } = new HashSet<GameRoom>();
     }
 }
