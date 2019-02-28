@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GameSharp.Entities;
 using GameSharp.Services.Abstract;
@@ -32,13 +34,40 @@ namespace Snap.Server.Services
             _gameRoomService.OnPlayerJoinedEvent += OnPlayerJoined;
             _snapGameService.OnGameStartEvent += OnGameStartEvent;
             _dealer.OnCardPopEvent += OnCardPopEvent;
+            _dealer.OnSnap += OnSnap;
         }
 
+        private async Task OnSnap(object sender, CardSnapEvent args, CancellationToken token) =>
+            await NotifyRoomGroup(nameof(Snap), args.PlayerData.SnapGame.GameData.Room, new
+            {
+                username = args.PlayerData.PlayerTurn.Player.Username,
+                playerCardsCount = args.PlayerData.StackEntity.Count()
+            }, token);
+
         private async Task OnCardPopEvent(object sender, CardPopEvent args, CancellationToken token) =>
-            await NotifyRoomGroup(nameof(PopCard), args.GamePlay.GameData.Room, new { card = args.GamePlay.Card, currentPlayer = args.NextPlayer.PlayerTurn.Player.Username }, token);
+            await NotifyRoomGroup(nameof(PopCard), args.GamePlay.GameData.Room, new
+            {
+                card = new
+                {
+                    type = args.GamePlay.Card.GetCardType(),
+                    value = args.GamePlay.Card.GetCardValue()
+                },
+                currentPlayer = args.NextPlayer.PlayerTurn.Player.Username,
+                playerCardsCount = args.GamePlay.PlayerTurn.StackEntity.Count(),
+                popBy = args.GamePlay.PlayerTurn.PlayerTurn.Player.Username
+            }, token);
 
         private async Task OnGameStartEvent(object sender, SnapGame args, CancellationToken token = default(CancellationToken)) =>
-            await NotifyRoomGroup(nameof(StartGame), args.GameData.Room, new { gameId = args.Id, currentPlayer = args.CurrentTurn.PlayerTurn.Player.Username }, token);
+            await NotifyRoomGroup(nameof(StartGame), args.GameData.Room, new
+            {
+                gameId = args.Id,
+                currentPlayer = args.CurrentTurn.PlayerTurn.Player.Username,
+                playerData = args.PlayersData.Select(p => new
+                {
+                    playersCardsCount = p.StackEntity.Count(),
+                    username = p.PlayerTurn.Player.Username
+                })
+            }, token);
 
         private async Task OnPlayerJoined(object sender, GameRoomPlayer args, CancellationToken token = default(CancellationToken))
         {
@@ -67,6 +96,9 @@ namespace Snap.Server.Services
 
         public async Task<int> PopCard(int gameId) =>
             (await _dealer.PopCurrentPlayerCardAsync(gameId, Context.ConnectionAborted)).Id;
+
+        public async Task Snap(int gameId) =>
+            await _dealer.Snap(gameId, Context.ConnectionAborted);
 
         private async Task NotifyRoomGroup<TData>(string method, GameRoom room, TData data, CancellationToken token) =>
             await Clients.Group(room.GameIdentifier.ToString()).SendAsync(method, data, token);

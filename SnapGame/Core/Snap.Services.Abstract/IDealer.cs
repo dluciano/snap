@@ -13,6 +13,8 @@ namespace Snap.Services.Abstract
         IPlayerChooser
     {
         Task<PlayerGameplay> PopCurrentPlayerCardAsync(int gameId, CancellationToken token = default(CancellationToken));
+        Task<bool> Snap(int gameId, CancellationToken token = default(CancellationToken));
         event AsyncEventHandler<CardPopEvent> OnCardPopEvent;
+        event AsyncEventHandler<CardSnapEvent> OnSnap;
     }
 }

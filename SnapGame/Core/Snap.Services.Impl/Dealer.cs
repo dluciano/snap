@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dawlin.Abstract.Entities.Exceptions;
@@ -25,6 +26,7 @@ namespace Snap.Services.Impl
         private readonly SnapDbContext _db;
         private readonly IPlayerChooser _playerChooser;
         public event AsyncEventHandler<CardPopEvent> OnCardPopEvent;
+        public event AsyncEventHandler<CardSnapEvent> OnSnap;
         private readonly IPlayerProvider _playerProvider;
 
         public Dealer(IPlayerChooser playerChooser,
@@ -135,25 +137,56 @@ namespace Snap.Services.Impl
                 game.CentralPile.Last == null
                 || game.CentralPile.Last.Previous == null)
                 return false;
-            var last = (byte)((byte)game.CentralPile.Last.Card << 4) >> 4;
-            var previous = (byte)((byte)game.CentralPile.Last.Previous.Card << 4) >> 4;
+            var last = game.CentralPile.Last.Card.GetCardValue();
+            var previous = game.CentralPile.Last.Previous.Card.GetCardValue();
 
             return last == previous;
         }
 
-        public void Snap(GameRoom game, Player player)
+        public async Task<bool> Snap(int gameId, CancellationToken token = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            var player = (await _playerProvider.GetCurrentPlayerAsync());
+            if (player == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+            
+            var game = await _db
+                .SnapGames
+                .Include(g => g.CentralPile.Last)
+                .ThenInclude(p => p.Previous)
 
-            //if (!CanSnap(game)) return;
-            //Console.WriteLine($"User: {player.Username} is going to SNAP");
+                .Include(g => g.GameData)
+                .ThenInclude(g => g.Room)
 
-            //game.Turns
-            //    .Single(p => p.Player.Username == player.Username)
-            //    .Snap(game.CentralPileLast);
-            //game.CentralPileLast = null;
-            //Console.WriteLine($"Snap DONE. Central Pile: {game}");
-            //Console.WriteLine($"User Pile: {game.Turns.Single(t => t.Player.Username == player.Username)}");
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.PlayerTurn)
+                .ThenInclude(pt => pt.Player)
+
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.StackEntity)
+                .ThenInclude(p => p.Last)
+                .ThenInclude(n => n.Previous)
+
+                
+                .Include(p => p.PlayersData)
+                .ThenInclude(pd => pd.SnapGame)
+                .ThenInclude(p => p.GameData)
+                .ThenInclude(n => n.Room)
+
+                .SingleOrDefaultAsync(p => p.Id == gameId, token);
+
+            if (!CanSnap(game))
+                return false;
+
+            var playerData = game.PlayersData.Single(p => p.PlayerTurn.Player.Id == player.Id);
+            playerData.StackEntity.Snap(game.CentralPile);
+            await OnSnap?.Invoke(this, new CardSnapEvent
+            {
+                PlayerData = playerData
+            }, token);
+            await _db.SaveChangesAsync(token);
+            return true;
         }
     }
 }

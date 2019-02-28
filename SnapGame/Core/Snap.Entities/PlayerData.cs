@@ -12,13 +12,6 @@ namespace Snap.Entities
         public SnapGame SnapGame { get; set; }
         public int Id { get; set; }
 
-        public void Snap(StackNode centralPileLast)
-        {
-            if (StackEntity == null)
-                return;
-            var first = StackEntity.Last;
-            while (first.Previous != null) first = first.Previous;
-            first.Previous = centralPileLast;
-        }
+       
     }
 }

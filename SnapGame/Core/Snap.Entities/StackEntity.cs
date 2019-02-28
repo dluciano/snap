@@ -44,6 +44,15 @@ namespace Snap.Entities
             return aux.Card;
         }
 
+        public void Snap(StackEntity centralPileLast)
+        {
+            var first = Last;
+            while (first.Previous != null)
+                first = first.Previous;
+            first.Previous = centralPileLast.Last;
+            centralPileLast.Last = null;
+        }
+
         public override string ToString()
         {
             return string.Join(", ", this.Select(s => Enum.GetName(typeof(Card), s.Card)));

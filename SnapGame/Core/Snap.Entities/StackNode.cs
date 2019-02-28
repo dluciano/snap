@@ -12,13 +12,11 @@ namespace Snap.Entities
         public ICollection<PlayerData> PlayersData { get; } = new HashSet<PlayerData>();
         public int Id { get; set; }
 
-        public static StackNode Create(Card card, StackEntity stack)
-        {
-            return stack.Last = new StackNode
+        public static StackNode Create(Card card, StackEntity stack) =>
+            stack.Last = new StackNode
             {
                 Card = card,
                 Previous = stack.Last
             };
-        }
     }
 }
