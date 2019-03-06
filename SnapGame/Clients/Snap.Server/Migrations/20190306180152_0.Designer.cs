@@ -10,7 +10,7 @@ using Snap.DataAccess;
 namespace Snap.Server.Migrations
 {
     [DbContext(typeof(SnapDbContext))]
-    [Migration("20190228122332_0")]
+    [Migration("20190306180152_0")]
     partial class _0
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,9 +94,13 @@ namespace Snap.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Username");
+                    b.Property<string>("Username")
+                        .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Players");
                 });

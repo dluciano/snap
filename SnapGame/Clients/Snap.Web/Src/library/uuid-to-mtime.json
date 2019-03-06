@@ -250,13 +250,13 @@
     "relativePath": "prefab\\webview.prefab"
   },
   "299def5c-f9c7-498b-b786-b95c32143531": {
-    "asset": 1551381925388,
+    "asset": 1551829944865,
     "meta": 1551157005304,
     "relativePath": "Prefabs"
   },
   "6eb74548-123f-4b78-bac1-f1b4f815d127": {
-    "asset": 1551157992405,
-    "meta": 1551157992416,
+    "asset": 1551833366353,
+    "meta": 1551833366393,
     "relativePath": "Prefabs\\Item.prefab"
   },
   "171d5d42-4024-463f-b166-a26ec5d39393": {
@@ -275,12 +275,12 @@
     "relativePath": "Scene\\MainGame.fire"
   },
   "3d2026bf-79f1-402f-af4b-fda097c1a8ed": {
-    "asset": 1551386552808,
-    "meta": 1551386552845,
+    "asset": 1551853561493,
+    "meta": 1551853561565,
     "relativePath": "Scene\\MainMenu.fire"
   },
   "8fe90474-9237-4b95-b6b2-5ba641ae87ae": {
-    "asset": 1551311327137,
+    "asset": 1551852641388,
     "meta": 1551157005337,
     "relativePath": "Script"
   },
@@ -319,16 +319,6 @@
     "meta": 1551157008091,
     "relativePath": "resources\\next.png"
   },
-  "c0856f6d-16c2-43e0-82f8-765d6de3b495": {
-    "asset": 1551358380140,
-    "meta": 1551358474012,
-    "relativePath": "Prefabs\\ItemRoomScrollView.ts"
-  },
-  "4a09fc23-201f-457a-bd69-72a2081e0a09": {
-    "asset": 1551361104571,
-    "meta": 1551361123067,
-    "relativePath": "Script\\MainMenuManager.ts"
-  },
   "fb16c630-b327-478d-ba49-e1905de12bdb": {
     "asset": 1551365790556,
     "meta": 1551365790637,
@@ -338,11 +328,6 @@
     "asset": 1551381911517,
     "meta": 1551381911539,
     "relativePath": "Prefabs\\Card.prefab"
-  },
-  "9cf07b15-ef5c-4e32-8093-8060f4169f5b": {
-    "asset": 1551376664779,
-    "meta": 1551376773498,
-    "relativePath": "Script\\ConnectionManager.ts"
   },
   "794d083a-27f1-42de-ac66-f843aa6e0487": {
     "asset": 1551379639828,
@@ -354,14 +339,149 @@
     "meta": 1551380563167,
     "relativePath": "Script\\SnapGame.ts"
   },
-  "761e3e2c-554f-4fe4-bf77-e92097a2fa7d": {
-    "asset": 1551380212877,
-    "meta": 1551380563206,
-    "relativePath": "Script\\WaitingRoomManager.ts"
-  },
   "b3ccfa1c-0739-4ca2-9c08-708d05d2fa74": {
     "asset": 1551384714554,
     "meta": 1551384722099,
     "relativePath": "Script\\MainGameManager.ts"
+  },
+  "c0856f6d-16c2-43e0-82f8-765d6de3b495": {
+    "asset": 1551833350728,
+    "meta": 1551833352165,
+    "relativePath": "Prefabs\\ItemRoomScrollView.ts"
+  },
+  "761e3e2c-554f-4fe4-bf77-e92097a2fa7d": {
+    "asset": 1551833811088,
+    "meta": 1551833993174,
+    "relativePath": "Script\\WaitingRoomManager.ts"
+  },
+  "fb4cbc35-be44-4b94-a03e-d579b1f105ac": {
+    "asset": 1551847448688,
+    "meta": 1551836015571,
+    "relativePath": "Script\\api"
+  },
+  "e88e8644-c110-42cd-9915-87c714aea23c": {
+    "asset": 1551846460216,
+    "meta": 1551836015582,
+    "relativePath": "Script\\api\\clients"
+  },
+  "6c3994c1-2ddd-4879-b882-611590bf4877": {
+    "asset": 1551845967524,
+    "meta": 1551846065007,
+    "relativePath": "Script\\api\\models\\GameState.ts"
+  },
+  "d6ce3252-e741-41e1-a1cd-57977bb98cdd": {
+    "asset": 1551845967590,
+    "meta": 1551846065094,
+    "relativePath": "Script\\api\\models\\IGameData.ts"
+  },
+  "998fc9b7-e18e-4a51-8dba-72f11624cffa": {
+    "asset": 1551845967275,
+    "meta": 1551846065129,
+    "relativePath": "Script\\api\\models\\IGameRoom.ts"
+  },
+  "a106b7d5-022c-48e0-abea-9e93a8f96353": {
+    "asset": 1551845967338,
+    "meta": 1551846065245,
+    "relativePath": "Script\\api\\models\\IGameRoomPlayer.ts"
+  },
+  "ffb83784-8a99-47b1-af84-9a3980450a3f": {
+    "asset": 1551845967486,
+    "meta": 1551846065410,
+    "relativePath": "Script\\api\\models\\IPlayerTurn.ts"
+  },
+  "24c98478-7b21-4f31-a0f8-be4140254226": {
+    "asset": 1551847502442,
+    "meta": 1551846075127,
+    "relativePath": "Script\\api\\models"
+  },
+  "2fe462f1-77ec-4f75-81cb-2386cfb72d71": {
+    "asset": 1551846444304,
+    "meta": 1551846455386,
+    "relativePath": "Script\\api\\clients\\SwaggerException.ts"
+  },
+  "ec2f5933-baf5-4b5b-9c23-364532243499": {
+    "asset": 1551846834086,
+    "meta": 1551847449307,
+    "relativePath": "Script\\api\\clients\\index.ts"
+  },
+  "c6d64098-2330-4190-9ab8-7e5a982433e7": {
+    "asset": 1551847100162,
+    "meta": 1551847449519,
+    "relativePath": "Script\\api\\models\\GameData.ts"
+  },
+  "11f76b36-a1f7-4221-9594-f5c3bf5b5b20": {
+    "asset": 1551847141780,
+    "meta": 1551847449608,
+    "relativePath": "Script\\api\\models\\GameRoom.ts"
+  },
+  "9d400632-0b90-426d-b365-e0693c0ce3f1": {
+    "asset": 1551847207062,
+    "meta": 1551847449619,
+    "relativePath": "Script\\api\\models\\GameRoomPlayer.ts"
+  },
+  "219b169a-04d6-4b2b-8744-51d4b2b8b949": {
+    "asset": 1551847300574,
+    "meta": 1551847449779,
+    "relativePath": "Script\\api\\models\\PlayerTurn.ts"
+  },
+  "6975b635-cc21-4dbb-aa50-ae5b7f94eda5": {
+    "asset": 1551847374378,
+    "meta": 1551847449857,
+    "relativePath": "Script\\api\\models\\index.ts"
+  },
+  "4d92af1a-1e5a-459a-99e3-7acd183c4ce7": {
+    "asset": 1551847751831,
+    "meta": 1551847772165,
+    "relativePath": "Script\\api\\index.ts"
+  },
+  "8e74011a-2649-4f46-801d-6a5618092f56": {
+    "asset": 1551848704223,
+    "meta": 1551848938098,
+    "relativePath": "Script\\api\\clients\\GameRoomClient.ts"
+  },
+  "8853f2d1-2549-4491-9e7b-b71ba2c4e3fd": {
+    "asset": 1551853555690,
+    "meta": 1551852641411,
+    "relativePath": "Script\\oauth"
+  },
+  "9cf07b15-ef5c-4e32-8093-8060f4169f5b": {
+    "asset": 1551891338534,
+    "meta": 1551891356640,
+    "relativePath": "Script\\ConnectionManager.ts"
+  },
+  "2d2fd43c-97ba-4e08-b1b8-d5d2e6f9152e": {
+    "asset": 1551891083567,
+    "meta": 1551891356770,
+    "relativePath": "Script\\oauth\\GameConfiguration.ts"
+  },
+  "ffb34cc6-7cbf-44cc-b50f-52d7131333ff": {
+    "asset": 1551891253229,
+    "meta": 1551891356838,
+    "relativePath": "Script\\oauth\\IGameConfiguration.ts"
+  },
+  "4a09fc23-201f-457a-bd69-72a2081e0a09": {
+    "asset": 1551893797405,
+    "meta": 1551893854202,
+    "relativePath": "Script\\MainMenuManager.ts"
+  },
+  "8d99c84d-04df-47cb-9d05-2c50af25a5df": {
+    "asset": 1551894817180,
+    "meta": 1551894835720,
+    "relativePath": "Script\\api\\clients\\PlayerClient.ts"
+  },
+  "cdd77ca5-1cfb-407f-aba4-d9c7726496e0": {
+    "asset": 1551894573162,
+    "meta": 1551894835853,
+    "relativePath": "Script\\api\\models\\IPlayer.ts"
+  },
+  "64c43524-62a8-48cf-8e58-1f925823ee7b": {
+    "asset": 1551894636575,
+    "meta": 1551894836049,
+    "relativePath": "Script\\api\\models\\Player.ts"
+  },
+  "1bdb243b-8315-4490-96ee-6b8eac64a656": {
+    "asset": 1551894110503,
+    "meta": 1551894836053,
+    "relativePath": "Script\\oauth\\SecurityManager.ts"
   }
 }

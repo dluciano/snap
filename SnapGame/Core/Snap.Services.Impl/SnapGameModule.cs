@@ -21,12 +21,9 @@ namespace Snap.Services.Impl
             builder.RegisterType<CardPilesService>().As<ICardPilesService>();
 
             builder.Register(context => new StateMachine<GameState, GameSessionTransitions>()
-                    .AddTransition(GameState.NONE, GameState.PLAYING,
-                        GameSessionTransitions.START_GAME)
-                    .AddTransition(GameState.PLAYING, GameState.FINISHED,
-                        GameSessionTransitions.FINISH_GAME)
-                    .AddTransition(GameState.PLAYING, GameState.ABORTED,
-                        GameSessionTransitions.ABORT_GAME))
+                    .AddTransition(GameState.NONE, GameState.PLAYING,GameSessionTransitions.START_GAME)
+                    .AddTransition(GameState.PLAYING, GameState.FINISHED, GameSessionTransitions.FINISH_GAME)
+                    .AddTransition(GameState.PLAYING, GameState.ABORTED,GameSessionTransitions.ABORT_GAME))
                 .As<IStateMachineProvider<GameState, GameSessionTransitions>>();
         }
     }

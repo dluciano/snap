@@ -27,6 +27,14 @@ namespace GameSharp.DataAccess
                 .Entity<Player>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
+            modelBuilder
+                .Entity<Player>()
+                .Property(p => p.Username)
+                .IsRequired();
+            modelBuilder
+                .Entity<Player>()
+                .HasIndex(p => p.Username)
+                .IsUnique();
 
             modelBuilder
                 .Entity<GameData>()

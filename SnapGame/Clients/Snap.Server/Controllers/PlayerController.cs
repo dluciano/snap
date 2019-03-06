@@ -40,7 +40,8 @@ namespace Snap.Server.Controllers
         public async Task<ActionResult<Player>> PostAsync(CancellationToken token)
         {
             var player = await _playerProvider.AddAsync(token);
-            return Created(Url.Action($"Get/{player.Id}"), player);
+            var url = Url.Action(nameof(GetPlayerAsync));
+            return Created(url, player);
         }
     }
 }

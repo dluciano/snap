@@ -14,7 +14,7 @@ namespace Snap.Server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(nullable: true)
+                    Username = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,6 +285,12 @@ namespace Snap.Server.Migrations
                 name: "IX_PlayerGamePlays_PlayerTurnId",
                 table: "PlayerGamePlays",
                 column: "PlayerTurnId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Players_Username",
+                table: "Players",
+                column: "Username",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlayersData_PlayerTurnId",

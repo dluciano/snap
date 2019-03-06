@@ -20,15 +20,6 @@ namespace Snap.DataAccess
         public DbSet<SnapGame> SnapGames { get; set; }
         public DbSet<StackNode> StackNodes { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            if (optionsBuilder.IsConfigured)
-                return;
-            optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\mssqllocaldb;Database=Snap.InMemory;Trusted_Connection=True;ConnectRetryCount=0");
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

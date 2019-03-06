@@ -7,6 +7,7 @@ using GameSharp.Services.Abstract;
 using GameSharp.Services.Impl;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,27 +49,13 @@ namespace Snap.Server
                     config => config.MigrationsAssembly(this.GetType().Assembly.FullName));
             });
 
-            services
-                .AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
-                    {
-                        options.Authority = Configuration["SnapGameOAuth:Authority"];
-                        options.TokenRetriever = CustomTokenRetriever.FromHeaderAndQueryString;
-                        options.Validate();
-                    });
+            var obj = new IdentityConfiguration();
+            Configuration.Bind("SnapGame:SnapOAuthProviders", obj);
+            obj.ConfigureServices(services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme));
 
-            services.AddCors(options => options.AddPolicy("CorsPolicy",
-                builder =>
-                {
-                    builder.AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .WithOrigins(Configuration["CorsPolicy:Origin"])
-                        .AllowCredentials();
-                    builder.AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .WithOrigins("http://localhost:7456")
-                        .AllowCredentials();
-                }));
+            var cors = new CorsConfiguration();
+            Configuration.Bind("SnapGame:CORS", cors);
+            cors.ConfigureServices(services);
 
             services.AddOpenApiDocument(document =>
             {
@@ -151,7 +138,7 @@ namespace Snap.Server
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<SignalRNotificationHub>(Configuration["Hub:EndpointUrl"]);
+                routes.MapHub<SignalRNotificationHub>(Configuration["SnapGame:Hub:EndpointUrl"]);
             });
 
             app.UseMvc();

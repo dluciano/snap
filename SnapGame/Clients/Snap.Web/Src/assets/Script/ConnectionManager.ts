@@ -1,14 +1,11 @@
 import * as signalR from "@aspnet/signalr";
-import { JSO, Popup, Fetcher } from "jso";
+import { IServerConfiguration, ISecurityConfiguration } from "./oauth/IGameConfiguration";
 
 export class ConnectionManager {
     private static readonly conn: ConnectionManager = new ConnectionManager();
     public static getInstance(): ConnectionManager {
         return ConnectionManager.conn;
     }
-    public static readonly ON_CHALLENGING: string = "onChallenging";
-    public static readonly ON_PLAYER_LOGIN_EVENT: string = "onPlayerLoginEvent";
-    public static readonly ON_PLAYER_LOGOUT: string = "onPlayerLogoutEvent";
 
     public static readonly ON_CONNECTING: string = "onConnecting";
     public static readonly ON_CONNECTION_CLOSED: string = "onConnectionClosed";
@@ -26,119 +23,25 @@ export class ConnectionManager {
     public static readonly ON_JOIN_GAME_MESSAGE: string = "OnPopCard";
     public static readonly ON_SNAP_MESSAGE: string = "OnPopCard";
 
-    private static readonly ENPOINT: string = "https://localhost:44378/game_notifications";
     private connection: signalR.HubConnection;
-    private token: ITokenResponse;
     private connectTryCount: number = 0;
 
-    private _player: any = null;
+    constructor(private serverConfig?: IServerConfiguration,
+        private securityConfig?: ISecurityConfiguration) { }
 
-    get player(): any {
-        return this._player;
-    }
-
-    set player(player: any) {
-        this._player = player;
-        const eventType: string = this._player ? ConnectionManager.ON_PLAYER_LOGIN_EVENT :
-            ConnectionManager.ON_PLAYER_LOGOUT;
-        this.dispatch(eventType, this._player);
-    }
-
-    private client: JSO = new JSO({
-        providerID: "snapGameOauth",
-        client_id: "snapGameApiDevSwagger",
-        authorization: "https://localhost:52365/connect/authorize",
-        token: "https://localhost:52365/connect/token",
-        redirect_uri: "http://localhost:7456",
-        debug: true,
-        scopes: {
-            request: ["snapgame"],
-        },
-        response_type: "token",
-        request: {
-            // tslint:disable-next-line:max-line-length
-            nonce: "636864884858396406.MWI4ZjNkYWItOGU1My00YmFiLTg1MTAtMWQzOTY2OTM4YzRkOGFhOGI1OGItODc0YS00NGEyLWI3NzgtYzU0YmJiMzk5NWY0"
-        }
-    });
-
-    refresh(): Promise<any> {
-        return this.login().then(() => {
-            return this.connect().catch(e => {
-                cc.error(e);
-                throw e;
-            });
-        });
-    }
-
-    login(): Promise<any> {
-        this.client.callback();
-        cc.log("Trying to loggin");
-        this.dispatch(ConnectionManager.ON_CHALLENGING, {});
-        return this.client.getToken()
-            .then((token) => {
-                this.token = token;
-                cc.log("I got the token: ", this.token);
-
-                const fetcher: Fetcher = new Fetcher(this.client);
-                const url: string = "https://localhost:44378/api/Player/me";
-                fetcher.fetch(url, {})
-                    .then((data) => {
-                        return data.json();
-                    })
-                    .then((data) => {
-                        cc.log(`Player ifno recieved from the server ${data}`);
-                        this.player = data;
-                    })
-                    .catch((err) => {
-                        cc.error("Error getting user data: ", err);
-                        throw err;
-                    });
-            })
-            .catch((err) => {
-                cc.error("Error from getToken: ", err);
-                throw err;
-            });
-    }
-
-    logout(): void {
-        this.client.wipeTokens();
-        this.player = null;
-    }
-
-    connect(): Promise<void> {
+    async connect(): Promise<void> {
         if (!this.connection) {
             const builder: signalR.HubConnectionBuilder = new signalR.HubConnectionBuilder()
                 .configureLogging(signalR.LogLevel.Information)
-                .withUrl(ConnectionManager.ENPOINT, {
+                .withUrl(this.serverConfig.gameServerUrl, {
                     accessTokenFactory: () => {
-                        return !this.token ? "" : this.token.access_token;
+                        return this.securityConfig.currentToken.access_token;
                     }
                 });
             this.connection = builder.build();
             this.connection.onclose((err) => {
                 this.dispatch(ConnectionManager.ON_CONNECTION_CLOSED, err);
-                // this.connect();
-                // this.connectionStatusLbl.string = "Disconnected";
-                // this.reconnectBtn.node.getChildByName("Label").getComponent(cc.Label).string = "Reconnect";
-                // cc.error(err);
             });
-        }
-        if (this.connection.state === signalR.HubConnectionState.Connected) {
-            return new Promise<void>(() => {
-                cc.log("You are already connected");
-                return;
-            });
-        }
-
-        cc.log("Connecting");
-        this.dispatch(ConnectionManager.ON_CONNECTING, {});
-        this.connectTryCount++;
-        if (this.connectTryCount > 10) {
-            throw "maxReconnectFailed";
-        }
-        return this.connection.start().then(c => {
-            this.connectTryCount = 0;
-
             this.connection
                 .on(ConnectionManager.CREATE_ROOM, (message) => {
                     cc.log(`${ConnectionManager.CREATE_ROOM} received: ${message}`);
@@ -164,10 +67,24 @@ export class ConnectionManager {
                     cc.log(`${ConnectionManager.SNAP_MESSAGE} received: ${message}`);
                     this.dispatch(ConnectionManager.ON_SNAP_MESSAGE, message);
                 });
+        }
+        if (this.connection.state === signalR.HubConnectionState.Connected) {
+            return new Promise<void>(() => {
+                cc.log("You are already connected");
+                return;
+            });
+        }
 
-            this.dispatch(ConnectionManager.ON_CONNECTED, {});
-            cc.log("Connection stablished!");
-        });
+        cc.log("Connecting");
+        this.dispatch(ConnectionManager.ON_CONNECTING, {});
+        this.connectTryCount++;
+        if (this.connectTryCount > 10) {
+            throw "maxReconnectFailed";
+        }
+        await this.connection.start();
+        this.connectTryCount = 0;
+        this.dispatch(ConnectionManager.ON_CONNECTED, {});
+        cc.log("Connection stablished!");
 
     }
 
@@ -235,13 +152,4 @@ export class ConnectionManager {
     }
 }
 
-export interface ITokenResponse {
-    access_token: string;
-    expires: number;
-    expires_in: number;
-    received: number;
-    scopes: [];
-    state: string;
-    token_type: string;
-}
 export default ConnectionManager;

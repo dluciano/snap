@@ -1,0 +1,1 @@
+{"version":3,"sources":["IApiConfiguration.ts"],"names":[],"mappings":";;;;AAAA,YAAY,CAAC","file":"","sourceRoot":"..\\..\\..\\..\\..\\assets\\Script\\oauth","sourcesContent":["\"use strict\";\r\nimport { JSO, Popup, Fetcher } from \"jso\";\r\nexport interface IApiConfiguration {\r\n    baseUrl: string;\r\n    client: JSO;\r\n    fetcher: Fetcher;\r\n}\r\n"]}

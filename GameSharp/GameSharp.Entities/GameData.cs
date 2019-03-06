@@ -24,7 +24,7 @@ namespace GameSharp.Entities
         }
 
         public int Id { get; set; }
-        public GameState CurrentState { get; set; }
+        public GameState CurrentState { get; set; } = GameState.NONE;
 
         public PlayerTurn NextTurn() =>
             CurrentTurn = CurrentTurn == null || CurrentTurn.Next == null ? FirstPlayer : CurrentTurn.Next;
