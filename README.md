@@ -8,4 +8,4 @@ Foders:
 - Dawlin: other library to common utilities. (A state machihne, some helpers)
 - Test: Unit/Integration testing of the core and the Gamesharp library (it will be divided later)
 
-The projects contain an abstract and impl projects, it is just a division to group abstract and not abstract objects. Other difference is that the Impl projects have a *Module.cs file that initilize a Autofac module.
+The projects contain an abstract and impl projects, it is just a division to group abstract and not abstract objects. Other difference is that the Impl projects have a *Module.cs file that initilize a Autofac module
